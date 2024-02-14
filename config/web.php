@@ -11,7 +11,6 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
-        // '@select2' => '@vendor/kartik/select2',
     ],
     'components' => [
         'authManager' => [

@@ -10,4 +10,7 @@ return [
     // password
     'user.passwordResetTokenExpire' => 3600,
     'user.passwordMinLength' => 8,
+
+    // bootstrap
+    'bsVersion' => '5.x',
 ];
