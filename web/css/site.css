@@ -1,0 +1,282 @@
+/* ===========================================================================================
+                                        CSS INDEX
+==============================================================================================
+
+|| GENERAL
+|| TYPOGRAPHY
+|| COLOR PALETTE
+
+|| PILL NAV
+|| GRIDVIEW WIDGET
+
+|| LOGIN
+
+|| ACTIVITY
+
+|| MEDIA QUERIES
+
+==============================================================================================
+|| GENERAL
+=========================================================================================== */
+
+html,
+body {
+    height: calc(100vh - 56px);
+}
+
+main,
+footer {
+    position: relative;
+    top: 56px;
+}
+
+main {
+  flex: 1;
+}
+
+h1 {
+  margin-bottom: 2rem;
+}
+
+h2:not(.activity h2) {
+  margin-top: 2rem;
+}
+
+.title-icon svg {
+  margin: 0 10px 2rem 0;
+
+  color:#09a2c9;
+}
+
+/* ===========================================================================================
+|| TYPOGRAPHY
+=========================================================================================== */
+
+/* ---------- imports ---------- */
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuOKfAZ9hiA.woff2) format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+      U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+      U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  
+  @font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/lato/v24/S6u9w4BMUTPHh6UVSwiPGQ.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  
+  /* ---------- default ---------- */
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #070e33;
+  }
+  
+  h1,
+  h2 {
+    font-family: 'Lato', sans-serif;
+  }
+
+/* ===========================================================================================
+|| COLOR PALETTE
+=========================================================================================== */
+
+.slate {
+  color: #070e33;
+}
+
+.bg-slate {
+    background: #070e33;
+}
+
+.bg-transparent-slate {
+    background: rgba(7, 14, 51, 0.89);
+}
+
+.pacific-cyan {
+  color: #09a2c9;
+}
+
+.bg-pacific-cyan {
+  background: #09a2c9;
+}
+
+.border-pacific-cyan {
+  border-color: #09a2c9;
+}
+
+/* i wanna use these i just don't know where yet */
+.light-bulb {
+  color: #EE9018;
+}
+
+.lighter-bulb {
+  color: #F1C40F;
+}
+
+/* ===========================================================================================
+|| COLOR PALETTE
+=========================================================================================== */
+
+.bg-login {
+  background: url('./images/bg-login.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* ===========================================================================================
+|| PILL NAV
+=========================================================================================== */
+
+#pills-tab {
+  display: inline-flex;
+  justify-content: space-evenly;
+
+  width: 100%;
+
+  background-color: #09a2c9;
+}
+
+#pills-tab>li {
+  flex: 1 1 50%;
+  border: 1px solid #fff;
+}
+
+#pills-tab>li>button {
+  border-radius: 0;
+  width: 100%;
+  padding: 15px;
+
+  background-color: transparent;
+
+  font-weight: bold;
+  font-family: 'Lato';
+  color: #fff;
+}
+
+#pills-tab>li>button.active {
+  background-color: #0000005b;
+}
+
+.accordion {
+  margin-bottom: 50px;
+}
+
+.accordion-button {
+  font-family: 'Inter';
+  font-weight: normal;
+  font-size: 1.4rem;
+}
+
+.accordion-body {
+  color: #575757;
+}
+
+/* ===========================================================================================
+|| GRIDVIEW WIDGET
+=========================================================================================== */
+
+.critical td {
+  background-color: #ffa7a7 !important;
+}
+
+tr:nth-child(odd) td {
+  background-color: #f7f5ff;
+}
+
+.filters td {
+  background-color: #070e33dc;
+}
+
+.pagination li {
+  margin: 0 5px;
+}
+
+th a {
+  text-decoration: none;
+
+  color:#09a2c9;
+}
+
+/* add sorting icons to gridview sort links */
+a.asc:after, a.desc:after {
+  content: '';
+  left: 3px;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border: solid 5px transparent;
+  margin: 4px 4px 2px 4px;
+  background: transparent;
+}
+
+a.asc:after {
+  border-bottom: solid 7px #212529;
+  border-top-width: 0;
+}
+
+a.desc:after {
+  border-top: solid 7px #212529;
+  border-bottom-width: 0;
+}
+
+.grid-view th {
+  white-space: nowrap;
+}
+
+.apply-word-break {
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.hint-block {
+  display: block;
+  margin-top: 5px;
+  color: #999;
+}
+
+.error-summary {
+  color: #a94442;
+  background: #fdf7f7;
+  border-left: 3px solid #eed3d7;
+  padding: 10px 20px;
+  margin: 0 0 15px 0;
+}
+
+/* ===========================================================================================
+|| LOGIN
+=========================================================================================== */
+
+
+/* ===========================================================================================
+|| ACTIVITY
+=========================================================================================== */
+
+/* ===========================================================================================
+|| MEDIA QUERIES
+=========================================================================================== */
+
+@media only screen and (min-width: 1250px) {
+  #pills-tab>li {
+    flex: 1 1 200px;
+  }
+}
