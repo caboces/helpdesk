@@ -8,6 +8,7 @@
 
 || PILL NAV
 || GRIDVIEW WIDGET
+|| PAGINATION
 
 || LOGIN
 
@@ -45,8 +46,10 @@ h2:not(.activity h2) {
 .title-icon svg {
   margin: 0 10px 2rem 0;
   box-shadow: -1px 1px 3px #070e3338;
-  border-radius: 40%;
+  border-radius: 50%;
   padding: 4px;
+
+  background: #fff;
 
   color:#6fc6db;
 }
@@ -77,11 +80,23 @@ h2:not(.activity h2) {
     unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
   }
   
-  /* ---------- default ---------- */
-  
+  /* ---------- darkmode? ---------- */
   body {
     font-family: 'Inter', sans-serif;
-    color: #070e33;
+
+    background: #1a1b27;
+
+    color: #fff;
+  }
+
+
+  /* ---------- default ---------- */
+  body {
+    font-family: 'Inter', sans-serif;
+    
+    background: #fafafa;
+
+    color: #0c1955;
   }
   
   h1,
@@ -173,20 +188,18 @@ h2:not(.activity h2) {
 || GRIDVIEW WIDGET
 =========================================================================================== */
 
-.critical td {
-  box-shadow: inset 200px 200px #ff273967 !important;
-}
-
+/* change alternating table row colors to be prettier */
 tr:nth-child(odd) td {
   background-color: #f4f2ff;
 }
 
-.filters td {
-  background-color: #070e33dc;
+/* applied to ticket table rows when the priority is critical */
+.critical td {
+  box-shadow: inset 200px 200px #ff273967 !important;
 }
 
-.pagination li {
-  margin: 0 5px;
+.filters td {
+  background-color: #070e33dc;
 }
 
 th a {
@@ -248,6 +261,28 @@ a.desc:after {
   border-left: 3px solid #eed3d7;
   padding: 10px 20px;
   margin: 0 0 15px 0;
+}
+
+/* ===========================================================================================
+|| PAGINATION
+=========================================================================================== */
+
+ul.pagination li {
+  margin: 0 5px;
+}
+
+ul.pagination li a {
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px #070e3331;
+  
+  padding: 10px;
+
+  text-decoration: none;
+  color: #09a2c9;
+}
+
+ul.pagination li.active a {
+  color:#070e33;
 }
 
 /* ===========================================================================================
