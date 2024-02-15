@@ -56,78 +56,82 @@ $this->title = 'Manage Tickets';
                 <div class="alert alert-warning" role="alert">
                     Filters haven't been made yet! Currently showing all tickets.
                 </div>
-                <?php Pjax::begin(['id' => 'grid-assignments']); ?>
-                <?= GridView::widget([
-                    'dataProvider' => $dataProvider,
-                    'filterModel' => $searchModel,
-                    'tableOptions' => ['class' => 'table table-bordered'],
-                    'rowOptions' => function ($model) {
-                        if ($model->jobPriority->name == 'Critical') {
-                            return ['class' => 'critical'];
-                        }
-                        return [];
-                    },
-                    'columns' => [
-                        [
-                            'class' => ActionColumn::className(),
-                            'buttons' => [
-                                'images' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
-                                    return Html::a('<span class="glyphicon glyphicon glyphicon-picture" aria-hidden="true"></span>', Url::to(['image/index', 'id' => $model->id]));
+                <div class="container-fluid overflow-x-scroll">
+                    <?php Pjax::begin(['id' => 'grid-assignments']); ?>
+                    <?= GridView::widget([
+                        'dataProvider' => $dataProvider,
+                        'filterModel' => $searchModel,
+                        'tableOptions' => ['class' => 'table table-bordered'],
+                        'rowOptions' => function ($model) {
+                            if ($model->jobPriority->name == 'Critical') {
+                                return ['class' => 'critical'];
+                            } else if ($model->jobPriority->name == 'High') {
+                                return ['class' => 'high'];
+                            }
+                            return [];
+                        },
+                        'columns' => [
+                            [
+                                'class' => ActionColumn::className(),
+                                'buttons' => [
+                                    'images' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
+                                        return Html::a('<span class="glyphicon glyphicon glyphicon-picture" aria-hidden="true"></span>', Url::to(['image/index', 'id' => $model->id]));
+                                    }
+                                ],
+                                'urlCreator' => function ($action, Ticket $model, $key, $index, $column) {
+                                    return Url::toRoute([$action, 'id' => $model->id]);
                                 }
                             ],
-                            'urlCreator' => function ($action, Ticket $model, $key, $index, $column) {
-                                return Url::toRoute([$action, 'id' => $model->id]);
-                            }
-                        ],
-                        'id' => [
-                            'attribute' => 'id',
-                            'filter' => false,
-                        ],
-                        'summary',
+                            'id' => [
+                                'attribute' => 'id',
+                                'filter' => false,
+                            ],
+                            'summary',
 
-                        /** 
-                         * TODO: we need to have LDAP before we can fill in the user fields automatically.
-                         * Location is up in the air but i'm working on it.. -efox
-                         */
-                        'requester',
-                        'primary_tech',
-                        'location',
-                        'job_category_name' => [
-                            'attribute' => 'job_category_name',
-                            'value' => 'jobCategory.name',
-                            'format' => 'text',
-                            'label' => 'Category',
-                            'filter' => Html::activeDropDownList($searchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                            /** 
+                             * TODO: we need to have LDAP before we can fill in the user fields automatically.
+                             * Location is up in the air but i'm working on it.. -efox
+                             */
+                            'requester',
+                            'primary_tech',
+                            'location',
+                            'job_category_name' => [
+                                'attribute' => 'job_category_name',
+                                'value' => 'jobCategory.name',
+                                'format' => 'text',
+                                'label' => 'Category',
+                                'filter' => Html::activeDropDownList($searchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                            ],
+                            'job_priority_name' => [
+                                'attribute' => 'job_priority_name',
+                                'value' => 'jobPriority.name',
+                                'format' => 'text',
+                                'label' => 'Priority',
+                                'filter' => Html::activeDropDownList($searchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                            ],
+                            'job_status_name' => [
+                                'attribute' => 'job_status_name',
+                                'value' => 'jobStatus.name',
+                                'format' => 'text',
+                                'label' => 'Status',
+                                'filter' => Html::activeDropDownList($searchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                            ],
+                            'job_type_name' => [
+                                'attribute' => 'job_type_name',
+                                'value' => 'jobType.name',
+                                'format' => 'text',
+                                'label' => 'Type',
+                                'filter' => Html::activeDropDownList($searchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
+                            ],
+                            'created' => [
+                                'attribute' => 'created',
+                                'label' => 'Date submitted',
+                                'filter' => false,
+                            ],
                         ],
-                        'job_priority_name' => [
-                            'attribute' => 'job_priority_name',
-                            'value' => 'jobPriority.name',
-                            'format' => 'text',
-                            'label' => 'Priority',
-                            'filter' => Html::activeDropDownList($searchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
-                        ],
-                        'job_status_name' => [
-                            'attribute' => 'job_status_name',
-                            'value' => 'jobStatus.name',
-                            'format' => 'text',
-                            'label' => 'Status',
-                            'filter' => Html::activeDropDownList($searchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
-                        ],
-                        'job_type_name' => [
-                            'attribute' => 'job_type_name',
-                            'value' => 'jobType.name',
-                            'format' => 'text',
-                            'label' => 'Type',
-                            'filter' => Html::activeDropDownList($searchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
-                        ],
-                        'created' => [
-                            'attribute' => 'created',
-                            'label' => 'Date submitted',
-                            'filter' => false,
-                        ],
-                    ],
-                ]); ?>
-                <?php Pjax::end(); ?>
+                    ]); ?>
+                    <?php Pjax::end(); ?>
+                </div>
             </div>
         </div>
         <div class="tab-pane fade" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
@@ -146,6 +150,8 @@ $this->title = 'Manage Tickets';
                         'rowOptions' => function ($model) {
                             if ($model->jobPriority->name == 'Critical') {
                                 return ['class' => 'critical'];
+                            } else if ($model->jobPriority->name == 'High') {
+                                return ['class' => 'high'];
                             }
                             return [];
                         },
@@ -220,79 +226,84 @@ $this->title = 'Manage Tickets';
                 <div class="alert alert-warning" role="alert">
                     Filters haven't been made yet! Currently showing all tickets.
                 </div>
-                <?php Pjax::begin(['id' => 'grid-resolved-closed']); ?>
-                <?= GridView::widget([
-                    'dataProvider' => $dataProvider,
-                    'filterModel' => $searchModel,
-                    'tableOptions' => ['class' => 'table table-bordered'],
-                    'rowOptions' => function ($model) {
-                        if ($model->jobPriority->name == 'Critical') {
-                            return ['class' => 'critical'];
-                        }
-                        return [];
-                    },
-                    'columns' => [
-                        [
-                            'class' => ActionColumn::className(),
-                            'buttons' => [
-                                'images' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
-                                    return Html::a('<span class="glyphicon glyphicon glyphicon-picture" aria-hidden="true"></span>', Url::to(['image/index', 'id' => $model->id]));
+                <div class="container-fluid overflow-x-scroll">
+                    <?php Pjax::begin(['id' => 'grid-resolved-closed']); ?>
+                    <?= GridView::widget([
+                        'dataProvider' => $dataProvider,
+                        'filterModel' => $searchModel,
+                        'tableOptions' => ['class' => 'table table-bordered'],
+                        'rowOptions' => function ($model) {
+                            if ($model->jobPriority->name == 'Critical') {
+                                return ['class' => 'critical'];
+                            } else if ($model->jobPriority->name == 'High') {
+                                return ['class' => 'high'];
+                            }
+                            return [];
+                        },
+                        'columns' => [
+                            [
+                                'class' => ActionColumn::className(),
+                                'buttons' => [
+                                    'images' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
+                                        return Html::a('<span class="glyphicon glyphicon glyphicon-picture" aria-hidden="true"></span>', Url::to(['image/index', 'id' => $model->id]));
+                                    }
+                                ],
+                                'urlCreator' => function ($action, Ticket $model, $key, $index, $column) {
+                                    return Url::toRoute([$action, 'id' => $model->id]);
                                 }
                             ],
-                            'urlCreator' => function ($action, Ticket $model, $key, $index, $column) {
-                                return Url::toRoute([$action, 'id' => $model->id]);
-                            }
-                        ],
-                        'id' => [
-                            'attribute' => 'id',
-                            'filter' => false,
-                        ],
-                        'summary',
+                            'id' => [
+                                'attribute' => 'id',
+                                'filter' => false,
+                            ],
+                            'summary',
 
-                        /** 
-                         * TODO: we need to have LDAP before we can fill in the user fields automatically.
-                         * Location is up in the air but i'm working on it.. -efox
-                         */
-                        'requester',
-                        'primary_tech',
-                        'location',
-                        'job_category_name' => [
-                            'attribute' => 'job_category_name',
-                            'value' => 'jobCategory.name',
-                            'format' => 'text',
-                            'label' => 'Category',
-                            'filter' => Html::activeDropDownList($searchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                            /** 
+                             * TODO: we need to have LDAP before we can fill in the user fields automatically.
+                             * Location is up in the air but i'm working on it.. -efox
+                             */
+                            'requester',
+                            'primary_tech',
+                            'location',
+                            'job_category_name' => [
+                                'attribute' => 'job_category_name',
+                                'value' => 'jobCategory.name',
+                                'format' => 'text',
+                                'label' => 'Category',
+                                'filter' => Html::activeDropDownList($searchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                            ],
+                            'job_priority_name' => [
+                                'attribute' => 'job_priority_name',
+                                'value' => 'jobPriority.name',
+                                'format' => 'text',
+                                'label' => 'Priority',
+                                'filter' => Html::activeDropDownList($searchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                            ],
+                            'job_status_name' => [
+                                'attribute' => 'job_status_name',
+                                'value' => 'jobStatus.name',
+                                'format' => 'text',
+                                'label' => 'Status',
+                                'filter' => Html::activeDropDownList($searchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                            ],
+                            'job_type_name' => [
+                                'attribute' => 'job_type_name',
+                                'value' => 'jobType.name',
+                                'format' => 'text',
+                                'label' => 'Type',
+                                'filter' => Html::activeDropDownList($searchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
+                            ],
+                            'created' => [
+                                'attribute' => 'created',
+                                'label' => 'Date submitted',
+                                'filter' => false,
+                            ],
                         ],
-                        'job_priority_name' => [
-                            'attribute' => 'job_priority_name',
-                            'value' => 'jobPriority.name',
-                            'format' => 'text',
-                            'label' => 'Priority',
-                            'filter' => Html::activeDropDownList($searchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
-                        ],
-                        'job_status_name' => [
-                            'attribute' => 'job_status_name',
-                            'value' => 'jobStatus.name',
-                            'format' => 'text',
-                            'label' => 'Status',
-                            'filter' => Html::activeDropDownList($searchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
-                        ],
-                        'job_type_name' => [
-                            'attribute' => 'job_type_name',
-                            'value' => 'jobType.name',
-                            'format' => 'text',
-                            'label' => 'Type',
-                            'filter' => Html::activeDropDownList($searchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
-                        ],
-                        'created' => [
-                            'attribute' => 'created',
-                            'label' => 'Date submitted',
-                            'filter' => false,
-                        ],
-                    ],
-                ]); ?>
-                <?php Pjax::end(); ?>
+                    ]); ?>
+                    <?php Pjax::end(); ?>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
