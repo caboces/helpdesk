@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
+use kartik\select2\Select2;
 
 /** @var yii\web\View $this */
 /** @var app\models\Ticket $model */
@@ -87,6 +88,16 @@ use yii\bootstrap5\ActiveForm;
                         <div class="subsection-info-block">
                                 <h2>Technicians</h2>
                                 <p>Technicians assigned to this ticket</p>
+                                <?php 
+                                echo $form->field($model, 'users')->widget(Select2::classname(), [
+                                    'data' => $users,
+                                    'options' => ['placeholder' => 'Add users ...'],
+                                    'pluginOptions' => [
+                                        'allowClear' => true,
+                                        'multiple' => true
+                                    ],
+                                ]);
+                                ?>
                         </div>
                 </div>
                 <div class="tab-pane fade" id="pills-time-entries" role="tabpanel" aria-labelledby="pills-time-entries-tab">

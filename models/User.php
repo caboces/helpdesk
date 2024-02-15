@@ -153,6 +153,19 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->auth_key;
     }
 
+    public static function getUsers() {
+        return User::find()->orderBy('username ASC')->asArray()->all();
+    }
+
+    /**
+     * Junction relation to get tickets attached to a user via tech_ticket_assignment table
+     *
+     * */
+    public function getTickets()
+    {
+        return $this->hasMany(Ticket::class,['id'=>'ticket_id'])->viaTable('{{%tech_ticket_assignment}}',['user_id'=>'id']); 
+    }
+
     public function getPassword() {
         return '';
     }

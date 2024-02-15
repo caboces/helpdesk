@@ -24,7 +24,8 @@ $this->title = 'Update Ticket: ' . $model->id;
             'categories' => $categories,
             'priorities' => $priorities,
             'statuses' => $statuses,
-            'types' => $types
+            'types' => $types,
+            'users' => $users
         ]
     ) ?>
 

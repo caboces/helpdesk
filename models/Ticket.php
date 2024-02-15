@@ -123,6 +123,15 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
+     * Junction relation to get users attached to a ticket via tech_ticket_assignment table
+     *
+     * */
+    public function getUsers()
+    {
+        return $this->hasMany(User::class,['id'=>'user_id'])->viaTable('{{%tech_ticket_assignment}}',['ticket_id'=>'id']); 
+    }
+
+    /**
      * {@inheritdoc}
      * @return \app\models\query\TicketQuery the active query used by this AR class.
      */

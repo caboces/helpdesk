@@ -25,6 +25,7 @@ $this->title = 'Create Ticket';
             'priorities' => $priorities,
             'statuses' => $statuses,
             'types' => $types,
+            'users' => $users
         ]
     ) ?>
 
