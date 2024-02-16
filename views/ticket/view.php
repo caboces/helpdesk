@@ -38,6 +38,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'summary',
+            'requester',
+            'requester_email',
+            'requester_phone',
+            'location',
             'description' => [
                 'attribute' => 'description',
                 'contentOptions' => ['class' => 'apply-word-break']

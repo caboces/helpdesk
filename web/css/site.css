@@ -9,6 +9,7 @@
 || PILL NAV
 || GRIDVIEW WIDGET
 || PAGINATION
+|| SELECT2
 
 || LOGIN
 
@@ -22,13 +23,13 @@
 
 html,
 body {
-    height: calc(100vh - 56px);
+  height: calc(100vh - 56px);
 }
 
 main,
 footer {
-    position: relative;
-    top: 56px;
+  position: relative;
+  top: 56px;
 }
 
 main {
@@ -51,7 +52,7 @@ h2:not(.activity h2) {
 
   background: #fff;
 
-  color:#6fc6db;
+  color: #6fc6db;
 }
 
 /* ===========================================================================================
@@ -61,48 +62,48 @@ h2:not(.activity h2) {
 /* ---------- imports ---------- */
 
 @font-face {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 300;
-    font-display: swap;
-    src: url(https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuOKfAZ9hiA.woff2) format("woff2");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-      U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
-      U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-  
-  @font-face {
-    font-family: 'Lato';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url(https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjxAwXjeu.woff2) format('woff2');
-    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-  }
-  
-  /* ---------- darkmode? ---------- */
-  body {
-    font-family: 'Inter', sans-serif;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuOKfAZ9hiA.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
-    background: #1a1b27;
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjxAwXjeu.woff2) format('woff2');
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
 
-    color: #fff;
-  }
+/* ---------- darkmode? ---------- */
+body {
+  font-family: 'Inter', sans-serif;
+
+  background: #1a1b27;
+
+  color: #fff;
+}
 
 
-  /* ---------- default ---------- */
-  body {
-    font-family: 'Inter', sans-serif;
-    
-    background: #fafafa;
+/* ---------- default ---------- */
+body {
+  font-family: 'Inter', sans-serif;
 
-    color: #0c1955;
-  }
-  
-  h1,
-  h2 {
-    font-family: 'Lato', sans-serif;
-  }
+  background: #fafafa;
+
+  color: #0c1955;
+}
+
+h1,
+h2 {
+  font-family: 'Lato', sans-serif;
+}
 
 /* ===========================================================================================
 || COLOR PALETTE
@@ -113,11 +114,11 @@ h2:not(.activity h2) {
 }
 
 .bg-slate {
-    background: #070e33;
+  background: #070e33;
 }
 
 .bg-transparent-slate {
-    background: rgba(7, 14, 51, 0.89);
+  background: rgba(7, 14, 51, 0.89);
 }
 
 .pacific-cyan {
@@ -205,11 +206,12 @@ tr:nth-child(odd) td {
 th a {
   text-decoration: none;
 
-  color:#09a2c9;
+  color: #09a2c9;
 }
 
 /* add sorting icons to gridview sort links */
-a.asc:after, a.desc:after {
+a.asc:after,
+a.desc:after {
   content: '';
   left: 3px;
   display: inline-block;
@@ -274,7 +276,7 @@ ul.pagination li {
 ul.pagination li a {
   border-radius: 5px;
   box-shadow: 1px 1px 3px #070e3331;
-  
+
   padding: 10px;
 
   text-decoration: none;
@@ -282,7 +284,15 @@ ul.pagination li a {
 }
 
 ul.pagination li.active a {
-  color:#070e33;
+  color: #070e33;
+}
+
+/* ===========================================================================================
+|| SELECT2
+=========================================================================================== */
+
+.select2 {
+  width: 100% !important;
 }
 
 /* ===========================================================================================
