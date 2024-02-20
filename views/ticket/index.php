@@ -87,7 +87,6 @@ $this->title = 'Manage Tickets';
                                 'filter' => false,
                             ],
                             'summary',
-
                             /** 
                              * TODO: we need to have LDAP before we can fill in the user fields automatically.
                              * Location is up in the air but i'm working on it.. -efox

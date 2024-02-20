@@ -78,9 +78,6 @@ $this->title = 'General Management Tools';
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item p-2"><?= Html::a('Manage ticket categories', ['job-category/index'], ['class' => 'pacific-cyan']) ?></li>
-                    <li class="list-group-item p-2"><?= Html::a('Manage ticket priorities', ['job-priority/index'], ['class' => 'pacific-cyan']) ?></li>
-                    <li class="list-group-item p-2"><?= Html::a('Manage ticket statuses', ['job-status/index'], ['class' => 'pacific-cyan']) ?></li>
-                    <li class="list-group-item p-2"><?= Html::a('Manage ticket types', ['job-type/index'], ['class' => 'pacific-cyan']) ?></li>
                 </ul>
             </div>
         </div>

@@ -21,9 +21,16 @@ use yii\bootstrap5\ActiveForm;
     <h2>General details</h2>
     <p>Details pertaining to the category</p>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <div class="border border-2 rounded-1 border-subtle bg-light p-3 my-3">
+        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'description')->textarea(['maxlength' => true, 'rows' => 3]) ?>
+    </div>
 
-    <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
+    <!-- action buttons -->
+    <div class='container-fluid border border-subtle py-2 | bg-light'>
+        <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
+    </div>
 
     <?php ActiveForm::end(); ?>
 

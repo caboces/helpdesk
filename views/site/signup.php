@@ -30,14 +30,31 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>Details pertaining to the user</p>
 
     <!-- $form->field($model, 'username')->textInput(['autofocus' => true]) -->
+    <div class="border border-2 rounded-1 border-subtle bg-light p-3 my-3">
+        <div class="row">
+            <div class="col-md-6">
+                <?= $form->field($model, 'fname')->textInput()->label('First name') ?>
+            </div>
+            <div class="col-md-6">
+                <?= $form->field($model, 'lname')->textInput()->label('Last name') ?>
+            </div>
+        </div>
 
-    <?= $form->field($model, 'fname')->textInput()->label('First name') ?>
+        <?= $form->field($model, 'email') ?>
 
-    <?= $form->field($model, 'lname')->textInput()->label('Last name') ?>
+    </div>
+    <div class="border border-2 rounded-1 border-subtle bg-light p-3 my-3">
+        <!-- this is where i'm putting the auto generated username -->
+        <?= $form->field($model, 'username')->textInput(['disabled' => true])->label('Username') ?>
 
-    <?= $form->field($model, 'email') ?>
+        <?= $form->field($model, 'password')->passwordInput() ?>
+    </div>
 
-    <?= $form->field($model, 'password')->passwordInput() ?>
+    <!-- action buttons -->
+    <div class='container-fluid border border-subtle py-2 | bg-light'>
+        <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
+    </div>
 
     <?php ActiveForm::end(); ?>
 </div>

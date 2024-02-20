@@ -26,7 +26,7 @@ use yii\bootstrap5\ActiveForm;
     <?= $form->field($model, 'district_id')
                                         ->dropDownList($districts, ['prompt' => 'Select District']) ?>
 
-    <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'description')->textarea(['maxlength' => true, 'rows' => 3]) ?>
 
     <?php ActiveForm::end(); ?>
 

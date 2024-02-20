@@ -101,17 +101,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays testing page.
-     *
-     * @return mixed
-     */
-    public function actionTest()
-    {
-        $this->layout = 'blank-container';
-        return $this->render('test');
-    }
-
-    /**
      * Logs in a user.
      *
      * @return mixed
