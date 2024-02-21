@@ -15,33 +15,47 @@ use yii\base\Widget;
 
 class ActivityWidget extends Widget
 {
-
-    public $entry;
-    public $text;
-    public $icon;
-    public $user;
-
     // Note to self: handling the data/input should go here rather than in run
     public function init()
     {
         parent::init();
 
         // convert icon keyword into corresponding svg
-        $this->icon = $this->convertIcon();
     }
 
     public function run()
     {
         parent::run();
-        $entry =    '<div class="row">
-                        <div class="col-auto ps-3">
-                            <div class="icon">' . $this->icon . '</div>
-                        </div>
-                        <div class="col">
-                            <div class="entry">'  . $this->text . '</div>
-                        </div>
-                    </div>';
-        return $entry;
+        $db = \Yii::$app->db;
+        $entries = $db->createCommand('SELECT * FROM activity LIMIT 10')->queryAll();
+
+        foreach ($entries as $entry) {
+            $entry_id = $entry['id'];
+            $entry_user_id = $entry['user_id'];
+            $entry_type = $entry['type'];
+            $entry_description = $entry['description'];
+            $entry_created = $entry['created'];
+
+            $entry = '<div class="row mb-2">
+                <div class="col-auto ps-3">
+                    <div class="icon">' . 'ICON' . '</div>
+                </div>
+                <div class="col">
+                    <div class="entry">
+                        Activity ID: ' . $entry_id
+                        . '<br>Description: '  . $entry_description
+                        . '<br>User: ' . $entry_user_id
+                        . '<br>' . $entry_created 
+                    . '</div>
+                </div>
+            </div>';
+
+            echo $entry;
+        }
+
+        // echo '<pre>';
+        // var_dump($entries);
+        // echo '</pre>';
     }
 
     /**

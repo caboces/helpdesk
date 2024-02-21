@@ -82,7 +82,7 @@ class SiteController extends Controller
         $this->layout = 'main';
         return $this->render('index');
     }
-
+    
     /**
      * Displays manage section.
      *

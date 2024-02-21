@@ -13,8 +13,5 @@ $this->title = 'Activity';
         </svg>
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
-    <?php echo ActivityWidget::widget ([
-            'text' => 'This is a test!',
-            'icon' => 'submit'
-        ]); ?>
+    <?php echo ActivityWidget::widget([]); ?>
 </div>
