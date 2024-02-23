@@ -31,12 +31,13 @@ class Activity extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'type'], 'required'],
-            [['user_id'], 'integer'],
+            [['type'], 'required'],
+            [['user_id', 'ticket_id'], 'integer'],
             [['created'], 'safe'],
             [['type'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 500],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],
         ];
     }
 
@@ -48,6 +49,7 @@ class Activity extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
+            'ticket_id' => 'Ticket ID',
             'type' => 'Type',
             'description' => 'Description',
             'created' => 'Created',
@@ -62,6 +64,16 @@ class Activity extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * Gets query for [[Ticket]].
+     *
+     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
+     */
+    public function getTicket()
+    {
+        return $this->hasOne(Ticket::class, ['id' => 'ticket_id']);
     }
 
     /**

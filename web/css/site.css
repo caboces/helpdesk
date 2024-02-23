@@ -309,14 +309,17 @@ ul.pagination li.active a {
 }
 
 .activity .entry {
+  overflow-y: scroll;
+
   border-radius: 10px;
-  height: 150px;
+  max-height: 150px;
   padding: 10px;
 
   background: #fff;
 
   color: #0c1955;
 }
+
 
 /* ===========================================================================================
 || MEDIA QUERIES
