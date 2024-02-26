@@ -10,7 +10,8 @@ use yii\base\Widget;
  * @author Emma Fox
  * @package app\widgets
 
- * TODO: create a widget that will display auditing messages
+ * TODO: add to init properties that will handle a range of dates as well as
+ * user id's
  */
 
 class ActivityWidget extends Widget
@@ -19,11 +20,14 @@ class ActivityWidget extends Widget
     public function init()
     {
         parent::init();
+        ob_start();
     }
 
     public function run()
     {
         parent::run();
+        $output = ob_get_clean();
+
         $db = \Yii::$app->db;
         $entries = $db->createCommand('SELECT * FROM activity LIMIT 10')->queryAll();
 
@@ -44,8 +48,9 @@ class ActivityWidget extends Widget
                     <div class="entry">'
                 . $entry_user_id . ' ' . $entry_type . 'd ticket ' . $entry_ticket_id
                 . '<br>Note: '  . $entry_description
-                . '<br>' . $entry_created
-                . '</div>
+                . '<br><span class="activity-date">' . $entry_created
+                . '</span>
+                </div>
                 </div>
             </div>';
 

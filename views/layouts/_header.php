@@ -21,8 +21,8 @@ $menuItems = [
         'url' => ['/ticket/index']
     ],
     [
-        'label' => 'WAREHOUSE',
-        'url' => ['/warehouse/index']
+        'label' => 'INVENTORY',
+        'url' => ['/inventory/index']
     ],
     [
         'label' => 'MANAGE',

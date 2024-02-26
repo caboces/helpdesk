@@ -137,9 +137,6 @@ $this->title = 'Manage Tickets';
             <div class="subsection-info-block">
                 <h2>All tickets</h2>
                 <p>All tickets in the current workflow</p>
-                <div class="alert alert-warning" role="alert">
-                    Filters haven't been made yet! Currently showing all tickets.
-                </div>
                 <div class="container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-all']); ?>
                     <?= GridView::widget([

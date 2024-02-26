@@ -320,6 +320,24 @@ ul.pagination li.active a {
   color: #0c1955;
 }
 
+.entry p {
+  margin: 0;
+  padding: 0;
+}
+
+.entry p:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.entry p:last-child {
+  margin-top: 10px;
+}
+
+.activity-date {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #a5a5a5;
+}
 
 /* ===========================================================================================
 || MEDIA QUERIES
