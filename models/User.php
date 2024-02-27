@@ -166,6 +166,14 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->hasMany(Ticket::class,['id'=>'ticket_id'])->viaTable('{{%tech_ticket_assignment}}',['user_id'=>'id']); 
     }
 
+    /**
+     * Relation to get users for activity table
+     * efox 2/27/24
+     */
+    public function getActivities() {
+        return $this->hasMany(Activity::class, ['user_id'=>'id']);
+    }
+
     public function getPassword() {
         return '';
     }

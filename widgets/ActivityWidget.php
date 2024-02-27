@@ -2,7 +2,10 @@
 
 namespace app\widgets;
 
+use app\models\User;
 use yii\base\Widget;
+use app\models\Ticket;
+use yii\bootstrap5\Html;
 
 /**
  * Class ActivityWidget
@@ -32,34 +35,48 @@ class ActivityWidget extends Widget
         $entries = $db->createCommand('SELECT * FROM activity LIMIT 10')->queryAll();
 
         foreach ($entries as $entry) {
-            $entry_id = $entry['id'];
-            $entry_user_id = $entry['user_id'];
-            $entry_ticket_id = $entry['ticket_id'];
-            $entry_type =  $entry['type'];
-            $entry_type_icon = $this->convertIcon($entry_type);
-            $entry_description = $entry['description'];
-            $entry_created = $entry['created'];
+            // this is the user object
+            $user = User::findOne($entry['user_id']);
+            $username = ucwords($user->username);
 
-            $entry = '<div class="row mb-2">
+            // related to the tickets
+            $ticket_id = $entry['ticket_id'];
+            $ticket = Ticket::findOne($ticket_id);
+            $summary = ucfirst($ticket->summary);
+
+            // entry stuff
+            $type =  $entry['type'];
+            $icon = $this->convertIcon($type);
+            $description = $entry['description'];
+            $created = $entry['created'];
+
+
+            // trying to reduce ugliness by chunking up the data
+            $header = $username . ' ' . $type . 'd ticket ' . $ticket_id . ' (' . $summary . ')';
+            $body = 'Tech note: ' . $description;
+            $footer = $created;
+
+            $entry_test = '
+            <div class="row mb-2">
                 <div class="col-auto">
-                    <div class="icon">' . $entry_type_icon . '</div>
+                    ' . Html::tag('div', $icon, ['class' => 'icon']) . '
                 </div>
                 <div class="col">
-                    <div class="entry">'
-                . $entry_user_id . ' ' . $entry_type . 'd ticket ' . $entry_ticket_id
-                . '<br>Note: '  . $entry_description
-                . '<br><span class="activity-date">' . $entry_created
-                . '</span>
+                    <div class="entry">
+                    ' . Html::tag('p', $header) 
+                      . Html::tag('p', $body)
+                      . Html::tag('p', $footer, ['class' => 'activity-date']) . '
+                    </div>
                 </div>
-                </div>
-            </div>';
+            </div>
+            ';
 
-            echo $entry;
+            echo $entry_test;
         }
     }
 
     /**
-     * Converts icon text input into an actual svg
+     * Converts entry type input into an actual svg
      */
     public function convertIcon($type)
     {

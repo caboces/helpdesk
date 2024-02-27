@@ -13,23 +13,5 @@ $this->title = 'Activity';
         </svg>
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
-
-
-    example message start
-    <div class="row mb-2">
-        <div class="col-auto">
-            <div class="icon">X</div>
-        </div>
-        <div class="col">
-            <div class="entry">
-                <p>admin created ticket 15</p>
-                <p>Note: I created a ticket</p>
-                <p class="activity-date">2024-02-26 12:19:56</p>
-            </div>
-        </div>
-    </div>
-    example message end
-
-
     <?php echo ActivityWidget::widget([]); ?>
 </div>

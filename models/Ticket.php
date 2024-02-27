@@ -132,6 +132,14 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
+     * Relation to get tickets for activity table
+     * efox 2/27/24
+     */
+    public function getActivities() {
+        return $this->hasMany(Activity::class, ['ticket_id'=>'id']);
+    }
+
+    /**
      * {@inheritdoc}
      * @return \app\models\query\TicketQuery the active query used by this AR class.
      */
