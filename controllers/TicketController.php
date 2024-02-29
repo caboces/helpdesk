@@ -147,7 +147,7 @@ class TicketController extends Controller
     {
         $model = $this->findModel($id);
 
-        // used for populating select elements with user friendly words instead of senseless numbers
+        // used for populating select elements with user friendly words instead of id numbers
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
         $statuses = ArrayHelper::map(JobStatus::getStatuses(), 'id', 'name');
@@ -171,6 +171,8 @@ class TicketController extends Controller
                     $model->link('users', $user);
                 }
             }
+
+            
 
             return $this->redirect(['view', 'id' => $model->id]);
         }

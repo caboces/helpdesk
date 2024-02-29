@@ -171,7 +171,7 @@ class User extends ActiveRecord implements IdentityInterface
      * efox 2/27/24
      */
     public function getActivities() {
-        return $this->hasMany(Activity::class, ['user_id'=>'id']);
+        return $this->hasMany(Activity::class, ['id'=>'user_id'])->viaTable('{{%activity}}', ['user_id'=>'id']);
     }
 
     public function getPassword() {

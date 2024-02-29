@@ -22,7 +22,7 @@ class Activity extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'activity';
+        return '{{%activity}}';
     }
 
     /**
@@ -54,6 +54,10 @@ class Activity extends \yii\db\ActiveRecord
             'description' => 'Description',
             'created' => 'Created',
         ];
+    }
+
+    public static function getActivities() {
+        return Activity::find()->asArray()->all();
     }
 
     /**

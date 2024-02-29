@@ -83,20 +83,20 @@ h2:not(.activity h2) {
 
 /* ---------- darkmode? ---------- */
 body {
-  font-family: 'Inter', sans-serif;
-
   background: #1a1b27;
 
+  font-family: 'Inter', sans-serif;
   color: #fff;
 }
 
 
 /* ---------- default ---------- */
 body {
-  font-family: 'Inter', sans-serif;
+  overflow-y: scroll;
 
   background: #fafafa;
 
+  font-family: 'Inter', sans-serif;
   color: #0c1955;
 }
 
@@ -320,12 +320,16 @@ ul.pagination li.active a {
   color: #0c1955;
 }
 
-.entry p {
+.activity .entry::-webkit-scrollbar-thumb { border-radius: 10px; }
+
+.entry p,
+.entry a {
   margin: 0;
   padding: 0;
 }
 
-.entry p:not(:last-child) {
+.entry p:not(:last-child),
+.entry a {
   margin-bottom: 10px;
 }
 
