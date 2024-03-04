@@ -167,8 +167,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Relation to get users for activity table
-     * efox 2/27/24
+     * Relation to get activities attached to a user via activity table
      */
     public function getActivities() {
         return $this->hasMany(Activity::class, ['id'=>'user_id'])->viaTable('{{%activity}}', ['user_id'=>'id']);

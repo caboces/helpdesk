@@ -172,7 +172,8 @@ class TicketController extends Controller
                 }
             }
 
-            
+            // TODO: add tech note space
+            // $model->link('activities', Yii::$app->user->identity);
 
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -183,7 +184,8 @@ class TicketController extends Controller
             'priorities' => $priorities,
             'statuses' => $statuses,
             'types' => $types,
-            'users' => $users
+
+            'users' => $users,
         ]);
     }
 

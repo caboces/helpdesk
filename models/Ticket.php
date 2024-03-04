@@ -132,8 +132,7 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
-     * Relation to get tickets for activity table
-     * efox 2/27/24
+     * Relation to get activities attached to ticket via activity table
      */
     public function getActivities() {
         return $this->hasMany(Activity::class, ['id'=>'ticket_id'])->viaTable('{{%activity}}', ['ticket_id'=>'id']);

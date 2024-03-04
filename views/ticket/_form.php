@@ -16,6 +16,13 @@ use kartik\select2\Select2;
         <!-- action buttons -->
         <div class='container-fluid p-2 | bg-dark shadow-sm'>
                 <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
+                <?= Html::button('Add tech note', [
+                        'class' => 'btn btn-secondary',
+                        'data-bs-toggle' => 'collapse',
+                        'data-bs-target' => '#tech-note',
+                        'aria-expanded' => 'false',
+                        'aria-controls' => '#tech-note'
+                ]); ?>
                 <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
         </div>
 
@@ -31,6 +38,18 @@ use kartik\select2\Select2;
                         <button class="nav-link" id="pills-time-entries-tab" data-bs-toggle="pill" data-bs-target="#pills-time-entries" type="button" role="tab" aria-controls="pills-time-entries" aria-selected="false">Time entries</button>
                 </li>
         </ul>
+
+        <!-- tech note -->
+        <div class="row">
+                <div class="col">
+                        <div class="collapse multi-collapse" id="tech-note">
+                                <div class="card card-body">
+                                        There will be a text box here soon!
+                                        <!-- $form->field($model, 'tech_note')->textarea(['maxlength' => true, 'rows' => 3]) -->
+                                </div>
+                        </div>
+                </div>
+        </div>
 
         <!-- pill content -->
         <div class="tab-content" id="pills-tabContent">
@@ -88,14 +107,14 @@ use kartik\select2\Select2;
                         <div class="subsection-info-block">
                                 <h2>Technicians</h2>
                                 <p>Technicians assigned to this ticket</p>
-                                <?php 
+                                <?php
                                 echo $form->field($model, 'users')->widget(Select2::classname(), [
-                                    'data' => $users,
-                                    'options' => ['placeholder' => 'Add users ...'],
-                                    'pluginOptions' => [
-                                        'allowClear' => true,
-                                        'multiple' => true
-                                    ],
+                                        'data' => $users,
+                                        'options' => ['placeholder' => 'Add users ...'],
+                                        'pluginOptions' => [
+                                                'allowClear' => true,
+                                                'multiple' => true
+                                        ],
                                 ]);
                                 ?>
                         </div>
