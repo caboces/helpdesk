@@ -21,7 +21,7 @@ use yii\bootstrap5\ActiveForm;
     <h2>General details</h2>
     <p>Details pertaining to the category</p>
 
-    <div class="border border-2 rounded-1 border-subtle bg-light p-3 my-3">
+    <div class="question-box">
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'description')->textarea(['maxlength' => true, 'rows' => 3]) ?>
     </div>

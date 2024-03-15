@@ -49,7 +49,7 @@ class ActivityWidget extends Widget
             // trying to reduce ugliness by chunking up the data
             // $header = 'Ticket ' . $ticket_id . ' (' . $summary . ')';
             $header = $this->createEntryHeader($entry);
-            $subheader = 'Action: ' . $type . 'd by ' . $username;
+            $subheader = 'Action: ' . $type . ' by ' . $username;
             $body = 'Tech note: ' . $description;
             $footer = $created;
 
@@ -107,7 +107,7 @@ class ActivityWidget extends Widget
                 return '<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="#94b54a" class="bi bi-plus-square-fill" viewBox="0 0 16 16"><path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/></svg>';
                 break;
             default:
-                return '<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/></svg>';
+                return '<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="#fff" class="bi bi-three-dots" viewBox="0 0 16 16"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/></svg>';
         }
     }
 }

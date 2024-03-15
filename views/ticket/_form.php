@@ -57,7 +57,7 @@ use kartik\select2\Select2;
                         <div class="subsection-info-block">
                                 <h2>General details</h2>
                                 <p>Details pertaining to the request</p>
-                                <div class="border border-2 rounded-1 border-subtle bg-light p-3 my-3">
+                                <div class="question-box">
                                         <div class="row">
                                                 <div class="col-md-6">
                                                         <?= $form->field($model, 'requester')->textInput(['maxlength' => true]) ?>
@@ -75,11 +75,11 @@ use kartik\select2\Select2;
                                                 </div>
                                         </div>
                                 </div>
-                                <div class="border border-2 rounded-1 border-subtle bg-light p-3 my-3">
+                                <div class="question-box">
                                         <?= $form->field($model, 'summary')->textInput(['maxlength' => true]) ?>
                                         <?= $form->field($model, 'description')->textarea(['maxlength' => true, 'rows' => 3]) ?>
                                 </div>
-                                <div class="border border-2 rounded-1 border-subtle bg-light p-3 my-3">
+                                <div class="question-box">
                                         <div class="row">
                                                 <div class="col-md-6">
                                                         <?= $form->field($model, 'job_category_id')

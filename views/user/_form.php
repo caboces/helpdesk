@@ -20,7 +20,7 @@ use yii\bootstrap5\ActiveForm;
 
     <h2>General details</h2>
     <p>Details pertaining to the user</p>
-    <div class="border border-2 rounded-1 border-subtle bg-light p-3 my-3">
+    <div class="question-box">
         <!-- uname + email not working, idk why -->
         <?= $form->field($user, 'username')->textInput([
             'disabled' => 'disabled',

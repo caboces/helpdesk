@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>Details pertaining to the user</p>
 
     <!-- $form->field($model, 'username')->textInput(['autofocus' => true]) -->
-    <div class="border border-2 rounded-1 border-subtle bg-light p-3 my-3">
+    <div class="question-box">
         <div class="row">
             <div class="col-md-6">
                 <?= $form->field($model, 'fname')->textInput()->label('First name') ?>
@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'email') ?>
 
     </div>
-    <div class="border border-2 rounded-1 border-subtle bg-light p-3 my-3">
+    <div class="question-box">
         <!-- this is where i'm putting the auto generated username -->
         <?= $form->field($model, 'username')->textInput(['disabled' => true])->label('Username') ?>
 
