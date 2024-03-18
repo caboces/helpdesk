@@ -311,6 +311,16 @@ ul.pagination li.active a {
   background-color: #fff;
 }
 
+.secondary-action-button-bar {
+  box-shadow: 3px 3px 5px rgba(32, 4, 63, 0.1);
+  border: 1px solid rgba(32, 4, 63, 0.1);
+  border-left: 5px solid #535353;
+  border-radius: 5px;
+  padding: 1rem;
+
+  background-color: #fff;
+}
+
 /* ===========================================================================================
 || LOGIN
 =========================================================================================== */

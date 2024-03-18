@@ -127,7 +127,8 @@ use kartik\select2\Select2;
                 </div>
         </div>
         <!-- action buttons -->
-        <div class='container-fluid border border-subtle py-2 | bg-light'>
+        <!-- <div class='container-fluid border border-subtle py-2 | bg-light'> -->
+        <div class='secondary-action-button-bar'>
                 <?= Html::button('Assign tech', ['class' => 'btn btn-outline-info']); ?>
                 <?= Html::button('Add time entry', ['class' => 'btn btn-outline-info']); ?>
                 <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
