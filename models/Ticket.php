@@ -145,6 +145,56 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[CustomerType]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\CustomerTypeQuery
+     */
+    public function getCustomerType()
+    {
+        return $this->hasOne(CustomerType::class, ['id' => 'customer_type_id']);
+    }
+
+    /**
+     * Gets query for [[Building]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\BuildingQuery
+     */
+    public function getBuilding()
+    {
+        return $this->hasOne(Building::class, ['id' => 'building_id']);
+    }
+
+    /**
+     * Gets query for [[Department]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\DepartmentQuery
+     */
+    public function getDepartment()
+    {
+        return $this->hasOne(Department::class, ['id' => 'department_id']);
+    }
+
+    /**
+     * Gets query for [[District]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\DistrictQuery
+     */
+    public function getDistrict()
+    {
+        return $this->hasOne(District::class, ['id' => 'district_id']);
+    }
+
+    /**
+     * Gets query for [[Division]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\DivisionQuery
+     */
+    public function getDivision()
+    {
+        return $this->hasOne(Division::class, ['id' => 'division_id']);
+    }
+
+    /**
      * Junction relation to get users attached to a ticket via tech_ticket_assignment table
      *
      * */

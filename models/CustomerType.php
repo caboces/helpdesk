@@ -22,7 +22,7 @@ class CustomerType extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'customer_type';
+        return '{{%customer_type}}';
     }
 
     /**
@@ -69,5 +69,23 @@ class CustomerType extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \app\models\query\CustomerTypeQuery(get_called_class());
+    }
+
+    /**
+     * Gets all customer types
+     * 
+     * @return all customer types in an alphabetical array
+     */
+    public static function getCustomerTypes() {
+        return CustomerType::find()->orderBy('name ASC')->asArray()->all();
+    }
+
+    /**
+     * Gets name of customer types from id
+     * 
+     * @return the readable name of the customer type
+     */
+    public function getName() {
+        return $this->name;
     }
 }
