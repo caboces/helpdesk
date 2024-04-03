@@ -57,24 +57,21 @@ use kartik\select2\Select2;
                         <div class="subsection-info-block">
                                 <h2>General details</h2>
                                 <p>Details pertaining to the request</p>
-
-
                                 <!-- this is where the dependent dropdowns are going to be, i think all three can fit in one row-->
                                 <div class="question-box">
                                         <div class="row">
-                                                <div class="col-md-6">
-
+                                                <div class="col-md-4">
+                                                        <?= $form->field($model, 'customer_type_id')
+                                                                        ->dropDownList($customerTypes, ['prompt' => 'Select Type']) ?>
                                                 </div>
-                                                <div class="col-md-6">
-                                                        
+                                                <div class="col-md-4">
+                                                        <!-- district or division -->
                                                 </div>
-                                                <div class="col-md-6">
-                                                        
+                                                <div class="col-md-4">
+                                                        <!-- department or building -->
                                                 </div>
                                         </div>
                                 </div>
-
-
                                 <div class="question-box">
                                         <div class="row">
                                                 <div class="col-md-6">
@@ -147,6 +144,7 @@ use kartik\select2\Select2;
         <!-- action buttons -->
         <!-- <div class='container-fluid border border-subtle py-2 | bg-light'> -->
         <div class='secondary-action-button-bar'>
+                <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
                 <?= Html::button('Assign tech', ['class' => 'btn btn-outline-secondary']); ?>
                 <?= Html::button('Add time entry', ['class' => 'btn btn-outline-secondary']); ?>
                 <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>

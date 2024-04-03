@@ -21,11 +21,14 @@ $this->title = 'Update Ticket: ' . $model->id;
         [
             'model' => $model,
 
+            // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
             'statuses' => $statuses,
             'types' => $types,
-
+            // customers
+            'customerTypes' => $customerTypes,
+            // users
             'users' => $users,
             // 'activities' => $activities
         ]

@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\User;
 use app\models\Ticket;
 use app\models\JobType;
 use yii\web\Controller;
@@ -10,6 +11,7 @@ use app\models\JobStatus;
 use app\models\JobCategory;
 use app\models\JobPriority;
 use yii\filters\VerbFilter;
+use app\models\CustomerType;
 use app\models\TicketSearch;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
@@ -17,7 +19,6 @@ use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use app\models\TicketAssignmentSearch;
 use app\models\TicketResolvedClosedSearch;
-use app\models\User;
 
 /**
  * TicketController implements the CRUD actions for Ticket model.
@@ -63,17 +64,21 @@ class TicketController extends Controller
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'name', 'name');
         $statuses = ArrayHelper::map(JobStatus::getStatuses(), 'name', 'name');
         $types = ArrayHelper::map(JobType::getTypes(), 'name', 'name');
+        // search customers
+        $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'name', 'name');
 
         $this->layout = 'blank';
         return $this->render('index', [
             // search all tickets
             'searchModel' => $ticketSearch,
             'dataProvider' => $dataProvider,
-            // search ticket tags
+            // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
             'statuses' => $statuses,
-            'types' => $types
+            'types' => $types,
+            // customers
+            'customerTypes' => $customerTypes
         ]);
     }
 
@@ -98,12 +103,14 @@ class TicketController extends Controller
     public function actionCreate()
     {
         $model = new Ticket();
-
+        // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
         $statuses = ArrayHelper::map(JobStatus::getStatuses(), 'id', 'name');
         $types = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
-
+        // customers
+        $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'name');
+        // users
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
 
         if ($this->request->isPost) {
@@ -132,6 +139,7 @@ class TicketController extends Controller
             'priorities' => $priorities,
             'statuses' => $statuses,
             'types' => $types,
+            'customerTypes' => $customerTypes,
             'users' => $users
         ]);
     }
@@ -147,12 +155,14 @@ class TicketController extends Controller
     {
         $model = $this->findModel($id);
 
-        // used for populating select elements with user friendly words instead of id numbers
+        // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
         $statuses = ArrayHelper::map(JobStatus::getStatuses(), 'id', 'name');
         $types = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
-
+        // customers
+        $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'name');
+        // users
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -180,11 +190,14 @@ class TicketController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
             'statuses' => $statuses,
             'types' => $types,
-
+            // customers
+            'customerTypes' => $customerTypes,
+            // users
             'users' => $users,
         ]);
     }
