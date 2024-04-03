@@ -5,26 +5,26 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "district".
+ * This is the model class for table "division".
  *
  * @property int $id
  * @property string $name
  * @property string|null $description
- * @property int $component_district
  * @property int $status
  * @property string|null $created
  * @property string|null $modified
  *
+ * @property Department[] $departments
  * @property Ticket[] $tickets
  */
-class District extends \yii\db\ActiveRecord
+class Division extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'district';
+        return 'division';
     }
 
     /**
@@ -34,7 +34,7 @@ class District extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['component_district', 'status'], 'integer'],
+            [['status'], 'integer'],
             [['created', 'modified'], 'safe'],
             [['name'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 500],
@@ -51,11 +51,20 @@ class District extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'description' => 'Description',
-            'component_district' => 'Component District',
             'status' => 'Status',
             'created' => 'Created',
             'modified' => 'Modified',
         ];
+    }
+
+    /**
+     * Gets query for [[Departments]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\DepartmentQuery
+     */
+    public function getDepartments()
+    {
+        return $this->hasMany(Department::class, ['division_id' => 'id']);
     }
 
     /**
@@ -65,15 +74,15 @@ class District extends \yii\db\ActiveRecord
      */
     public function getTickets()
     {
-        return $this->hasMany(Ticket::class, ['district_id' => 'id']);
+        return $this->hasMany(Ticket::class, ['division_id' => 'id']);
     }
 
     /**
      * {@inheritdoc}
-     * @return \app\models\query\DistrictQuery the active query used by this AR class.
+     * @return \app\models\query\DivisionQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \app\models\query\DistrictQuery(get_called_class());
+        return new \app\models\query\DivisionQuery(get_called_class());
     }
 }

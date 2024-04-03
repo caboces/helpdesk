@@ -292,6 +292,7 @@ ul.pagination li.active a {
 || SELECT2
 =========================================================================================== */
 
+/* select2 freaks out if you remove content from one of its elements */
 .select2 {
   width: 100% !important;
 }
@@ -304,21 +305,31 @@ ul.pagination li.active a {
   box-shadow: 3px 3px 5px rgba(32, 4, 63, 0.1);
   margin-bottom: 1rem;
   border: 1px solid rgba(32, 4, 63, 0.1);
-  border-left: 5px solid #09a2c9;
+  border-left: 7px solid #09a2c9;
   border-radius: 5px;
   padding: 1rem;
 
   background-color: #fff;
 }
 
+/* i don't know how to make bootstrap do what i want so this is a long rule oops */
 .secondary-action-button-bar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 10px;
+
   box-shadow: 3px 3px 5px rgba(32, 4, 63, 0.1);
   border: 1px solid rgba(32, 4, 63, 0.1);
-  border-left: 5px solid #535353;
+  border-left: 7px solid #535353;
   border-radius: 5px;
   padding: 1rem;
 
   background-color: #fff;
+}
+
+button.bg-pacific-cyan:hover {
+  background-color: #066882;
 }
 
 /* ===========================================================================================

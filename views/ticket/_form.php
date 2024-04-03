@@ -57,6 +57,24 @@ use kartik\select2\Select2;
                         <div class="subsection-info-block">
                                 <h2>General details</h2>
                                 <p>Details pertaining to the request</p>
+
+
+                                <!-- this is where the dependent dropdowns are going to be, i think all three can fit in one row-->
+                                <div class="question-box">
+                                        <div class="row">
+                                                <div class="col-md-6">
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                        
+                                                </div>
+                                                <div class="col-md-6">
+                                                        
+                                                </div>
+                                        </div>
+                                </div>
+
+
                                 <div class="question-box">
                                         <div class="row">
                                                 <div class="col-md-6">
@@ -129,8 +147,8 @@ use kartik\select2\Select2;
         <!-- action buttons -->
         <!-- <div class='container-fluid border border-subtle py-2 | bg-light'> -->
         <div class='secondary-action-button-bar'>
-                <?= Html::button('Assign tech', ['class' => 'btn btn-outline-info']); ?>
-                <?= Html::button('Add time entry', ['class' => 'btn btn-outline-info']); ?>
+                <?= Html::button('Assign tech', ['class' => 'btn btn-outline-secondary']); ?>
+                <?= Html::button('Add time entry', ['class' => 'btn btn-outline-secondary']); ?>
                 <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
         </div>
         <?php ActiveForm::end(); ?>

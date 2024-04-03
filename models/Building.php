@@ -5,26 +5,31 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "district".
+ * This is the model class for table "building".
  *
  * @property int $id
  * @property string $name
  * @property string|null $description
- * @property int $component_district
+ * @property string|null $street_address
+ * @property string|null $po_box
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zip
+ * @property string|null $phone
  * @property int $status
  * @property string|null $created
  * @property string|null $modified
  *
  * @property Ticket[] $tickets
  */
-class District extends \yii\db\ActiveRecord
+class Building extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'district';
+        return 'building';
     }
 
     /**
@@ -34,11 +39,12 @@ class District extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['component_district', 'status'], 'integer'],
+            [['status'], 'integer'],
             [['created', 'modified'], 'safe'],
-            [['name'], 'string', 'max' => 100],
+            [['name', 'street_address', 'city'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 500],
-            [['name'], 'unique'],
+            [['po_box', 'zip', 'phone'], 'string', 'max' => 50],
+            [['state'], 'string', 'max' => 2],
         ];
     }
 
@@ -51,7 +57,12 @@ class District extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'description' => 'Description',
-            'component_district' => 'Component District',
+            'street_address' => 'Street Address',
+            'po_box' => 'Po Box',
+            'city' => 'City',
+            'state' => 'State',
+            'zip' => 'Zip',
+            'phone' => 'Phone',
             'status' => 'Status',
             'created' => 'Created',
             'modified' => 'Modified',
@@ -65,15 +76,15 @@ class District extends \yii\db\ActiveRecord
      */
     public function getTickets()
     {
-        return $this->hasMany(Ticket::class, ['district_id' => 'id']);
+        return $this->hasMany(Ticket::class, ['building_id' => 'id']);
     }
 
     /**
      * {@inheritdoc}
-     * @return \app\models\query\DistrictQuery the active query used by this AR class.
+     * @return \app\models\query\BuildingQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \app\models\query\DistrictQuery(get_called_class());
+        return new \app\models\query\BuildingQuery(get_called_class());
     }
 }

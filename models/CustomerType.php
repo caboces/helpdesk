@@ -5,26 +5,24 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "district".
+ * This is the model class for table "customer_type".
  *
  * @property int $id
+ * @property string $code
  * @property string $name
  * @property string|null $description
- * @property int $component_district
- * @property int $status
- * @property string|null $created
- * @property string|null $modified
+ * @property int|null $bill_using_coser
  *
  * @property Ticket[] $tickets
  */
-class District extends \yii\db\ActiveRecord
+class CustomerType extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'district';
+        return 'customer_type';
     }
 
     /**
@@ -33,12 +31,10 @@ class District extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
-            [['component_district', 'status'], 'integer'],
-            [['created', 'modified'], 'safe'],
-            [['name'], 'string', 'max' => 100],
+            [['code', 'name'], 'required'],
+            [['bill_using_coser'], 'integer'],
+            [['code', 'name'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 500],
-            [['name'], 'unique'],
         ];
     }
 
@@ -49,12 +45,10 @@ class District extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'code' => 'Code',
             'name' => 'Name',
             'description' => 'Description',
-            'component_district' => 'Component District',
-            'status' => 'Status',
-            'created' => 'Created',
-            'modified' => 'Modified',
+            'bill_using_coser' => 'Bill Using Coser',
         ];
     }
 
@@ -65,15 +59,15 @@ class District extends \yii\db\ActiveRecord
      */
     public function getTickets()
     {
-        return $this->hasMany(Ticket::class, ['district_id' => 'id']);
+        return $this->hasMany(Ticket::class, ['customer_type_id' => 'id']);
     }
 
     /**
      * {@inheritdoc}
-     * @return \app\models\query\DistrictQuery the active query used by this AR class.
+     * @return \app\models\query\CustomerTypeQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \app\models\query\DistrictQuery(get_called_class());
+        return new \app\models\query\CustomerTypeQuery(get_called_class());
     }
 }

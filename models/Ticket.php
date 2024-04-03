@@ -27,6 +27,13 @@ use Yii;
  * @property JobPriority $jobPriority
  * @property JobStatus $jobStatus
  * @property JobType $jobType
+ * 
+ * @property CustomerType $customerType
+ * @property District $district
+ * @property Building $building
+ * @property Division $division
+ * @property Department $department
+ * 
  */
 class Ticket extends \yii\db\ActiveRecord
 {
@@ -45,7 +52,7 @@ class Ticket extends \yii\db\ActiveRecord
     {
         return [
             [['summary', 'requester', 'location', 'requester_email', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id'], 'required'],
-            [['job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id'], 'integer'],
+            [['job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'district_id', 'building_id', 'division_id', 'department_id'], 'integer'],
             [['created', 'modified'], 'safe'],
             [['summary'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 500],
@@ -53,10 +60,17 @@ class Ticket extends \yii\db\ActiveRecord
             [['location'], 'string', 'max' => 100 ],
             [['requester_email'], 'string', 'max' => 100],
             [['requester_phone'], 'string', 'max' => 100],
+            
             [['job_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => JobCategory::class, 'targetAttribute' => ['job_category_id' => 'id']],
             [['job_priority_id'], 'exist', 'skipOnError' => true, 'targetClass' => JobPriority::class, 'targetAttribute' => ['job_priority_id' => 'id']],
             [['job_status_id'], 'exist', 'skipOnError' => true, 'targetClass' => JobStatus::class, 'targetAttribute' => ['job_status_id' => 'id']],
             [['job_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => JobType::class, 'targetAttribute' => ['job_type_id' => 'id']],
+            
+            [['customer_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => CustomerType::class, 'targetAttribute' => ['customer_type_id' => 'id']],
+            [['district'], 'exist', 'skipOnError' => true, 'targetClass' => District::class, 'targetAttribute' => ['district_id' => 'id']],
+            [['division'], 'exist', 'skipOnError' => true, 'targetClass' => Division::class, 'targetAttribute' => ['division_id' => 'id']],
+            [['department'], 'exist', 'skipOnError' => true, 'targetClass' => Department::class, 'targetAttribute' => ['department_id' => 'id']],
+            [['building'], 'exist', 'skipOnError' => true, 'targetClass' => Building::class, 'targetAttribute' => ['building_id' => 'id']],
         ];
     }
 
@@ -73,10 +87,18 @@ class Ticket extends \yii\db\ActiveRecord
             'location' => 'Location',
             'requester_email' => 'Requester Email',
             'requester_phone' => 'Requester Phone',
+
             'job_category_id' => 'Job Category ID',
             'job_priority_id' => 'Job Priority ID',
             'job_status_id' => 'Job Status ID',
             'job_type_id' => 'Job Type ID',
+
+            'customer_type_id' => 'Customer Type ID',
+            'district_id' => 'District ID',
+            'division_id' => 'Division ID',
+            'department_id' => 'Department ID',
+            'building_id' => 'Building ID',
+
             'created' => 'Created',
             'modified' => 'Modified',
         ];

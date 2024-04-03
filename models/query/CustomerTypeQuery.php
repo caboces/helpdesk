@@ -3,11 +3,11 @@
 namespace app\models\query;
 
 /**
- * This is the ActiveQuery class for [[\app\models\Department]].
+ * This is the ActiveQuery class for [[\app\models\CustomerType]].
  *
- * @see \app\models\Department
+ * @see \app\models\CustomerType
  */
-class DepartmentQuery extends \yii\db\ActiveQuery
+class CustomerTypeQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {
@@ -16,7 +16,7 @@ class DepartmentQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\models\Department[]|array
+     * @return \app\models\CustomerType[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class DepartmentQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\models\Department|array|null
+     * @return \app\models\CustomerType|array|null
      */
     public function one($db = null)
     {
