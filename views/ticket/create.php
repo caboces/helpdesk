@@ -20,11 +20,18 @@ $this->title = 'Create Ticket';
         '_form',
         [
             'model' => $model,
-
+            // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
             'statuses' => $statuses,
             'types' => $types,
+            // customers
+            'customerTypes' => $customerTypes,
+            'districts' => $districts,
+            'departments' => $departments,
+            'divisions' => $divisions,
+            'buildings' => $buildings,
+            // users
             'users' => $users
         ]
     ) ?>

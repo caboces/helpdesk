@@ -20,6 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
 
+    <p>You are currently viewing all of the details and recent activity of this ticket. To make modifications, click the "Update" button.</p>
+
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Back', ['index'], ['class' => 'btn btn-secondary']); ?>
@@ -33,38 +35,101 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </div>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'summary',
-            'requester',
-            'requester_email',
-            'requester_phone',
-            'location',
-            'description' => [
-                'attribute' => 'description',
-                'contentOptions' => ['class' => 'apply-word-break']
-            ],
-            [
-                'attribute' => 'jobCategory.name',
-                'label' => 'Category'
-            ],
-            [
-                'attribute' => 'jobPriority.name',
-                'label' => 'Priority'
-            ],
-            [
-                'attribute' => 'jobStatus.name',
-                'label' => 'Status'
-            ],
-            [
-                'attribute' => 'jobType.name',
-                'label' => 'Type'
-            ],
-            'created',
-            'modified',
-        ],
-    ]) ?>
+    <!-- detail widget for general details -->
+    <div class="detail-view-container">
+        <div class="table-container">
+            <?= DetailView::widget([
+                'model' => $model,
+                'attributes' => [
+                    'id',
+                    'summary',
+                    'description' => [
+                        'attribute' => 'description',
+                        'contentOptions' => ['class' => 'apply-word-break']
+                    ],
+                ],
+            ])?>
+        </div>
+    </div>
+
+    <!-- detail widget for customer/requester details -->
+    <div class="detail-view-container">
+        <h3>Customer and Requester</h3>
+        <div class="table-container">
+            <?= DetailView::widget([
+                'model' => $model,
+                'attributes' => [
+                    // customer
+                    [
+                        'attribute' => 'customerType.name',
+                        'label' => 'Customer Type'
+                    ],
+                    [
+                        'attribute' => 'district.name',
+                        'label' => 'District'
+                    ],
+                    [
+                        'attribute' => 'department.name',
+                        'label' => 'Department'
+                    ],
+                    [
+                        'attribute' => 'division.name',
+                        'label' => 'Division'
+                    ],
+                    [
+                        'attribute' => 'building.name',
+                        'label' => 'Building'
+                    ],
+                    // requester
+                    'requester',
+                    'requester_email',
+                    'requester_phone',
+                    'location',
+                ],
+            ])?>
+        </div>
+    </div>
+
+    <!-- detail widget for ticket tag details -->
+    <div class="detail-view-container">
+        <h3>Ticket Tags</h3>
+        <div class="table-container">
+            <?= DetailView::widget([
+                'model' => $model,
+                'attributes' => [
+                    // ticket tags
+                    [
+                        'attribute' => 'jobCategory.name',
+                        'label' => 'Category'
+                    ],
+                    [
+                        'attribute' => 'jobPriority.name',
+                        'label' => 'Priority'
+                    ],
+                    [
+                        'attribute' => 'jobStatus.name',
+                        'label' => 'Status'
+                    ],
+                    [
+                        'attribute' => 'jobType.name',
+                        'label' => 'Type'
+                    ],
+                ],
+            ])?>
+        </div>
+    </div>
+
+    <div class="detail-view-container">
+        <h3>Creation / Modification Dates</h3>
+        <div class="table-container">
+            <?= DetailView::widget([
+                'model' => $model,
+                'attributes' => [
+                    'created',
+                    'modified',
+                ],
+            ]) ?>
+        </div>
+    </div>
 
 </div>

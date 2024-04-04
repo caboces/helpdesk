@@ -51,7 +51,7 @@ class Ticket extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['summary', 'requester', 'location', 'requester_email', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id'], 'required'],
+            [['summary', 'requester', 'location', 'requester_email', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id'], 'required'],
             [['job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'district_id', 'building_id', 'division_id', 'department_id'], 'integer'],
             [['created', 'modified'], 'safe'],
             [['summary'], 'string', 'max' => 100],

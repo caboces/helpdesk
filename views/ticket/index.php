@@ -15,7 +15,7 @@ use yii\helpers\ArrayHelper;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Manage Tickets';
+$this->title = 'Ticket Management';
 
 ?>
 
@@ -27,6 +27,8 @@ $this->title = 'Manage Tickets';
         </svg>
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
+
+    <p>You are viewing the Ticket Management page. From here you may filter, view, and edit existing tickets, or create new tickets.</p>
 
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>

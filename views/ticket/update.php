@@ -16,6 +16,8 @@ $this->title = 'Update Ticket: ' . $model->id;
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
 
+    <p>You are currently editing the details of this ticket. To save your changes, click the "Save" button. Your changes will be logged in this ticket's activity, along with your tech note (if provided).</p>
+
     <?= $this->render(
         '_form',
         [
@@ -28,6 +30,10 @@ $this->title = 'Update Ticket: ' . $model->id;
             'types' => $types,
             // customers
             'customerTypes' => $customerTypes,
+            'districts' => $districts,
+            'departments' => $departments,
+            'divisions' => $divisions,
+            'buildings' => $buildings,
             // users
             'users' => $users,
             // 'activities' => $activities

@@ -3,11 +3,16 @@
 namespace app\controllers;
 
 use Yii;
+use yii\db\Query;
 use app\models\User;
 use app\models\Ticket;
 use app\models\JobType;
 use yii\web\Controller;
+use app\models\Building;
+use app\models\District;
+use app\models\Division;
 use app\models\JobStatus;
+use app\models\Department;
 use app\models\JobCategory;
 use app\models\JobPriority;
 use yii\filters\VerbFilter;
@@ -17,8 +22,6 @@ use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
-use app\models\TicketAssignmentSearch;
-use app\models\TicketResolvedClosedSearch;
 
 /**
  * TicketController implements the CRUD actions for Ticket model.
@@ -66,6 +69,10 @@ class TicketController extends Controller
         $types = ArrayHelper::map(JobType::getTypes(), 'name', 'name');
         // search customers
         $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'name', 'name');
+        $districts = ArrayHelper::map(District::getDistricts(), 'name', 'name');
+        $departments = ArrayHelper::map(Department::getDepartments(), 'name', 'name');
+        $divisions = ArrayHelper::map(Division::getDivisions(), 'name', 'name');
+        $buildings = ArrayHelper::map(Building::getBuildings(), 'name', 'name');
 
         $this->layout = 'blank';
         return $this->render('index', [
@@ -78,7 +85,11 @@ class TicketController extends Controller
             'statuses' => $statuses,
             'types' => $types,
             // customers
-            'customerTypes' => $customerTypes
+            'customerTypes' => $customerTypes,
+            'districts' => $districts,
+            'departments' => $departments,
+            'divisions' => $divisions,
+            'buildings' => $buildings
         ]);
     }
 
@@ -110,6 +121,10 @@ class TicketController extends Controller
         $types = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
         // customers
         $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'name');
+        $districts = ArrayHelper::map(District::getDistricts(), 'id', 'name');
+        $departments = ArrayHelper::map(Department::getDepartments(), 'id', 'name');
+        $divisions = ArrayHelper::map(Division::getDivisions(), 'id', 'name');
+        $buildings = ArrayHelper::map(Building::getBuildings(), 'id', 'name');
         // users
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
 
@@ -135,11 +150,18 @@ class TicketController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
             'statuses' => $statuses,
             'types' => $types,
+            // customers
             'customerTypes' => $customerTypes,
+            'districts' => $districts,
+            'departments' => $departments,
+            'divisions' => $divisions,
+            'buildings' => $buildings,
+            //users
             'users' => $users
         ]);
     }
@@ -162,6 +184,10 @@ class TicketController extends Controller
         $types = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
         // customers
         $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'name');
+        $districts = ArrayHelper::map(District::getDistricts(), 'id', 'name');
+        $departments = ArrayHelper::map(Department::getDepartments(), 'id', 'name');
+        $divisions = ArrayHelper::map(Division::getDivisions(), 'id', 'name');
+        $buildings = ArrayHelper::map(Building::getBuildings(), 'id', 'name');
         // users
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
 
@@ -197,8 +223,12 @@ class TicketController extends Controller
             'types' => $types,
             // customers
             'customerTypes' => $customerTypes,
+            'districts' => $districts,
+            'departments' => $departments,
+            'divisions' => $divisions,
+            'buildings' => $buildings,
             // users
-            'users' => $users,
+            'users' => $users
         ]);
     }
 
@@ -234,5 +264,63 @@ class TicketController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Dependent dropdown query for Tickets. Checks for change
+     */
+    public function actionDependentDropdownQuery() {
+        $customer_search_reference = Yii::$app->request->post('customer_search-reference');
+
+        switch ($customer_search_reference) {
+            // BOCES customer (id=1)
+            case 1:
+                $query = new Query;
+                $query->select('id, name')->from('department');
+                $rows = $query->all();
+
+                $data = [];
+                if(!empty($rows)) {
+                    foreach($rows as $row) {
+                        $data[] = ['id' => $row['id'], 'name' => $row['name']];
+                    }
+                } else {
+                    $data = '';
+                }
+                return $this->asJson($data);
+                break;
+            // DISTRICT customer (id=2)
+            case 2:
+                $query = new Query;
+                $query->select('id, name')->from('district');
+                $rows = $query->all();
+
+                $data = [];
+                if(!empty($rows)) {
+                    foreach($rows as $row) {
+                        $data[] = ['id' => $row['id'], 'name' => $row['name']];
+                    }
+                } else {
+                    $data = '';
+                }
+                return $this->asJson($data);
+                break;
+            // WNYRIC customer (id=4)
+            case 4:
+                $query = new Query;
+                $query->select('id, name')->from('district');
+                $rows = $query->all();
+
+                $data = [];
+                if(!empty($rows)) {
+                    foreach($rows as $row) {
+                        $data[] = ['id' => $row['id'], 'name' => $row['name']];
+                    }
+                } else {
+                    $data = '';
+                }
+                return $this->asJson($data);
+                break;
+        }
     }
 }

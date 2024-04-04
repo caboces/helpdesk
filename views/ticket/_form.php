@@ -1,8 +1,9 @@
 <?php
 
 use yii\helpers\Html;
-use yii\bootstrap5\ActiveForm;
 use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
+use yii\bootstrap5\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Ticket $model */
@@ -62,10 +63,46 @@ use kartik\select2\Select2;
                                         <div class="row">
                                                 <div class="col-md-4">
                                                         <?= $form->field($model, 'customer_type_id')
-                                                                        ->dropDownList($customerTypes, ['prompt' => 'Select Type']) ?>
+                                                                        ->dropDownList($customerTypes, [
+                                                                                'prompt' => 'Select a customer type...',
+                                                                                // this is the ajax that allows us to post changes for the dependent dropdowns
+                                                                                'onchange' => '
+                                                                                        $.ajax({
+                                                                                                type: "POST",
+                                                                                                url: "' . Yii::$app->urlManager->createUrl(["site/dependent-dropdown-query"]) . '",
+                                                                                                data: {customer_search_reference}: $(this).val()},
+                                                                                                dataType: "json",
+                                                                                                success: function(response) {
+                                                                                                        // enable the ddl
+                                                                                                        $("#district-name").prop("disabled", false);
+                                                                                                        // clear previous ddl data
+                                                                                                        $("#district-name").empty();
+                                                                                                        var count = response.length;
+
+                                                                                                        // if no options are available, say so. else, populate the ddl appropriately
+                                                                                                        if(count === 0) {
+                                                                                                                $("#district-name").empty();
+                                                                                                                $("#district-name").prop("disabled", "disabled");
+                                                                                                                $("#district-name").append("<option value=\'" + id + "\'>Sorry, there are no options available for this selection</option>");
+                                                                                                        } else {
+                                                                                                                $("#district-name").append("<option value=\'" + id + "\'>Select a district...</option>");
+                                                                                                                for(var i = 0; i<count; i++){
+                                                                                                                    var id = response[i][\'id\'];
+                                                                                                                    var name = response[i][\'name\'];
+                                                                                                                    $("#district-name").append("<option value=\'" + id + "\'>" + name + "</option>");
+                                                                                                        }
+                                                                                                }
+                                                                                        });
+                                                                                '
+                                                                        ]
+                                                                );
+                                                        ?>
                                                 </div>
                                                 <div class="col-md-4">
                                                         <!-- district or division -->
+                                                        <?= $form->field($model, 'district_id')
+                                                                        // DDL expects to recieve an associative array in the form of "id" and "name"
+                                                                        ->dropDownList(ArrayHelper::map([], 'id', 'name'), ['prompt' => 'Select District']) ?>
                                                 </div>
                                                 <div class="col-md-4">
                                                         <!-- department or building -->
@@ -122,16 +159,18 @@ use kartik\select2\Select2;
                         <div class="subsection-info-block">
                                 <h2>Technicians</h2>
                                 <p>Technicians assigned to this ticket</p>
-                                <?php
-                                echo $form->field($model, 'users')->widget(Select2::classname(), [
-                                        'data' => $users,
-                                        'options' => ['placeholder' => 'Add users ...'],
-                                        'pluginOptions' => [
-                                                'allowClear' => true,
-                                                'multiple' => true
-                                        ],
-                                ]);
-                                ?>
+                                <div class="question-box">
+                                        <?php
+                                        echo $form->field($model, 'users')->widget(Select2::classname(), [
+                                                'data' => $users,
+                                                'options' => ['placeholder' => 'Add users ...'],
+                                                'pluginOptions' => [
+                                                        'allowClear' => true,
+                                                        'multiple' => true
+                                                ],
+                                        ]);
+                                        ?>
+                                </div>
                         </div>
                 </div>
                 <div class="tab-pane fade" id="pills-time-entries" role="tabpanel" aria-labelledby="pills-time-entries-tab">
@@ -142,7 +181,6 @@ use kartik\select2\Select2;
                 </div>
         </div>
         <!-- action buttons -->
-        <!-- <div class='container-fluid border border-subtle py-2 | bg-light'> -->
         <div class='secondary-action-button-bar'>
                 <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
                 <?= Html::button('Assign tech', ['class' => 'btn btn-outline-secondary']); ?>
