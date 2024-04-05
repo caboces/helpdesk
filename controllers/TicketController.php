@@ -131,8 +131,8 @@ class TicketController extends Controller
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
 
-                if(!empty($_POST['Ticket']['users'])) {
-                    foreach($_POST['Ticket']['users'] as $user_id) {
+                if (!empty($_POST['Ticket']['users'])) {
+                    foreach ($_POST['Ticket']['users'] as $user_id) {
                         // Find user objects by user ids sent in POST
                         $user = User::findOne($user_id);
                         // Link users to ticket, this will create a record in TechTicketAssignment table for each selected user
@@ -176,7 +176,6 @@ class TicketController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
@@ -196,13 +195,13 @@ class TicketController extends Controller
             // To update the tech_ticket_assignment junction table
             // This is kind of a lazy way of doing this, probably should check to see if any records need to be deleted instead of always doing it, but I'm keeping it for now :)
             // First delete existing tech assignments in the table (otherwise it will not touch removed techs if you remove some but not all from a list)
-            foreach($model->users as $user) {
+            foreach ($model->users as $user) {
                 // pass "true" because we want to delete the records, not just nullify all columns
                 $model->unlink('users', $user, true);
             }
             // If the selection is empty, we are done. If there is some data, insert a row into the tech_ticket_assignment table for each selected tech
-            if(!empty($_POST['Ticket']['users'])) {
-                foreach($_POST['Ticket']['users'] as $user_id) {
+            if (!empty($_POST['Ticket']['users'])) {
+                foreach ($_POST['Ticket']['users'] as $user_id) {
                     $user = User::findOne($user_id);
                     $model->link('users', $user);
                 }
@@ -228,7 +227,7 @@ class TicketController extends Controller
             'divisions' => $divisions,
             'buildings' => $buildings,
             // users
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
@@ -269,58 +268,81 @@ class TicketController extends Controller
     /**
      * Dependent dropdown query for Tickets. Checks for change
      */
-    public function actionDependentDropdownQuery() {
-        $customer_search_reference = Yii::$app->request->post('customer_search-reference');
+    public function actionDependentDropdownQuery()
+    {
+            $search_reference = Yii::$app->request->post('search_reference');
+            $query = new Query;
+            $query->select('*')->from('district');
+            $rows = $query->all();
 
-        switch ($customer_search_reference) {
-            // BOCES customer (id=1)
-            case 1:
-                $query = new Query;
-                $query->select('id, name')->from('department');
-                $rows = $query->all();
-
-                $data = [];
-                if(!empty($rows)) {
-                    foreach($rows as $row) {
-                        $data[] = ['id' => $row['id'], 'name' => $row['name']];
-                    }
-                } else {
-                    $data = '';
+            $data = [];
+            if (!empty($rows)) {
+                foreach ($rows as $row) {
+                    $data[] = ['id' => $row['id'], 'name' => $row['name']];
                 }
-                return $this->asJson($data);
-                break;
-            // DISTRICT customer (id=2)
-            case 2:
-                $query = new Query;
-                $query->select('id, name')->from('district');
-                $rows = $query->all();
+            } else {
+                $data = '';
+            }
 
-                $data = [];
-                if(!empty($rows)) {
-                    foreach($rows as $row) {
-                        $data[] = ['id' => $row['id'], 'name' => $row['name']];
-                    }
-                } else {
-                    $data = '';
-                }
-                return $this->asJson($data);
-                break;
-            // WNYRIC customer (id=4)
-            case 4:
-                $query = new Query;
-                $query->select('id, name')->from('district');
-                $rows = $query->all();
+            return $this->asJson($data);
 
-                $data = [];
-                if(!empty($rows)) {
-                    foreach($rows as $row) {
-                        $data[] = ['id' => $row['id'], 'name' => $row['name']];
-                    }
-                } else {
-                    $data = '';
-                }
-                return $this->asJson($data);
-                break;
-        }
+        /**
+         * This isn't working yet, but I'm hoping eventually it will eventualy
+         * return the relevant options based on customer_type
+         */
+
+        // switch ($customer_search_reference) {
+        //     // BOCES customer (id=1)
+        //     case 1:
+        //         $query = new Query;
+        //         $query->select('id, name')->from('department');
+        //         $rows = $query->all();
+
+        //         $data = [];
+        //         if(!empty($rows)) {
+        //             foreach($rows as $row) {
+        //                 $data[] = ['id' => $row['id'], 'name' => $row['name']];
+        //             }
+        //         } else {
+        //             $data = '';
+        //         }
+        //         return $this->asJson($data);
+        //         break;
+        //     // DISTRICT customer (id=2)
+        //     case 2:
+        //         $query = new Query;
+        //         $query->select('id, name')->from('district');
+        //         $rows = $query->all();
+
+        //         $data = [];
+        //         if(!empty($rows)) {
+        //             foreach($rows as $row) {
+        //                 $data[] = ['id' => $row['id'], 'name' => $row['name']];
+        //             }
+        //         } else {
+        //             $data = '';
+        //         }
+        //         return $this->asJson($data);
+        //         break;
+        //     // WNYRIC customer (id=4)
+        //     case 4:
+        //         $query = new Query;
+        //         $query->select('id, name')->from('district');
+        //         $rows = $query->all();
+
+        //         $data = [];
+        //         if(!empty($rows)) {
+        //             foreach($rows as $row) {
+        //                 $data[] = ['id' => $row['id'], 'name' => $row['name']];
+        //             }
+        //         } else {
+        //             $data = '';
+        //         }
+        //         return $this->asJson($data);
+        //         break;
+        //     default:
+        //         echo "whatever you just tried didn't work";
+        // }
+        // }
     }
 }
