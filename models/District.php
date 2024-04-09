@@ -91,7 +91,7 @@ class District extends \yii\db\ActiveRecord
     /**
      * Gets all districts
      * 
-     * @return all statuses in an alphabetical array
+     * @return all districts in an alphabetical array
      */
     public static function getDistricts() {
         return District::find()->orderBy('name ASC')->asArray()->all();

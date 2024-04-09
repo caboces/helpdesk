@@ -65,34 +65,7 @@ use yii\bootstrap5\ActiveForm;
                                                         <!-- customer type selections -->
                                                         <?= $form->field($model, 'customer_type_id')->dropDownList($customerTypes,
                                                                 [
-                                                                        'prompt' => 'Select a customer type...',
-                                                                        // this is the ajax that allows us to post changes for the dependent dropdowns
-                                                                        'onchange' => '
-                                                                                $.ajax({
-                                                                                        type: "POST",
-                                                                                        url: "'.Yii::$app->urlManager->createUrl(["ticket/dependent-dropdown-query"]).'",
-                                                                                        data: {search_reference: $(this).val()},
-                                                                                        dataType: "json",
-                                                                                        success: function(response) {
-                                                                                                $("#ticket-district_id").prop("disabled", false);
-                                                                                                $("#ticket-district_id").empty();
-                                                                                                var count = response.length;
-                                                                        
-                                                                                                if(count === 0) {
-                                                                                                        $("#ticket-district_id").empty();
-                                                                                                        $("#ticket-district_id").prop("disabled", "disabled");
-                                                                                                        $("#ticket-district_id").append("<option value=\'" + id + "\'>Sorry, there are no options available for this selection</option>");
-                                                                                                } else {
-                                                                                                        $("#ticket-district_id").append("<option value=\'" + id + "\'>Select a department/district...</option>");
-                                                                                                        for(var i = 0; i < count; i++){
-                                                                                                                var id = response[i][\'id\'];
-                                                                                                                var name = response[i][\'name\'];
-                                                                                                                $("#ticket-district_id").append("<option value=\'" + id + "\'>" + name + "</option>");
-                                                                                                        }
-                                                                                                }
-                                                                                        }
-                                                                                });
-                                                                        '
+                                                                        'prompt' => 'N/A',
                                                                 ]
                                                         ); ?>
                                                 </div>
@@ -101,21 +74,21 @@ use yii\bootstrap5\ActiveForm;
                                                         <?= $form->field($model, 'district_id')->dropDownList($districts, 
                                                                 [
                                                                         'prompt' => 'N/A',
-                                                                        'disabled' => 'disabled'
+                                                                        // 'disabled' => 'disabled'
                                                                 ]
                                                                 
                                                         ); ?>
-                                                        <?= $form->field($model, 'department_id')->dropDownList($districts, 
+                                                        <?= $form->field($model, 'department_id')->dropDownList($departments, 
                                                                 [
                                                                         'prompt' => 'N/A',
-                                                                        'disabled' => 'disabled',
-                                                                        'class' => 'invisible'
+                                                                        // 'disabled' => 'disabled',
+                                                                        // 'class' => 'invisible'
                                                                 ]
                                                                 
                                                         ); ?>
                                                 </div>
                                                 <div class="col-md-4">
-                                                        <!-- deptartment-building or district-building selection -->
+
                                                 </div>
                                         </div>
                                 </div>

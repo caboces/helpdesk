@@ -84,4 +84,22 @@ class DistrictBuilding extends \yii\db\ActiveRecord
     {
         return new \app\models\query\DistrictBuildingQuery(get_called_class());
     }
+
+    /**
+     * Gets all district buildings
+     * 
+     * @return all district buildings in an alphabetical array
+     */
+    public static function getDistrictBuildings() {
+        return DistrictBuilding::find()->orderBy('name ASC')->asArray()->all();
+    }
+
+    /**
+     * Gets name of district building from id
+     * 
+     * @return the readable name of the district building
+     */
+    public function getName() {
+        return $this->name;
+    }
 }

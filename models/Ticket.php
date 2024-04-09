@@ -52,7 +52,7 @@ class Ticket extends \yii\db\ActiveRecord
     {
         return [
             [['summary', 'requester', 'location', 'requester_email', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id'], 'required'],
-            [['job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'district_id', 'building_id', 'division_id', 'department_id'], 'integer'],
+            [['job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'district_id', 'building_id', 'division_id', 'department_id', 'district_building_id', 'department_building_id'], 'integer'],
             [['created', 'modified'], 'safe'],
             [['summary'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 500],
@@ -71,6 +71,8 @@ class Ticket extends \yii\db\ActiveRecord
             [['division'], 'exist', 'skipOnError' => true, 'targetClass' => Division::class, 'targetAttribute' => ['division_id' => 'id']],
             [['department'], 'exist', 'skipOnError' => true, 'targetClass' => Department::class, 'targetAttribute' => ['department_id' => 'id']],
             [['building'], 'exist', 'skipOnError' => true, 'targetClass' => Building::class, 'targetAttribute' => ['building_id' => 'id']],
+            [['district_building'], 'exist', 'skipOnError' => true, 'targetClass' => District::class, 'targetAttribute' => ['district_building_id' => 'id']],
+            [['department_building'], 'exist', 'skipOnError' => true, 'targetClass' => Department::class, 'targetAttribute' => ['department_building_id' => 'id']],
         ];
     }
 
@@ -98,6 +100,8 @@ class Ticket extends \yii\db\ActiveRecord
             'division_id' => 'Division ID',
             'department_id' => 'Department ID',
             'building_id' => 'Building ID',
+            'district_building_id' => 'District Building ID',
+            'department_building_id' => 'Department Building ID',
 
             'created' => 'Created',
             'modified' => 'Modified',
@@ -192,6 +196,24 @@ class Ticket extends \yii\db\ActiveRecord
     public function getDivision()
     {
         return $this->hasOne(Division::class, ['id' => 'division_id']);
+    }
+
+    /**
+     * Gets query for [[DistrictBuilding]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\DistrictBuildingQuery
+     */
+    public function getDistrictBuilding() {
+        return $this->hasOne(DistrictBuilding::class, ['id' => 'district_building_id']);
+    }
+
+    /**
+     * Gets query for [[DepartmentBuilding]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\DepartmentBuildingQuery
+     */
+    public function getDepartmentBuilding() {
+        return $this->hasOne(DepartmentBuilding::class, ['id' => 'department_building_id']);
     }
 
     /**

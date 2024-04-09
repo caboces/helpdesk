@@ -84,4 +84,22 @@ class DepartmentBuilding extends \yii\db\ActiveRecord
     {
         return new \app\models\query\DepartmentBuildingQuery(get_called_class());
     }
+
+    /**
+     * Gets all department buildings
+     * 
+     * @return all department buildings in an alphabetical array
+     */
+    public static function getDepartmentBuildings() {
+        return DepartmentBuilding::find()->orderBy('name ASC')->asArray()->all();
+    }
+
+    /**
+     * Gets name of department building from id
+     * 
+     * @return the readable name of the department building
+     */
+    public function getName() {
+        return $this->name;
+    }
 }
