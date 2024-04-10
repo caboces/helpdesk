@@ -66,23 +66,31 @@ use yii\bootstrap5\ActiveForm;
                                                         <?= $form->field($model, 'customer_type_id')->dropDownList($customerTypes,
                                                                 [
                                                                         'prompt' => 'N/A',
+                                                                        // 'onChange' => 'changeCustomerType()'
                                                                 ]
                                                         ); ?>
                                                 </div>
                                                 <div class="col-md-4">
                                                         <!-- district or department selection -->
-                                                        <?= $form->field($model, 'district_id')->dropDownList($districts, 
+                                                        <?= $form->field($model, 'district_id', ['options' =>
+                                                                [
+                                                                        // 'class' => 'invisible'
+                                                                ]
+                                                        ])->dropDownList($districts, 
                                                                 [
                                                                         'prompt' => 'N/A',
                                                                         // 'disabled' => 'disabled'
                                                                 ]
                                                                 
                                                         ); ?>
-                                                        <?= $form->field($model, 'department_id')->dropDownList($departments, 
+                                                        <?= $form->field($model, 'department_id', ['options' => 
+                                                                [
+                                                                        // 'class' => 'invisible'
+                                                                ]
+                                                                ])->dropDownList($departments, 
                                                                 [
                                                                         'prompt' => 'N/A',
                                                                         // 'disabled' => 'disabled',
-                                                                        // 'class' => 'invisible'
                                                                 ]
                                                                 
                                                         ); ?>

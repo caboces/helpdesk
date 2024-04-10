@@ -20,8 +20,6 @@ use app\models\CustomerType;
 use app\models\TicketSearch;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
-use app\models\DistrictBuilding;
-use app\models\DepartmentBuilding;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 

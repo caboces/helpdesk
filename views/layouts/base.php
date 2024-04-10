@@ -14,6 +14,11 @@ use yii\helpers\Html;
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <script
+        src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous">
+    </script>
     <?php $this->head() ?>
 </head>
 
@@ -28,6 +33,7 @@ use yii\helpers\Html;
     </div>
     
     <?php $this->endBody() ?>
+
 </body>
 
 </html>
