@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Url;
 use yii\helpers\Html;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
@@ -63,12 +64,7 @@ use yii\bootstrap5\ActiveForm;
                                         <div class="row">
                                                 <div class="col-md-4">
                                                         <!-- customer type selections -->
-                                                        <?= $form->field($model, 'customer_type_id')->dropDownList($customerTypes,
-                                                                [
-                                                                        'prompt' => 'N/A',
-                                                                        // 'onChange' => 'changeCustomerType()'
-                                                                ]
-                                                        ); ?>
+                                                        <?= $form->field($model, 'customer_type_id')->radioList($customerTypes); ?>
                                                 </div>
                                                 <div class="col-md-4">
                                                         <!-- district or department selection -->
@@ -76,10 +72,14 @@ use yii\bootstrap5\ActiveForm;
                                                                 [
                                                                         // 'class' => 'invisible'
                                                                 ]
+                                                        // ground zero for testing this goddamn atrocity. awful attempt at ajax
+                                                        // by a frontend developer incoming...
                                                         ])->dropDownList($districts, 
                                                                 [
                                                                         'prompt' => 'N/A',
-                                                                        // 'disabled' => 'disabled'
+                                                                        'data' => [
+                                                                                'url' => Url::to(['ticket/dependent-dropdown-query']),
+                                                                        ],
                                                                 ]
                                                                 
                                                         ); ?>
@@ -96,7 +96,14 @@ use yii\bootstrap5\ActiveForm;
                                                         ); ?>
                                                 </div>
                                                 <div class="col-md-4">
-
+                                                        <!-- district buildings -->
+                                                        <?= $form->field($model, 'district_building_id')->dropDownList($districtBuildings,
+                                                                [
+                                                                        'prompt' => 'N/A'
+                                                                ]
+                                                        ); ?>
+                                                        <!-- department buildings -->
+                                                        <!-- not added yet because these break everything since they are relation tables -->
                                                 </div>
                                         </div>
                                 </div>
