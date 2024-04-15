@@ -113,4 +113,5 @@ class Building extends \yii\db\ActiveRecord
     public function getName() {
         return $this->name;
     }
+
 }

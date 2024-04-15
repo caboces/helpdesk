@@ -72,8 +72,6 @@ use yii\bootstrap5\ActiveForm;
                                                                 [
                                                                         // 'class' => 'invisible'
                                                                 ]
-                                                        // ground zero for testing this goddamn atrocity. awful attempt at ajax
-                                                        // by a frontend developer incoming...
                                                         ])->dropDownList($districts, 
                                                                 [
                                                                         'prompt' => 'N/A',
@@ -97,13 +95,13 @@ use yii\bootstrap5\ActiveForm;
                                                 </div>
                                                 <div class="col-md-4">
                                                         <!-- district buildings -->
-                                                        <?= $form->field($model, 'district_building_id')->dropDownList($districtBuildings,
+                                                        <?= $form->field($model, 'building_id')->dropDownList($districtBuildings,
                                                                 [
                                                                         'prompt' => 'N/A'
                                                                 ]
                                                         ); ?>
                                                         <!-- department buildings -->
-                                                        <!-- not added yet because these break everything since they are relation tables -->
+                                                        <!-- not added yet -->
                                                 </div>
                                         </div>
                                 </div>

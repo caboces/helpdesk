@@ -17,6 +17,7 @@ use app\models\JobCategory;
 use app\models\JobPriority;
 use yii\filters\VerbFilter;
 use app\models\CustomerType;
+use app\models\DistrictBuilding;
 use app\models\TicketSearch;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
@@ -187,6 +188,8 @@ class TicketController extends Controller
         $departments = ArrayHelper::map(Department::getDepartments(), 'id', 'name');
         $divisions = ArrayHelper::map(Division::getDivisions(), 'id', 'name');
         $buildings = ArrayHelper::map(Building::getBuildings(), 'id', 'name');
+        // customer buildings
+        $districtBuildings = ArrayHelper::map(DistrictBuilding::getBuildingNamesFromDistrictId(), 'building_id', 'name');
         // users
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
 
@@ -226,6 +229,8 @@ class TicketController extends Controller
             'departments' => $departments,
             'divisions' => $divisions,
             'buildings' => $buildings,
+            // customer buildings
+            'districtBuildings' => $districtBuildings,
             // users
             'users' => $users,
         ]);
@@ -285,64 +290,5 @@ class TicketController extends Controller
             }
 
             return $this->asJson($data);
-
-        /**
-         * This isn't working yet, but I'm hoping eventually it will eventualy
-         * return the relevant options based on customer_type
-         */
-
-        // switch ($customer_search_reference) {
-        //     // BOCES customer (id=1)
-        //     case 1:
-        //         $query = new Query;
-        //         $query->select('id, name')->from('department');
-        //         $rows = $query->all();
-
-        //         $data = [];
-        //         if(!empty($rows)) {
-        //             foreach($rows as $row) {
-        //                 $data[] = ['id' => $row['id'], 'name' => $row['name']];
-        //             }
-        //         } else {
-        //             $data = '';
-        //         }
-        //         return $this->asJson($data);
-        //         break;
-        //     // DISTRICT customer (id=2)
-        //     case 2:
-        //         $query = new Query;
-        //         $query->select('id, name')->from('district');
-        //         $rows = $query->all();
-
-        //         $data = [];
-        //         if(!empty($rows)) {
-        //             foreach($rows as $row) {
-        //                 $data[] = ['id' => $row['id'], 'name' => $row['name']];
-        //             }
-        //         } else {
-        //             $data = '';
-        //         }
-        //         return $this->asJson($data);
-        //         break;
-        //     // WNYRIC customer (id=4)
-        //     case 4:
-        //         $query = new Query;
-        //         $query->select('id, name')->from('district');
-        //         $rows = $query->all();
-
-        //         $data = [];
-        //         if(!empty($rows)) {
-        //             foreach($rows as $row) {
-        //                 $data[] = ['id' => $row['id'], 'name' => $row['name']];
-        //             }
-        //         } else {
-        //             $data = '';
-        //         }
-        //         return $this->asJson($data);
-        //         break;
-        //     default:
-        //         echo "whatever you just tried didn't work";
-        // }
-        // }
     }
 }
