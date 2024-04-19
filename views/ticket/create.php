@@ -16,6 +16,8 @@ $this->title = 'Create Ticket';
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
 
+    <p>You are currently creating a new ticket. To save your changes, click the "Save" button. Your changes will be logged in this ticket's activity, along with your tech note (if provided).</p>
+
     <?= $this->render(
         '_form',
         [
@@ -33,6 +35,7 @@ $this->title = 'Create Ticket';
             'buildings' => $buildings,
             // customer buildings
             'districtBuildings' => $districtBuildings,
+            'departmentBuildings' => $departmentBuildings,
             // users
             'users' => $users
         ]

@@ -380,9 +380,15 @@ label.form-label {
   color: #09a2c9;
 }
 
-.invisible {
-  display: none;
+div#ticket-customer_type_id {
+  border-right: var(--bs-border-width) solid var(--bs-border-color);
 }
+
+.form-check {
+  padding-top: 5px;
+  padding-bottom: 6px;
+}
+
 
 /* ===========================================================================================
 || LOGIN

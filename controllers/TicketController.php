@@ -17,10 +17,11 @@ use app\models\JobCategory;
 use app\models\JobPriority;
 use yii\filters\VerbFilter;
 use app\models\CustomerType;
-use app\models\DistrictBuilding;
 use app\models\TicketSearch;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
+use app\models\DistrictBuilding;
+use app\models\DepartmentBuilding;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 
@@ -123,11 +124,13 @@ class TicketController extends Controller
         // customers
         $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'name');
         $districts = ArrayHelper::map(District::getDistricts(), 'id', 'name');
-        $departments = ArrayHelper::map(Department::getDepartments(), 'id', 'name');
+        // tack the corresponding division name onto department options
+        $departments = ArrayHelper::map(Department::getSortedDepartments(), 'id', function($model) {return Division::findOne($model['division_id'])->name . ' > ' . $model['name'];});
         $divisions = ArrayHelper::map(Division::getDivisions(), 'id', 'name');
         $buildings = ArrayHelper::map(Building::getBuildings(), 'id', 'name');
         // customer buildings
-        $districtBuildings = ArrayHelper::map(DistrictBuilding::getBuildingNamesFromDistrictId(), 'building_id', 'name');
+        $districtBuildings = ArrayHelper::map(DistrictBuilding::getBuildingNamesFromDistrictId(), 'district_building_id', 'name');
+        $departmentBuildings = ArrayHelper::map(DepartmentBuilding::getBuildingNamesFromDepartmentId(), 'department_building_id', 'name');
         // users
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
 
@@ -166,6 +169,7 @@ class TicketController extends Controller
             'buildings' => $buildings,
             // customer buildings
             'districtBuildings' => $districtBuildings,
+            'departmentBuildings' => $departmentBuildings,
             //users
             'users' => $users
         ]);
@@ -189,16 +193,13 @@ class TicketController extends Controller
         // customers
         $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'code');
         $districts = ArrayHelper::map(District::getDistricts(), 'id', 'name');
-
-
-        
-        $departments = ArrayHelper::map(Department::getDepartments(), 'id', function($model) {return $model['name'] . ' > ' . $model['id'];});
-
-
+        // tack the corresponding division name onto department options
+        $departments = ArrayHelper::map(Department::getSortedDepartments(), 'id', function($model) {return Division::findOne($model['division_id'])->name . ' > ' . $model['name'];});
         $divisions = ArrayHelper::map(Division::getDivisions(), 'id', 'name');
         $buildings = ArrayHelper::map(Building::getBuildings(), 'id', 'name');
         // customer buildings
-        $districtBuildings = ArrayHelper::map(DistrictBuilding::getBuildingNamesFromDistrictId(), 'building_id', 'name');
+        $districtBuildings = ArrayHelper::map(DistrictBuilding::getBuildingNamesFromDistrictId(), 'district_building_id', 'name');
+        $departmentBuildings = ArrayHelper::map(DepartmentBuilding::getBuildingNamesFromDepartmentId(), 'department_building_id', 'name');
         // users
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
 
@@ -240,6 +241,7 @@ class TicketController extends Controller
             'buildings' => $buildings,
             // customer buildings
             'districtBuildings' => $districtBuildings,
+            'departmentBuildings' => $departmentBuildings,
             // users
             'users' => $users,
         ]);

@@ -22,7 +22,6 @@ $this->title = 'Update Ticket: ' . $model->id;
         '_form',
         [
             'model' => $model,
-
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
@@ -36,6 +35,7 @@ $this->title = 'Update Ticket: ' . $model->id;
             'buildings' => $buildings,
             // customer buildings
             'districtBuildings' => $districtBuildings,
+            'departmentBuildings' => $departmentBuildings,
             // users
             'users' => $users,
             // 'activities' => $activities

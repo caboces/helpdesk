@@ -77,8 +77,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         'label' => 'Division'
                     ],
                     [
-                        'attribute' => 'building.name',
-                        'label' => 'Building'
+                        'attribute' => 'departmentBuilding.name',
+                        'label' => 'Department Building'
+                    ],
+                    [
+                        'attribute' => 'districtBuilding.name',
+                        'label' => 'District Building'
                     ],
                     // requester
                     'requester',

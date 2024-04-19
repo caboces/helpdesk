@@ -42,24 +42,4 @@ $('#ticket-customer_type_id').on('change', function() {
     }
 });
 
-/**
- * OnChange: District Input Drop Down List
- * When the user selects a new district, populate the third building drop down list using using
- * the district_id as a filter.
- * 
- * efox - 4/11/24
- */
-$('#ticket-district_id').on('change', function() {
-    var url = $(this).data('ticket/dependent-dropdown-query');
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: {search_reference: $(this).val()},
-        dataType: 'json',
-        success: function(response) {
-            console.log('working so far!');
-        }
-    });
-});
-
 });

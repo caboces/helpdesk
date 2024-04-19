@@ -63,11 +63,11 @@ use yii\bootstrap5\ActiveForm;
                                 <!-- this is where the dependent dropdowns are going to be, i think all three can fit in one row-->
                                 <div class="question-box">
                                         <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                         <!-- customer type selections -->
                                                         <?= $form->field($model, 'customer_type_id')->radioList($customerTypes); ?>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-5">
                                                         <!-- department  selection -->
                                                         <!-- the view will default to showing department/department buildings as if the customer is expected to be CABOCES -->
                                                         <?= $form->field($model, 'department_id', ['options' => 
@@ -95,19 +95,21 @@ use yii\bootstrap5\ActiveForm;
                                                                                 'url' => Url::to(['ticket/dependent-dropdown-query']),
                                                                         ],
                                                                 ]
-                                                                
                                                         ); ?>
                                                 </div>
                                                 <div class="col-md-4">
-                                                        <!-- district buildings -->
-                                                        <?= $form->field($model, 'building_id')->dropDownList($districtBuildings,
+                                                        <!-- department buildings -->
+                                                        <?= $form->field($model, 'department_building_id')->dropDownList($departmentBuildings,
                                                                 [
                                                                         'prompt' => 'N/A'
                                                                 ]
                                                         ); ?>
-
-                                                        <!-- department buildings -->
-                                                        <!-- not added yet -->
+                                                        <!-- district buildings -->
+                                                        <?= $form->field($model, 'district_building_id')->dropDownList($districtBuildings,
+                                                                [
+                                                                        'prompt' => 'N/A'
+                                                                ]
+                                                        ); ?>
                                                 </div>
                                         </div>
                                 </div>

@@ -102,11 +102,29 @@ class Department extends \yii\db\ActiveRecord
     /**
      * Gets all departments
      * 
-     * @return all statuses in an alphabetical array
+     * @return all departments in an alphabetical array
      */
     public static function getDepartments() {
         return Department::find()->orderBy('name ASC')->asArray()->all();
     }
+
+    /** 
+     * Get sorted departments (WIP) 
+     * I don't like the way that the dropdown menu sorts by default. This function will first sort
+     * the departments first by the NAME of their division, then the NAME of the department.
+     * 
+     * @return all departments alphabetically (asc division, asc department).
+    */
+    public static function getSortedDepartments() {
+        return Department::find()
+        ->select(['department.id', 'department.name', 'department.division_id'])
+        ->innerJoin('division', 'division.id = department.division_id')
+        ->orderBy('division.name ASC, department.name ASC')
+        ->asArray()
+        ->all();
+    }
+
+
 
     /**
      * Gets name of department from id
@@ -117,11 +135,4 @@ class Department extends \yii\db\ActiveRecord
         return $this->name;
     }
 
-    /**
-     * Gets the name of the departments and concatenates it with the corresponding division
-     * e.g., "division > department" will be displayed
-     */
-    public function getDivisionDepartmentNames() {
-        return $this->division_id . ' > ' . $this->name;
-    }
 }
