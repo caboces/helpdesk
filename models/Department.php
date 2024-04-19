@@ -116,4 +116,12 @@ class Department extends \yii\db\ActiveRecord
     public function getName() {
         return $this->name;
     }
+
+    /**
+     * Gets the name of the departments and concatenates it with the corresponding division
+     * e.g., "division > department" will be displayed
+     */
+    public function getDivisionDepartmentNames() {
+        return $this->division_id . ' > ' . $this->name;
+    }
 }

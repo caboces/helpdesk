@@ -2,6 +2,7 @@
 
 use yii\helpers\Url;
 use yii\helpers\Html;
+use app\models\Ticket;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap5\ActiveForm;
@@ -67,10 +68,25 @@ use yii\bootstrap5\ActiveForm;
                                                         <?= $form->field($model, 'customer_type_id')->radioList($customerTypes); ?>
                                                 </div>
                                                 <div class="col-md-4">
-                                                        <!-- district or department selection -->
+                                                        <!-- department  selection -->
+                                                        <!-- the view will default to showing department/department buildings as if the customer is expected to be CABOCES -->
+                                                        <?= $form->field($model, 'department_id', ['options' => 
+                                                                [
+                                                                        // if the customerType exists and is not CABOCES, don't show department ddl
+                                                                        'style' => ($model->customerType != null && $model->customerType->id != 1) ? 'display: none;' : 'display: block;'
+                                                                ]
+                                                                ])->dropDownList($departments, 
+                                                                [
+                                                                        'prompt' => 'N/A',
+                                                                        // 'disabled' => 'disabled',
+                                                                ]
+                                                                
+                                                        ); ?>
+                                                        <!-- district  selection -->
                                                         <?= $form->field($model, 'district_id', ['options' =>
                                                                 [
-                                                                        // 'class' => 'invisible'
+                                                                        // if customerType not set or customerType needs department ddl, don't show district ddl
+                                                                        'style' => ($model->customerType == null || $model->customerType->id == 1) ? 'display: none;' : 'display: block;'
                                                                 ]
                                                         ])->dropDownList($districts, 
                                                                 [
@@ -78,17 +94,6 @@ use yii\bootstrap5\ActiveForm;
                                                                         'data' => [
                                                                                 'url' => Url::to(['ticket/dependent-dropdown-query']),
                                                                         ],
-                                                                ]
-                                                                
-                                                        ); ?>
-                                                        <?= $form->field($model, 'department_id', ['options' => 
-                                                                [
-                                                                        // 'class' => 'invisible'
-                                                                ]
-                                                                ])->dropDownList($departments, 
-                                                                [
-                                                                        'prompt' => 'N/A',
-                                                                        // 'disabled' => 'disabled',
                                                                 ]
                                                                 
                                                         ); ?>
@@ -100,6 +105,7 @@ use yii\bootstrap5\ActiveForm;
                                                                         'prompt' => 'N/A'
                                                                 ]
                                                         ); ?>
+
                                                         <!-- department buildings -->
                                                         <!-- not added yet -->
                                                 </div>

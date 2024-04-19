@@ -31,6 +31,8 @@ $this->title = 'Create Ticket';
             'departments' => $departments,
             'divisions' => $divisions,
             'buildings' => $buildings,
+            // customer buildings
+            'districtBuildings' => $districtBuildings,
             // users
             'users' => $users
         ]

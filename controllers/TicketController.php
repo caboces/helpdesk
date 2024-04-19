@@ -126,6 +126,8 @@ class TicketController extends Controller
         $departments = ArrayHelper::map(Department::getDepartments(), 'id', 'name');
         $divisions = ArrayHelper::map(Division::getDivisions(), 'id', 'name');
         $buildings = ArrayHelper::map(Building::getBuildings(), 'id', 'name');
+        // customer buildings
+        $districtBuildings = ArrayHelper::map(DistrictBuilding::getBuildingNamesFromDistrictId(), 'building_id', 'name');
         // users
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
 
@@ -162,6 +164,8 @@ class TicketController extends Controller
             'departments' => $departments,
             'divisions' => $divisions,
             'buildings' => $buildings,
+            // customer buildings
+            'districtBuildings' => $districtBuildings,
             //users
             'users' => $users
         ]);
@@ -183,9 +187,14 @@ class TicketController extends Controller
         $statuses = ArrayHelper::map(JobStatus::getStatuses(), 'id', 'name');
         $types = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
         // customers
-        $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'name');
+        $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'code');
         $districts = ArrayHelper::map(District::getDistricts(), 'id', 'name');
-        $departments = ArrayHelper::map(Department::getDepartments(), 'id', 'name');
+
+
+        
+        $departments = ArrayHelper::map(Department::getDepartments(), 'id', function($model) {return $model['name'] . ' > ' . $model['id'];});
+
+
         $divisions = ArrayHelper::map(Division::getDivisions(), 'id', 'name');
         $buildings = ArrayHelper::map(Building::getBuildings(), 'id', 'name');
         // customer buildings

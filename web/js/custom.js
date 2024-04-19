@@ -50,7 +50,7 @@ $('#ticket-customer_type_id').on('change', function() {
  * efox - 4/11/24
  */
 $('#ticket-district_id').on('change', function() {
-    var url = $(this).data('url');
+    var url = $(this).data('ticket/dependent-dropdown-query');
     $.ajax({
         type: 'POST',
         url: url,
