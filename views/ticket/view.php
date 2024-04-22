@@ -76,14 +76,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'division.name',
                         'label' => 'Division'
                     ],
-                    [
-                        'attribute' => 'departmentBuilding.name',
-                        'label' => 'Department Building'
-                    ],
-                    [
-                        'attribute' => 'districtBuilding.name',
-                        'label' => 'District Building'
-                    ],
+                    'department_building_id',
+                    // [
+                    //     'attribute' => 'departmentBuilding.name',
+                    //     'label' => 'Department Building'
+                    // ],
+                    'district_building_id',
+                    // [
+                    //     'attribute' => 'districtBuilding.name',
+                    //     'label' => 'District Building'
+                    // ],
                     // requester
                     'requester',
                     'requester_email',

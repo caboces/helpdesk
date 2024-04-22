@@ -288,13 +288,13 @@ class TicketController extends Controller
     {
             $search_reference = Yii::$app->request->post('search_reference');
             $query = new Query;
-            $query->select('*')->from('district');
+            $query->select('department_id, building_id')->from('department_building')->where(['department_id' => $search_reference]);
             $rows = $query->all();
 
             $data = [];
             if (!empty($rows)) {
                 foreach ($rows as $row) {
-                    $data[] = ['id' => $row['id'], 'name' => $row['name']];
+                    $data[] = ['department_building_id' => $row['building_id'], 'name' => $row['building_id']];
                 }
             } else {
                 $data = '';

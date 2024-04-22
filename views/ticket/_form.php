@@ -69,24 +69,51 @@ use yii\bootstrap5\ActiveForm;
                                                 </div>
                                                 <div class="col-md-5">
                                                         <!-- department  selection -->
-                                                        <!-- the view will default to showing department/department buildings as if the customer is expected to be CABOCES -->
+                                                        <!-- new forms will anticipate CABOCES customer, show departments and department buildings by default -->
                                                         <?= $form->field($model, 'department_id', ['options' => 
                                                                 [
-                                                                        // if the customerType exists and is not CABOCES, don't show department ddl
-                                                                        'style' => ($model->customerType != null && $model->customerType->id != 1) ? 'display: none;' : 'display: block;'
+                                                                        // if this IS a new ticket OR IS an existing ticket with a CABOCES customer, show department select. else, display none
+                                                                        'style' => ($model->customerType == null || $model->customerType->id == 1) ? 'display: block;' : 'display: none;'
                                                                 ]
                                                                 ])->dropDownList($departments, 
                                                                 [
                                                                         'prompt' => 'N/A',
-                                                                        // 'disabled' => 'disabled',
+                                                                        // if customerType is not null and requires department type, enable
+                                                                        // ($model->customerType == null) ? "'disabled' => 'disabled'" : '',
+                                                                        'onchange' => '
+                                                                                $.ajax({
+                                                                                        type: "POST",
+                                                                                        url: "'.Yii::$app->urlManager->createUrl(["ticket/dependent-dropdown-query"]) . '",
+                                                                                        data: {search_reference: $(this).val()},
+                                                                                        dataType: "json",
+                                                                                        success: function(response) {
+                                                                                                $("#ticket-department_building_id").empty();
+                                                                                                var count = response.length;
+
+                                                                                                if (count === 0) {
+                                                                                                        $("#ticket-department_building_id").empty();
+                                                                                                        $("#ticket-department_building_id").append("<option value=\'" + department_building_id + "\'>Sorry, there are no options available for this selection</option>");
+                                                                                                } else {
+                                                                                                        $("#ticket-department_building_id").append("<option value=\'" + department_building_id + "\'>Please choose a building...</option>");
+                                                                                                        for (var i = 0; i < count; i++) {
+                                                                                                                var department_building_id = response[i][\'department_building_id\'];
+                                                                                                                var name = response[i][\'name\'];
+                                                                                                                $("#ticket-department_building_id").append("<option value=\'" + department_building_id + "\'>" + name + "</option>");
+                                                                                                        }
+                                                                                                }
+                                                                                        }
+                                                                                });
+                                                                        '
                                                                 ]
                                                                 
                                                         ); ?>
+
                                                         <!-- district  selection -->
+                                                        <!-- if customer  -->
                                                         <?= $form->field($model, 'district_id', ['options' =>
                                                                 [
-                                                                        // if customerType not set or customerType needs department ddl, don't show district ddl
-                                                                        'style' => ($model->customerType == null || $model->customerType->id == 1) ? 'display: none;' : 'display: block;'
+                                                                        // if this is NOT a new ticket AND the customer is NOT CABOCES, show district select. else, display none
+                                                                        'style' => ($model->customerType != null && $model->customerType->id != 1) ? 'display: block;' : 'display: none;'
                                                                 ]
                                                         ])->dropDownList($districts, 
                                                                 [
@@ -99,13 +126,24 @@ use yii\bootstrap5\ActiveForm;
                                                 </div>
                                                 <div class="col-md-4">
                                                         <!-- department buildings -->
-                                                        <?= $form->field($model, 'department_building_id')->dropDownList($departmentBuildings,
+                                                        <!-- new forms will anticipate CABOCES customer, show departments and department buildings by default -->
+                                                        <?= $form->field($model, 'department_building_id', ['options' => 
+                                                                [
+                                                                        // if this IS a new ticket OR IS an existing ticket with a CABOCES customer, show department-building select. else, display none
+                                                                        'style' => ($model->customerType == null || $model->customerType->id == 1) ? 'display: block;' : 'display: none;'
+                                                                ]
+                                                        ])->dropDownList(ArrayHelper::map([], 'department_building_id', 'name'),
                                                                 [
                                                                         'prompt' => 'N/A'
                                                                 ]
                                                         ); ?>
                                                         <!-- district buildings -->
-                                                        <?= $form->field($model, 'district_building_id')->dropDownList($districtBuildings,
+                                                        <?= $form->field($model, 'district_building_id', ['options' => 
+                                                                [
+                                                                        // if this is NOT a new ticket AND the customer is NOT CABOCES, show district-building select. else, display none
+                                                                        'style' => ($model->customerType != null && $model->customerType->id != 1) ? 'display: block;' : 'display: none;'
+                                                                ]
+                                                        ])->dropDownList($districtBuildings,
                                                                 [
                                                                         'prompt' => 'N/A'
                                                                 ]
