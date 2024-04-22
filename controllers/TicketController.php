@@ -128,9 +128,9 @@ class TicketController extends Controller
         $departments = ArrayHelper::map(Department::getSortedDepartments(), 'id', function($model) {return Division::findOne($model['division_id'])->name . ' > ' . $model['name'];});
         $divisions = ArrayHelper::map(Division::getDivisions(), 'id', 'name');
         $buildings = ArrayHelper::map(Building::getBuildings(), 'id', 'name');
-        // customer buildings
-        $districtBuildings = ArrayHelper::map(DistrictBuilding::getBuildingNamesFromDistrictId(), 'district_building_id', 'name');
-        $departmentBuildings = ArrayHelper::map(DepartmentBuilding::getBuildingNamesFromDepartmentId(), 'department_building_id', 'name');
+        // customer buildings: this data will populate the ddl's based on dept/dist on load
+        $departmentBuildingData = DepartmentBuilding::getBuildingNamesFromDepartmentId($model);
+        $districtBuildingData = DistrictBuilding::getBuildingNamesFromDistrictId($model);
         // users
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
 
@@ -168,8 +168,8 @@ class TicketController extends Controller
             'divisions' => $divisions,
             'buildings' => $buildings,
             // customer buildings
-            'districtBuildings' => $districtBuildings,
-            'departmentBuildings' => $departmentBuildings,
+            'departmentBuildingData' => $departmentBuildingData,
+            'districtBuildingData' => $districtBuildingData,
             //users
             'users' => $users
         ]);
@@ -192,14 +192,14 @@ class TicketController extends Controller
         $types = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
         // customers
         $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'code');
-        $districts = ArrayHelper::map(District::getDistricts(), 'id', 'name');
         // tack the corresponding division name onto department options
         $departments = ArrayHelper::map(Department::getSortedDepartments(), 'id', function($model) {return Division::findOne($model['division_id'])->name . ' > ' . $model['name'];});
+        $districts = ArrayHelper::map(District::getDistricts(), 'id', 'name');
         $divisions = ArrayHelper::map(Division::getDivisions(), 'id', 'name');
         $buildings = ArrayHelper::map(Building::getBuildings(), 'id', 'name');
         // customer buildings
-        $districtBuildings = ArrayHelper::map(DistrictBuilding::getBuildingNamesFromDistrictId(), 'district_building_id', 'name');
-        $departmentBuildings = ArrayHelper::map(DepartmentBuilding::getBuildingNamesFromDepartmentId(), 'department_building_id', 'name');
+        $departmentBuildingData = DepartmentBuilding::getBuildingNamesFromDepartmentId($model);
+        $districtBuildingData = DistrictBuilding::getBuildingNamesFromDistrictId($model);
         // users
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
 
@@ -235,13 +235,13 @@ class TicketController extends Controller
             'types' => $types,
             // customers
             'customerTypes' => $customerTypes,
-            'districts' => $districts,
             'departments' => $departments,
+            'districts' => $districts,
             'divisions' => $divisions,
             'buildings' => $buildings,
             // customer buildings
-            'districtBuildings' => $districtBuildings,
-            'departmentBuildings' => $departmentBuildings,
+            'departmentBuildingData' => $departmentBuildingData,
+            'districtBuildingData' => $districtBuildingData,
             // users
             'users' => $users,
         ]);
@@ -282,19 +282,49 @@ class TicketController extends Controller
     }
 
     /**
-     * Dependent dropdown query for Tickets. Checks for change
+     * Dependent dropdown query for DepartmentBuilding. Checks for change
      */
-    public function actionDependentDropdownQuery()
+    public function actionDepartmentBuildingDependentDropdownQuery()
     {
-            $search_reference = Yii::$app->request->post('search_reference');
+            $search_reference = Yii::$app->request->post('department_search_reference');
             $query = new Query;
-            $query->select('department_id, building_id')->from('department_building')->where(['department_id' => $search_reference]);
+            $query->select(['department_building.department_id', 'department_building.building_id', 'building.name'])
+                    ->from('department_building')
+                    ->innerJoin('building', 'department_building.building_id = building.id')
+                    ->where(['department_id' => $search_reference])
+                    ->orderBy('name ASC');
             $rows = $query->all();
 
             $data = [];
             if (!empty($rows)) {
                 foreach ($rows as $row) {
-                    $data[] = ['department_building_id' => $row['building_id'], 'name' => $row['building_id']];
+                    $data[] = ['id' => $row['building_id'], 'name' => $row['name']];
+                }
+            } else {
+                $data = '';
+            }
+
+            return $this->asJson($data);
+    }
+
+    /**
+     * Dependent dropdown query for DistrictBuilding. Checks for change
+     */
+    public function actionDistrictBuildingDependentDropdownQuery()
+    {
+            $search_reference = Yii::$app->request->post('district_search_reference');
+            $query = new Query;
+            $query->select(['district_building.district_id', 'district_building.building_id', 'building.name'])
+                    ->from('district_building')
+                    ->innerJoin('building', 'district_building.building_id = building.id')
+                    ->where(['district_id' => $search_reference])
+                    ->orderBy('name ASC');
+            $rows = $query->all();
+
+            $data = [];
+            if (!empty($rows)) {
+                foreach ($rows as $row) {
+                    $data[] = ['id' => $row['building_id'], 'name' => $row['name']];
                 }
             } else {
                 $data = '';

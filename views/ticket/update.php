@@ -34,8 +34,8 @@ $this->title = 'Update Ticket: ' . $model->id;
             'divisions' => $divisions,
             'buildings' => $buildings,
             // customer buildings
-            'districtBuildings' => $districtBuildings,
-            'departmentBuildings' => $departmentBuildings,
+            'departmentBuildingData' => $departmentBuildingData,
+            'districtBuildingData' => $districtBuildingData,
             // users
             'users' => $users,
             // 'activities' => $activities

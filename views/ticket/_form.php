@@ -78,13 +78,11 @@ use yii\bootstrap5\ActiveForm;
                                                                 ])->dropDownList($departments, 
                                                                 [
                                                                         'prompt' => 'N/A',
-                                                                        // if customerType is not null and requires department type, enable
-                                                                        // ($model->customerType == null) ? "'disabled' => 'disabled'" : '',
                                                                         'onchange' => '
                                                                                 $.ajax({
                                                                                         type: "POST",
-                                                                                        url: "'.Yii::$app->urlManager->createUrl(["ticket/dependent-dropdown-query"]) . '",
-                                                                                        data: {search_reference: $(this).val()},
+                                                                                        url: "'.Yii::$app->urlManager->createUrl(["ticket/department-building-dependent-dropdown-query"]) . '",
+                                                                                        data: {department_search_reference: $(this).val()},
                                                                                         dataType: "json",
                                                                                         success: function(response) {
                                                                                                 $("#ticket-department_building_id").empty();
@@ -92,13 +90,13 @@ use yii\bootstrap5\ActiveForm;
 
                                                                                                 if (count === 0) {
                                                                                                         $("#ticket-department_building_id").empty();
-                                                                                                        $("#ticket-department_building_id").append("<option value=\'" + department_building_id + "\'>Sorry, there are no options available for this selection</option>");
+                                                                                                        $("#ticket-department_building_id").append("<option value=\'" + id + "\'>Sorry, there are no options available for this selection</option>");
                                                                                                 } else {
-                                                                                                        $("#ticket-department_building_id").append("<option value=\'" + department_building_id + "\'>Please choose a building...</option>");
+                                                                                                        $("#ticket-department_building_id").append("<option value=\'" + id + "\'>Please choose a building...</option>");
                                                                                                         for (var i = 0; i < count; i++) {
-                                                                                                                var department_building_id = response[i][\'department_building_id\'];
+                                                                                                                var id = response[i][\'id\'];
                                                                                                                 var name = response[i][\'name\'];
-                                                                                                                $("#ticket-department_building_id").append("<option value=\'" + department_building_id + "\'>" + name + "</option>");
+                                                                                                                $("#ticket-department_building_id").append("<option value=\'" + id + "\'>" + name + "</option>");
                                                                                                         }
                                                                                                 }
                                                                                         }
@@ -110,18 +108,40 @@ use yii\bootstrap5\ActiveForm;
 
                                                         <!-- district  selection -->
                                                         <!-- if customer  -->
-                                                        <?= $form->field($model, 'district_id', ['options' =>
+                                                        <?= $form->field($model, 'district_id', ['options' => 
                                                                 [
-                                                                        // if this is NOT a new ticket AND the customer is NOT CABOCES, show district select. else, display none
+                                                                        // if this is NOT a new ticket AND is NOT an existing ticket with a CABOCES customer, show district select. else, display none
                                                                         'style' => ($model->customerType != null && $model->customerType->id != 1) ? 'display: block;' : 'display: none;'
                                                                 ]
-                                                        ])->dropDownList($districts, 
+                                                                ])->dropDownList($districts, 
                                                                 [
                                                                         'prompt' => 'N/A',
-                                                                        'data' => [
-                                                                                'url' => Url::to(['ticket/dependent-dropdown-query']),
-                                                                        ],
+                                                                        'onchange' => '
+                                                                                $.ajax({
+                                                                                        type: "POST",
+                                                                                        url: "'.Yii::$app->urlManager->createUrl(["ticket/district-building-dependent-dropdown-query"]) . '",
+                                                                                        data: {district_search_reference: $(this).val()},
+                                                                                        dataType: "json",
+                                                                                        success: function(response) {
+                                                                                                $("#ticket-district_building_id").empty();
+                                                                                                var count = response.length;
+
+                                                                                                if (count === 0) {
+                                                                                                        $("#ticket-district_building_id").empty();
+                                                                                                        $("#ticket-district_building_id").append("<option value=\'" + id + "\'>Sorry, there are no options available for this selection</option>");
+                                                                                                } else {
+                                                                                                        $("#ticket-district_building_id").append("<option value=\'" + id + "\'>Please choose a building...</option>");
+                                                                                                        for (var i = 0; i < count; i++) {
+                                                                                                                var id = response[i][\'id\'];
+                                                                                                                var name = response[i][\'name\'];
+                                                                                                                $("#ticket-district_building_id").append("<option value=\'" + id + "\'>" + name + "</option>");
+                                                                                                        }
+                                                                                                }
+                                                                                        }
+                                                                                });
+                                                                        '
                                                                 ]
+                                                                
                                                         ); ?>
                                                 </div>
                                                 <div class="col-md-4">
@@ -132,7 +152,7 @@ use yii\bootstrap5\ActiveForm;
                                                                         // if this IS a new ticket OR IS an existing ticket with a CABOCES customer, show department-building select. else, display none
                                                                         'style' => ($model->customerType == null || $model->customerType->id == 1) ? 'display: block;' : 'display: none;'
                                                                 ]
-                                                        ])->dropDownList(ArrayHelper::map([], 'department_building_id', 'name'),
+                                                        ])->dropDownList(ArrayHelper::map($departmentBuildingData, 'building_id', 'name'),
                                                                 [
                                                                         'prompt' => 'N/A'
                                                                 ]
@@ -140,10 +160,10 @@ use yii\bootstrap5\ActiveForm;
                                                         <!-- district buildings -->
                                                         <?= $form->field($model, 'district_building_id', ['options' => 
                                                                 [
-                                                                        // if this is NOT a new ticket AND the customer is NOT CABOCES, show district-building select. else, display none
+                                                                        // if this iS NOT a new ticket AND is NOT an existing ticket with a CABOCES customer, show district-building select. else, display none
                                                                         'style' => ($model->customerType != null && $model->customerType->id != 1) ? 'display: block;' : 'display: none;'
                                                                 ]
-                                                        ])->dropDownList($districtBuildings,
+                                                        ])->dropDownList(ArrayHelper::map($districtBuildingData, 'building_id', 'name'),
                                                                 [
                                                                         'prompt' => 'N/A'
                                                                 ]

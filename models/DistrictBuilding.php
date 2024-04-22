@@ -91,7 +91,7 @@ class DistrictBuilding extends \yii\db\ActiveRecord
      * @return all district buildings in an alphabetical array
      */
     public static function getDistrictBuildings() {
-        return DistrictBuilding::find()->orderBy('building_id ASC')->asArray()->all();
+        return DistrictBuilding::find()->orderBy('name ASC')->asArray()->all();
     }
 
     /**
@@ -99,12 +99,12 @@ class DistrictBuilding extends \yii\db\ActiveRecord
      * 
      * @return all district building names in an alphabetical array
      */
-    public static function getBuildingNamesFromDistrictId($district_id = null) {
+    public static function getBuildingNamesFromDistrictId($model) {
         return DistrictBuilding::find()
         ->select(['district_building.district_id', 'district_building.building_id', 'building.name'])
         ->innerJoin('building', 'district_building.building_id = building.id')
-        ->where(['district_building.district_id' => $district_id])
-        ->orderBy('building_id ASC')
+        ->where(['building_id' => $model->district_building_id])
+        ->orderBy('name ASC')
         ->asArray()
         ->all();
     }

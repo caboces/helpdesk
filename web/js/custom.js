@@ -48,5 +48,4 @@ $('#ticket-customer_type_id').on('change', function() {
     }
 });
 
-
 });
