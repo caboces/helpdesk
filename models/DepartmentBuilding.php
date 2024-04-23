@@ -103,7 +103,7 @@ class DepartmentBuilding extends \yii\db\ActiveRecord
         return DepartmentBuilding::find()
         ->select(['department_building.department_id', 'department_building.building_id', 'building.name'])
         ->innerJoin('building', 'department_building.building_id = building.id')
-        ->where(['building_id' => $model->department_building_id])
+        ->where(['department_id' => $model->department_id])
         ->orderBy('name ASC')
         ->asArray()
         ->all();

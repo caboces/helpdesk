@@ -103,7 +103,7 @@ class DistrictBuilding extends \yii\db\ActiveRecord
         return DistrictBuilding::find()
         ->select(['district_building.district_id', 'district_building.building_id', 'building.name'])
         ->innerJoin('building', 'district_building.building_id = building.id')
-        ->where(['building_id' => $model->district_building_id])
+        ->where(['district_id' => $model->district_id])
         ->orderBy('name ASC')
         ->asArray()
         ->all();

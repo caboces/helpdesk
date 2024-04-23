@@ -184,6 +184,7 @@ class TicketController extends Controller
      */
     public function actionUpdate($id)
     {
+        Yii::$app->cache->flush();
         $model = $this->findModel($id);
         // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
