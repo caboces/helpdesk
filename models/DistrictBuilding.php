@@ -101,7 +101,7 @@ class DistrictBuilding extends \yii\db\ActiveRecord
      */
     public static function getBuildingNamesFromDistrictId($model) {
         return DistrictBuilding::find()
-        ->select(['district_building.district_id', 'district_building.building_id', 'building.name'])
+        ->select(['district_building.id', 'district_building.district_id', 'district_building.building_id', 'building.name'])
         ->innerJoin('building', 'district_building.building_id = building.id')
         ->where(['district_id' => $model->district_id])
         ->orderBy('name ASC')

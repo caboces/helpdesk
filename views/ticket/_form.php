@@ -152,7 +152,7 @@ use yii\bootstrap5\ActiveForm;
                                                                         // if this IS a new ticket OR IS an existing ticket with a CABOCES customer, show department-building select. else, display none
                                                                         'style' => ($model->customerType == null || $model->customerType->id == 1) ? 'display: block;' : 'display: none;'
                                                                 ]
-                                                        ])->dropDownList(ArrayHelper::map($departmentBuildingData, 'building_id', 'name'),
+                                                        ])->dropDownList(ArrayHelper::map($departmentBuildingData, 'id', 'name'),
                                                                 [
                                                                         'prompt' => 'N/A'
                                                                 ]
@@ -163,7 +163,7 @@ use yii\bootstrap5\ActiveForm;
                                                                         // if this iS NOT a new ticket AND is NOT an existing ticket with a CABOCES customer, show district-building select. else, display none
                                                                         'style' => ($model->customerType != null && $model->customerType->id != 1) ? 'display: block;' : 'display: none;'
                                                                 ]
-                                                        ])->dropDownList(ArrayHelper::map($districtBuildingData, 'building_id', 'name'),
+                                                        ])->dropDownList(ArrayHelper::map($districtBuildingData, 'id', 'name'),
                                                                 [
                                                                         'prompt' => 'N/A'
                                                                 ]

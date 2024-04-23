@@ -101,7 +101,7 @@ class DepartmentBuilding extends \yii\db\ActiveRecord
      */
     public static function getBuildingNamesFromDepartmentId($model) {
         return DepartmentBuilding::find()
-        ->select(['department_building.department_id', 'department_building.building_id', 'building.name'])
+        ->select(['department_building.id', 'department_building.department_id', 'department_building.building_id', 'building.name'])
         ->innerJoin('building', 'department_building.building_id = building.id')
         ->where(['department_id' => $model->department_id])
         ->orderBy('name ASC')

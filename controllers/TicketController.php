@@ -289,7 +289,7 @@ class TicketController extends Controller
     {
             $search_reference = Yii::$app->request->post('department_search_reference');
             $query = new Query;
-            $query->select(['department_building.department_id', 'department_building.building_id', 'building.name'])
+            $query->select(['department_building.id', 'department_building.department_id', 'department_building.building_id', 'building.name'])
                     ->from('department_building')
                     ->innerJoin('building', 'department_building.building_id = building.id')
                     ->where(['department_id' => $search_reference])
@@ -299,7 +299,7 @@ class TicketController extends Controller
             $data = [];
             if (!empty($rows)) {
                 foreach ($rows as $row) {
-                    $data[] = ['id' => $row['building_id'], 'name' => $row['name']];
+                    $data[] = ['id' => $row['id'], 'name' => $row['name']];
                 }
             } else {
                 $data = '';
@@ -315,7 +315,7 @@ class TicketController extends Controller
     {
             $search_reference = Yii::$app->request->post('district_search_reference');
             $query = new Query;
-            $query->select(['district_building.district_id', 'district_building.building_id', 'building.name'])
+            $query->select(['district_building.id', 'district_building.district_id', 'district_building.building_id', 'building.name'])
                     ->from('district_building')
                     ->innerJoin('building', 'district_building.building_id = building.id')
                     ->where(['district_id' => $search_reference])
@@ -325,7 +325,7 @@ class TicketController extends Controller
             $data = [];
             if (!empty($rows)) {
                 foreach ($rows as $row) {
-                    $data[] = ['id' => $row['building_id'], 'name' => $row['name']];
+                    $data[] = ['id' => $row['id'], 'name' => $row['name']];
                 }
             } else {
                 $data = '';
