@@ -38,6 +38,9 @@ use yii\bootstrap5\ActiveForm;
                         <button class="nav-link" id="pills-technicians-tab" data-bs-toggle="pill" data-bs-target="#pills-technicians" type="button" role="tab" aria-controls="pills-technicians" aria-selected="false">Technicians</button>
                 </li>
                 <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-equipment-tab" data-bs-toggle="pill" data-bs-target="#pills-equipment" type="button" role="tab" aria-controls="pills-equipment" aria-selected="false">Equipment</button>
+                </li>
+                <li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-time-entries-tab" data-bs-toggle="pill" data-bs-target="#pills-time-entries" type="button" role="tab" aria-controls="pills-time-entries" aria-selected="false">Time entries</button>
                 </li>
         </ul>
@@ -77,7 +80,7 @@ use yii\bootstrap5\ActiveForm;
                                                                 ]
                                                                 ])->dropDownList($departments, 
                                                                 [
-                                                                        'prompt' => 'N/A',
+                                                                        'prompt' => 'Select Department',
                                                                         'onchange' => '
                                                                                 $.ajax({
                                                                                         type: "POST",
@@ -90,9 +93,9 @@ use yii\bootstrap5\ActiveForm;
 
                                                                                                 if (count === 0) {
                                                                                                         $("#ticket-department_building_id").empty();
-                                                                                                        $("#ticket-department_building_id").append("<option value=\'" + id + "\'>Sorry, there are no options available for this selection</option>");
+                                                                                                        $("#ticket-department_building_id").append("<option value=\'" + id + "\'>Sorry, no buildings available for this department</option>");
                                                                                                 } else {
-                                                                                                        $("#ticket-department_building_id").append("<option value=\'" + id + "\'>Please choose a building...</option>");
+                                                                                                        $("#ticket-department_building_id").append("<option value=\'" + id + "\'>Select Department Building</option>");
                                                                                                         for (var i = 0; i < count; i++) {
                                                                                                                 var id = response[i][\'id\'];
                                                                                                                 var name = response[i][\'name\'];
@@ -115,7 +118,7 @@ use yii\bootstrap5\ActiveForm;
                                                                 ]
                                                                 ])->dropDownList($districts, 
                                                                 [
-                                                                        'prompt' => 'N/A',
+                                                                        'prompt' => 'Select District',
                                                                         'onchange' => '
                                                                                 $.ajax({
                                                                                         type: "POST",
@@ -128,9 +131,9 @@ use yii\bootstrap5\ActiveForm;
 
                                                                                                 if (count === 0) {
                                                                                                         $("#ticket-district_building_id").empty();
-                                                                                                        $("#ticket-district_building_id").append("<option value=\'" + id + "\'>Sorry, there are no options available for this selection</option>");
+                                                                                                        $("#ticket-district_building_id").append("<option value=\'" + id + "\'>Sorry, buildings available for this district</option>");
                                                                                                 } else {
-                                                                                                        $("#ticket-district_building_id").append("<option value=\'" + id + "\'>Please choose a building...</option>");
+                                                                                                        $("#ticket-district_building_id").append("<option value=\'" + id + "\'>Select District Building</option>");
                                                                                                         for (var i = 0; i < count; i++) {
                                                                                                                 var id = response[i][\'id\'];
                                                                                                                 var name = response[i][\'name\'];
@@ -154,7 +157,7 @@ use yii\bootstrap5\ActiveForm;
                                                                 ]
                                                         ])->dropDownList(ArrayHelper::map($departmentBuildingData, 'id', 'name'),
                                                                 [
-                                                                        'prompt' => 'N/A'
+                                                                        'prompt' => 'Select Department Building'
                                                                 ]
                                                         ); ?>
                                                         <!-- district buildings -->
@@ -165,7 +168,7 @@ use yii\bootstrap5\ActiveForm;
                                                                 ]
                                                         ])->dropDownList(ArrayHelper::map($districtBuildingData, 'id', 'name'),
                                                                 [
-                                                                        'prompt' => 'N/A'
+                                                                        'prompt' => 'Select District Building'
                                                                 ]
                                                         ); ?>
                                                 </div>
@@ -233,6 +236,12 @@ use yii\bootstrap5\ActiveForm;
                                         ]);
                                         ?>
                                 </div>
+                        </div>
+                </div>
+                <div class="tab-pane fade" id="pills-equipment" role="tabpanel" aria-labelledby="pills-equipment-tab">
+                        <div class="subsection-info-block">
+                                <h2>Equipment</h2>
+                                <p>Equipment associated with this ticket</p>
                         </div>
                 </div>
                 <div class="tab-pane fade" id="pills-time-entries" role="tabpanel" aria-labelledby="pills-time-entries-tab">

@@ -148,8 +148,6 @@ $this->title = 'Ticket Management';
                         'rowOptions' => function ($model) {
                             if ($model->jobPriority->name == 'Critical') {
                                 return ['class' => 'critical'];
-                            } else if ($model->jobPriority->name == 'High') {
-                                return ['class' => 'high'];
                             }
                             return [];
                         },

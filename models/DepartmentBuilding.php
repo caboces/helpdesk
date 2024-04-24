@@ -110,11 +110,20 @@ class DepartmentBuilding extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets name of department building from id
+     * Gets name of building from department_building
      * 
-     * @return the readable name of the department building
+     * @return the readable name of the department_building building
      */
-    public function getName() {
-        return $this->name;
+    public function getBuildingName() {
+        return Building::findOne($this->building_id)->name;
+    }
+
+    /**
+     * Gets name of department from department_building
+     * 
+     * @return the readable name of the department_building department
+     */
+    public function getDepartmentName() {
+        return Department::findOne($this->department_id)->name;
     }
 }

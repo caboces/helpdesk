@@ -62,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     // customer
                     [
                         'attribute' => 'customerType.name',
-                        'label' => 'Customer Type'
+                        'label' => 'Customer Type',
                     ],
                     [
                         'attribute' => 'district.name',
@@ -70,22 +70,24 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     [
                         'attribute' => 'department.name',
-                        'label' => 'Department'
+                        'label' => 'Department',
+                        'visible' => !empty($model->department)
                     ],
                     [
                         'attribute' => 'division.name',
-                        'label' => 'Division'
+                        'label' => 'Division',
+                        'visible' => !empty($model->division)
                     ],
-                    'department_building_id',
-                    // [
-                    //     'attribute' => 'departmentBuilding.name',
-                    //     'label' => 'Department Building'
-                    // ],
-                    'district_building_id',
-                    // [
-                    //     'attribute' => 'districtBuilding.name',
-                    //     'label' => 'District Building'
-                    // ],
+                    [
+                        'attribute' => 'departmentBuilding.buildingName',
+                        'label' => 'Department Building',
+                        'visible' => !empty($model->departmentBuilding)
+                    ],
+                    [
+                        'attribute' => 'districtBuilding.buildingName',
+                        'label' => 'District Building',
+                        'visible' => !empty($model->districtBuilding)
+                    ],
                     // requester
                     'requester',
                     'requester_email',

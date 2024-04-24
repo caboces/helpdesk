@@ -110,11 +110,20 @@ class DistrictBuilding extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets name of district building from id
+     * Gets name of building from district_building
      * 
-     * @return the readable name of the district building
+     * @return the readable name of the district_building building
      */
-    public function getName() {
-        return $this->name;
+    public function getBuildingName() {
+        return Building::findOne($this->building_id)->name;
+    }
+
+    /**
+     * Gets name of district from district_building
+     * 
+     * @return the readable name of the district_building district
+     */
+    public function getDistrictName() {
+        return District::findOne($this->district_id)->name;
     }
 }
