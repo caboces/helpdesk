@@ -38,6 +38,7 @@ $('#ticket-customer_type_id').on('change', function() {
         $('.field-ticket-department_id').hide();
         $('.field-ticket-department_building_id').hide();
         // clear division > deptartment val
+        $('#ticket-division_id').val('');
         $('#ticket-department_id').val('');
         $('#ticket-department_building_id').val('');
     }
@@ -45,6 +46,7 @@ $('#ticket-customer_type_id').on('change', function() {
     else {
         $('#ticket-district_id').val('');
         $('#ticket-department_id').val('');
+        $('#ticket-division_id').val('');
     }
 });
 

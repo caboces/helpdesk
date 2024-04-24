@@ -88,6 +88,9 @@ use yii\bootstrap5\ActiveForm;
                                                                                         data: {department_search_reference: $(this).val()},
                                                                                         dataType: "json",
                                                                                         success: function(response) {
+                                                                                                $("#ticket-division_id").val("");
+
+
                                                                                                 $("#ticket-department_building_id").empty();
                                                                                                 var count = response.length;
 
@@ -100,6 +103,10 @@ use yii\bootstrap5\ActiveForm;
                                                                                                                 var id = response[i][\'id\'];
                                                                                                                 var name = response[i][\'name\'];
                                                                                                                 $("#ticket-department_building_id").append("<option value=\'" + id + "\'>" + name + "</option>");
+
+                                                                                                                // this is so redundant...
+                                                                                                                var division = response[i][\'division\'];
+                                                                                                                $("#ticket-division_id").val(division);
                                                                                                         }
                                                                                                 }
                                                                                         }
@@ -146,6 +153,10 @@ use yii\bootstrap5\ActiveForm;
                                                                 ]
                                                                 
                                                         ); ?>
+
+                                                        <!-- division textbox -->
+                                                        <!-- this field is going to be entirely hidden and based off of the department selection. it gets values in a stupidly redundent way in the department ajax success function -->
+                                                        <?= $form->field($model, 'division_id')->hiddenInput()->label(false); ?>
                                                 </div>
                                                 <div class="col-md-4">
                                                         <!-- department buildings -->

@@ -289,9 +289,10 @@ class TicketController extends Controller
     {
             $search_reference = Yii::$app->request->post('department_search_reference');
             $query = new Query;
-            $query->select(['department_building.id', 'department_building.department_id', 'department_building.building_id', 'building.name'])
+            $query->select(['department_building.id', 'department_building.department_id', 'department_building.building_id', 'building.name', 'department.division_id'])
                     ->from('department_building')
                     ->innerJoin('building', 'department_building.building_id = building.id')
+                    ->innerJoin('department', 'department_building.department_id = department.id')
                     ->where(['department_id' => $search_reference])
                     ->orderBy('name ASC');
             $rows = $query->all();
@@ -299,7 +300,7 @@ class TicketController extends Controller
             $data = [];
             if (!empty($rows)) {
                 foreach ($rows as $row) {
-                    $data[] = ['id' => $row['id'], 'name' => $row['name']];
+                    $data[] = ['id' => $row['id'], 'name' => $row['name'], 'division' => $row['division_id']];
                 }
             } else {
                 $data = '';

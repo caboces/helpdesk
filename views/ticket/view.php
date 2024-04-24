@@ -66,17 +66,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     [
                         'attribute' => 'district.name',
-                        'label' => 'District'
-                    ],
-                    [
-                        'attribute' => 'department.name',
-                        'label' => 'Department',
-                        'visible' => !empty($model->department)
+                        'label' => 'District',
+                        'visible' => !empty($model->district)
                     ],
                     [
                         'attribute' => 'division.name',
                         'label' => 'Division',
                         'visible' => !empty($model->division)
+                    ],
+                    [
+                        'attribute' => 'department.name',
+                        'label' => 'Department',
+                        'visible' => !empty($model->department)
                     ],
                     [
                         'attribute' => 'departmentBuilding.buildingName',
