@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\TechTicketAssignment;
 
 /** @var yii\web\View $this */
 /** @var app\models\Ticket $model */
@@ -47,6 +48,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'description',
                         'contentOptions' => ['class' => 'apply-word-break']
                     ],
+                    // show the assigned techs (username)
+                    [
+                        'label' => 'All Assigned Techs',
+                        'value' => implode(', ', $model->getUsers()
+                            ->select('id', 'username')
+                            ->column())
+                    ]
                 ],
             ])?>
         </div>
