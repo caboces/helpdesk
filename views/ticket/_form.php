@@ -235,17 +235,27 @@ use yii\bootstrap5\ActiveForm;
                         <div class="subsection-info-block">
                                 <h2>Technicians</h2>
                                 <p>Technicians assigned to this ticket</p>
+                                <div class="alert alert-warning" role="alert">
+                                        Removing technicians will remove their recorded time entries!
+                                </div>
                                 <div class="question-box">
+                                        <!-- all tech assignments -->
                                         <?php
                                         echo $form->field($model, 'users')->widget(Select2::classname(), [
                                                 'data' => $users,
-                                                'options' => ['placeholder' => 'Add users ...'],
+                                                'options' => ['label' => 'Assigned Techs', 'placeholder' => 'Add users ...'],
                                                 'pluginOptions' => [
                                                         'allowClear' => true,
                                                         'multiple' => true
                                                 ],
-                                        ]);
-                                        ?>
+                                        ]);?>
+                                        <!-- primary tech assignment -->
+                                        <?= $form->field($model, 'primary_tech_id')
+                                        ->dropDownList(ArrayHelper::map($assignedTechData, 'user_id', 'username'),
+                                                [
+                                                        'prompt' => 'Select Primary Tech'
+                                                ]
+                                        );?>
                                 </div>
                         </div>
                 </div>

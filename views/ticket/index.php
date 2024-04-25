@@ -1,5 +1,6 @@
 <?php
 
+use app\models\User;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use app\models\Ticket;
@@ -94,7 +95,7 @@ $this->title = 'Ticket Management';
                              * Location is up in the air but i'm working on it.. -efox
                              */
                             'requester',
-                            'primary_tech',
+                            'primary_tech_id',
                             'location',
                             'job_category_name' => [
                                 'attribute' => 'job_category_name',

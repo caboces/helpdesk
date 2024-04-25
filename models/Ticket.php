@@ -11,11 +11,11 @@ use Yii;
  * @property string $summary
  * @property string|null $description
  * @property string $requester
- * @property string $requester
  * @property string $location
  * @property string $requester_email
  * @property string|null $requester_phone
  * 
+ * @propert int $primary_tech_id
  * @property int|null $job_category_id
  * @property int|null $job_priority_id
  * @property int|null $job_status_id
@@ -53,7 +53,7 @@ class Ticket extends \yii\db\ActiveRecord
     {
         return [
             [['summary', 'requester', 'location', 'requester_email', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id'], 'required'],
-            [['job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'district_id', 'district_building_id', 'department_building_id', 'division_id', 'department_id'], 'integer'],
+            [['primary_tech_id', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'district_id', 'district_building_id', 'department_building_id', 'division_id', 'department_id'], 'integer'],
             [['created', 'modified'], 'safe'],
             [['summary'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 500],
@@ -85,6 +85,8 @@ class Ticket extends \yii\db\ActiveRecord
             'id' => 'ID',
             'summary' => 'Summary',
             'description' => 'Description',
+            'primary_tech_id' => 'Primary Technician',
+            'users' => 'Assigned Technicians',
             'requester' => 'Requester',
             'location' => 'Location',
             'requester_email' => 'Requester Email',

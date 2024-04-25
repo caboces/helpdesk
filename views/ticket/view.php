@@ -1,5 +1,6 @@
 <?php
 
+use app\models\User;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\TechTicketAssignment;
@@ -48,13 +49,19 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'description',
                         'contentOptions' => ['class' => 'apply-word-break']
                     ],
+                    // show the primary tech
+                    [
+                        'label' => 'Primary Technician',
+                        // if there is an assigned primary tech, display their username
+                        'value' => (User::findOne($model->primary_tech_id) != null ? User::findOne($model->primary_tech_id)->username : null),
+                    ],
                     // show the assigned techs (username)
                     [
-                        'label' => 'All Assigned Techs',
+                        'label' => 'All Assigned Technicians',
                         'value' => implode(', ', $model->getUsers()
                             ->select('id', 'username')
                             ->column())
-                    ]
+                    ],
                 ],
             ])?>
         </div>

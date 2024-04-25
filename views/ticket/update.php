@@ -38,6 +38,7 @@ $this->title = 'Update Ticket: ' . $model->id;
             'districtBuildingData' => $districtBuildingData,
             // users
             'users' => $users,
+            'assignedTechData' => $assignedTechData,
             // 'activities' => $activities
         ]
     ) ?>

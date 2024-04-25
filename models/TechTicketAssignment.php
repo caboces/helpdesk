@@ -10,7 +10,6 @@ use Yii;
  * @property int $id
  * @property int $user_id
  * @property int $ticket_id
- * @property int $primary_tech
  */
 class TechTicketAssignment extends \yii\db\ActiveRecord
 {
@@ -28,8 +27,8 @@ class TechTicketAssignment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'ticket_id', 'primary_tech'], 'required'],
-            [['user_id', 'ticket_id', 'primary_tech'], 'integer'],
+            [['user_id', 'ticket_id'], 'required'],
+            [['user_id', 'ticket_id'], 'integer'],
         ];
     }
 
@@ -41,12 +40,27 @@ class TechTicketAssignment extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'ticket_id' => 'Ticket ID',
-            'primary_tech' => 'Primary Tech',
+            'ticket_id' => 'Ticket ID'
         ];
     }
 
     public static function getTechAssignments() {
         return TechTicketAssignment::find()->asArray()->all();
+    }
+
+    /**
+     * Gets all ids/names of assigned techs based on the ticket model
+     * 
+     * @return all tech usernames in an alphabetical array
+     */
+    public static function getTechNamesFromTicketId($model) {
+        return TechTicketAssignment::find()
+        ->select(['tech_ticket_assignment.id', 'tech_ticket_assignment.user_id', 'tech_ticket_assignment.ticket_id', 'user.username'])
+        ->innerJoin ('user', 'tech_ticket_assignment.user_id = user.id')
+        // this 'where' statement might be wrong...
+        ->where(['ticket_id' => $model->id])
+        ->orderBy('username ASC')
+        ->asArray()
+        ->all();
     }
 }

@@ -22,6 +22,7 @@ use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use app\models\DistrictBuilding;
 use app\models\DepartmentBuilding;
+use app\models\TechTicketAssignment;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 
@@ -132,6 +133,7 @@ class TicketController extends Controller
         $departmentBuildingData = DepartmentBuilding::getBuildingNamesFromDepartmentId($model);
         $districtBuildingData = DistrictBuilding::getBuildingNamesFromDistrictId($model);
         // users
+        $assignedTechData = TechTicketAssignment::getTechNamesFromTicketId($model);
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
 
         if ($this->request->isPost) {
@@ -171,7 +173,8 @@ class TicketController extends Controller
             'departmentBuildingData' => $departmentBuildingData,
             'districtBuildingData' => $districtBuildingData,
             //users
-            'users' => $users
+            'users' => $users,
+            'assignedTechData' => $assignedTechData,
         ]);
     }
 
@@ -203,6 +206,7 @@ class TicketController extends Controller
         $districtBuildingData = DistrictBuilding::getBuildingNamesFromDistrictId($model);
         // users
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
+        $assignedTechData = TechTicketAssignment::getTechNamesFromTicketId($model);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
 
@@ -244,6 +248,7 @@ class TicketController extends Controller
             'departmentBuildingData' => $departmentBuildingData,
             'districtBuildingData' => $districtBuildingData,
             // users
+            'assignedTechData' => $assignedTechData,
             'users' => $users,
         ]);
     }
