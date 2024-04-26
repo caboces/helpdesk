@@ -210,6 +210,13 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
+     * Finds out who the primary tech is.
+     */
+    public function getPrimaryTech() {
+        return $this->hasOne(User::class, ['id' => 'primary_tech_id']);
+    }
+
+    /**
      * Junction relation to get users attached to a ticket via tech_ticket_assignment table
      *
      * */

@@ -90,12 +90,14 @@ $this->title = 'Ticket Management';
                                 'filter' => false,
                             ],
                             'summary',
-                            /** 
-                             * TODO: we need to have LDAP before we can fill in the user fields automatically.
-                             * Location is up in the air but i'm working on it.. -efox
-                             */
                             'requester',
-                            'primary_tech_id',
+                            'primary_tech_id' => [
+                                'label' => 'Primary Tech',
+                                'attribute' => 'primary_tech_id',
+                                'value' => function($data) {
+                                    return ($data->primaryTech != null ? $data->primaryTech->username : '');
+                                }
+                            ],
                             'location',
                             'job_category_name' => [
                                 'attribute' => 'job_category_name',
