@@ -248,6 +248,12 @@ use yii\bootstrap5\ActiveForm;
                                                         'allowClear' => true,
                                                         'multiple' => true
                                                 ],
+                                                'pluginEvents' => [
+                                                        'change' => 'function(data) {
+                                                                       var data_id = $(this).val();
+                                                                       $("input#target").val($(this).val());
+                                                        }',
+                                                ]
                                         ]);?>
                                         <!-- primary tech assignment -->
                                         <?= $form->field($model, 'primary_tech_id')
