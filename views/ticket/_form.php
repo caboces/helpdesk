@@ -6,6 +6,7 @@ use app\models\Ticket;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap5\ActiveForm;
+use yii\grid\GridView;
 
 /** @var yii\web\View $this */
 /** @var app\models\Ticket $model */
@@ -275,6 +276,13 @@ use yii\bootstrap5\ActiveForm;
                         <div class="subsection-info-block">
                                 <h2>Time entries</h2>
                                 <p>Hours spent on current ticket</p>
+                                <?= GridView::widget([
+                                        'dataProvider' => $dataProvider,
+                                        'columns' => [
+                                                'id',
+                                                'name'
+                                        ],
+                                ]); ?>
                         </div>
                 </div>
         </div>

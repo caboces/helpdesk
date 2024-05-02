@@ -189,6 +189,9 @@ class TicketController extends Controller
     {
         Yii::$app->cache->flush();
         $model = $this->findModel($id);
+        // search all tickets
+        $ticketSearch = new TicketSearch();
+        $dataProvider = $ticketSearch->search(Yii::$app->request->get());
         // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
@@ -233,6 +236,9 @@ class TicketController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            // search all tickets
+            'searchModel' => $ticketSearch,
+            'dataProvider' => $dataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,

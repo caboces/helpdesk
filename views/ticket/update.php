@@ -22,6 +22,9 @@ $this->title = 'Update Ticket: ' . $model->id;
         '_form',
         [
             'model' => $model,
+            // search all tickets
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
