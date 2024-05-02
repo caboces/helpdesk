@@ -193,12 +193,11 @@ class TicketController extends Controller
 
         $query = (new \yii\db\Query())
         ->select([
-            'tech_time', 'overtime', 'travel_time', 'itinerate_time', 'entry_date', 'user_id', 'ticket_id', 'user.username'
+            'time_entry.id', 'tech_time', 'overtime', 'travel_time', 'itinerate_time', 'entry_date', 'user_id', 'ticket_id', 'user.username'
         ])
         ->from(['time_entry'])
-        ->innerJoin('tech_ticket_assignment', 'time_entry.tech_ticket_assignment_id = tech_ticket_assignment.id')
-        ->innerJoin('user', 'tech_ticket_assignment.user_id = user.id');
-
+        ->innerJoin('user', 'time_entry.user_id = user.id');
+        // ->where(['ticket_id' => $model->id]);
         // search time entries
         $dataProvider = new SqlDataProvider([
             // rewrite using SQL builder because i don't want to figure out vulnerabilities
@@ -206,11 +205,6 @@ class TicketController extends Controller
             // also, join with users to make grabbing usernames easier
 
             'sql' => $query->createCommand()->sql,
-            'sort' => [
-                'attributes' => [
-                    'created'
-                ],
-            ],
         ]);
         // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');

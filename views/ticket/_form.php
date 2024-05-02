@@ -279,12 +279,13 @@ use yii\grid\GridView;
                                 <?= GridView::widget([
                                         'dataProvider' => $dataProvider,
                                         'columns' => [
+                                                'ticket_id',
+                                                'entry_date',
                                                 'username',
                                                 'tech_time',
                                                 'overtime',
                                                 'travel_time',
                                                 'itinerate_time',
-                                                'entry_date',
                                         ],
                                 ]); ?>
                         </div>
