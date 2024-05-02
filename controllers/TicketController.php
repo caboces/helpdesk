@@ -23,6 +23,7 @@ use yii\filters\AccessControl;
 use app\models\DistrictBuilding;
 use app\models\DepartmentBuilding;
 use app\models\TechTicketAssignment;
+use yii\data\SqlDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 
@@ -189,9 +190,28 @@ class TicketController extends Controller
     {
         Yii::$app->cache->flush();
         $model = $this->findModel($id);
-        // search all tickets
-        $ticketSearch = new TicketSearch();
-        $dataProvider = $ticketSearch->search(Yii::$app->request->get());
+
+        $query = (new \yii\db\Query())
+        ->select([
+            'tech_time', 'overtime', 'travel_time', 'itinerate_time', 'entry_date', 'user_id', 'ticket_id', 'user.username'
+        ])
+        ->from(['time_entry'])
+        ->innerJoin('tech_ticket_assignment', 'time_entry.tech_ticket_assignment_id = tech_ticket_assignment.id')
+        ->innerJoin('user', 'tech_ticket_assignment.user_id = user.id');
+
+        // search time entries
+        $dataProvider = new SqlDataProvider([
+            // rewrite using SQL builder because i don't want to figure out vulnerabilities
+            // need to add "where" clause where ticket_id from time_entry is equal to id of model
+            // also, join with users to make grabbing usernames easier
+
+            'sql' => $query->createCommand()->sql,
+            'sort' => [
+                'attributes' => [
+                    'created'
+                ],
+            ],
+        ]);
         // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
@@ -236,8 +256,7 @@ class TicketController extends Controller
 
         return $this->render('update', [
             'model' => $model,
-            // search all tickets
-            'searchModel' => $ticketSearch,
+            // search time entries
             'dataProvider' => $dataProvider,
             // ticket tags
             'categories' => $categories,
