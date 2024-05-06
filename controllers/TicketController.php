@@ -23,6 +23,8 @@ use yii\filters\AccessControl;
 use app\models\DistrictBuilding;
 use app\models\DepartmentBuilding;
 use app\models\TechTicketAssignment;
+use app\models\TimeEntry;
+use yii\data\ArrayDataProvider;
 use yii\data\SqlDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
@@ -191,21 +193,17 @@ class TicketController extends Controller
         Yii::$app->cache->flush();
         $model = $this->findModel($id);
 
-        $query = (new \yii\db\Query())
-        ->select([
-            'time_entry.id', 'tech_time', 'overtime', 'travel_time', 'itinerate_time', 'entry_date', 'user_id', 'ticket_id', 'user.username'
-        ])
-        ->from(['time_entry'])
-        ->innerJoin('user', 'time_entry.user_id = user.id');
-        // ->where(['ticket_id' => $model->id]);
-        // search time entries
-        $dataProvider = new SqlDataProvider([
-            // rewrite using SQL builder because i don't want to figure out vulnerabilities
-            // need to add "where" clause where ticket_id from time_entry is equal to id of model
-            // also, join with users to make grabbing usernames easier
-
-            'sql' => $query->createCommand()->sql,
+        // search tech time entries for ticket
+        $techTimeEntryDataProvider = new ArrayDataProvider([
+            'allModels' => $this->queryTechTimeEntryData($model->id),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'attributes' => ['id']
+            ],
         ]);
+
         // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
@@ -251,7 +249,7 @@ class TicketController extends Controller
         return $this->render('update', [
             'model' => $model,
             // search time entries
-            'dataProvider' => $dataProvider,
+            'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
@@ -358,4 +356,46 @@ class TicketController extends Controller
 
             return $this->asJson($data);
     }
+
+    /**
+     * Return an array of tech time entries for the given ticket model, used to show 
+     * current time entries in ticket form
+     */
+    private function queryTechTimeEntryData($id) {
+        return TimeEntry::find()
+            ->select([
+                'time_entry.id', 
+                'tech_time', 
+                'overtime', 
+                'travel_time', 
+                'itinerate_time', 
+                'entry_date', 
+                'user_id', 
+                'ticket_id', 
+                'user.username'
+            ])
+            ->innerJoin('user', 'time_entry.user_id = user.id')
+            ->where(['ticket_id' => $id])
+            ->limit(100)
+            ->asArray()
+            ->all();
+    }
+
+
+        // throw this whole thing out and try again
+        // $query = (new \yii\db\Query())
+        // ->select([
+        //     'time_entry.id', 
+        //     'tech_time', 
+        //     'overtime', 
+        //     'travel_time', 
+        //     'itinerate_time', 
+        //     'entry_date', 
+        //     'user_id', 
+        //     'ticket_id', 
+        //     'user.username'
+        // ])
+        // ->from(['time_entry'])
+        // ->innerJoin('user', 'time_entry.user_id = user.id')
+        // ->where(['ticket_id' => $model->id]);
 }

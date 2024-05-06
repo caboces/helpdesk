@@ -3,10 +3,11 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 use app\models\Ticket;
+use yii\grid\GridView;
+use yii\bootstrap5\Modal;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap5\ActiveForm;
-use yii\grid\GridView;
 
 /** @var yii\web\View $this */
 /** @var app\models\Ticket $model */
@@ -277,9 +278,8 @@ use yii\grid\GridView;
                                 <h2>Time entries</h2>
                                 <p>Hours spent on current ticket</p>
                                 <?= GridView::widget([
-                                        'dataProvider' => $dataProvider,
+                                        'dataProvider' => $techTimeEntryDataProvider,
                                         'columns' => [
-                                                'ticket_id',
                                                 'entry_date',
                                                 'username',
                                                 'tech_time',
@@ -288,6 +288,17 @@ use yii\grid\GridView;
                                                 'itinerate_time',
                                         ],
                                 ]); ?>
+
+                                <!-- modal start -->
+                                <?php Modal::begin([
+                                        'header' => 'Testing modal',
+                                        'id' => 'test-modal',
+                                ]);
+
+
+
+                                Modal::end(); ?>
+                                <button data-toggle='modal' data-target='#test-modal'>Modal test!</button>
                         </div>
                 </div>
         </div>

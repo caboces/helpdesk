@@ -23,7 +23,7 @@ $this->title = 'Update Ticket: ' . $model->id;
         [
             'model' => $model,
             // search time entries
-            'dataProvider' => $dataProvider,
+            'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
