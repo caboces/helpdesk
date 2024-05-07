@@ -12,6 +12,8 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <p>Add new hours to this ticket</p>
+
     <?= $form->field($model, 'tech_time')->textInput() ?>
 
     <?= $form->field($model, 'overtime')->textInput() ?>
@@ -20,14 +22,14 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'itinerate_time')->textInput() ?>
 
-    <?= $form->field($model, 'entry_date')->textInput() ?>
+    <?= $form->field($model, 'entry_date')->date() ?>
 
     <?= $form->field($model, 'user_id')->textInput() ?>
 
     <?= $form->field($model, 'ticket_id')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Confirm new time entry', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
     </div>
 
     <?php ActiveForm::end(); ?>
