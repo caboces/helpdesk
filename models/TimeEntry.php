@@ -8,13 +8,18 @@ use Yii;
  * This is the model class for table "time_entry".
  *
  * @property int $id
- * @property int $duration_minutes
+ * @property int $tech_time
+ * @property int $overtime
+ * @property int $travel_time
+ * @property int $itinerate_time
  * @property string $entry_date
- * @property int $tech_ticket_assignment_id
+ * @property int $user_id
+ * @property int $ticket_id
  * @property string|null $created
  * @property string|null $modified
  *
- * @property TechTicketAssignment $techTicketAssignment
+ * @property Ticket $ticket
+ * @property User $user
  */
 class TimeEntry extends \yii\db\ActiveRecord
 {
@@ -32,10 +37,11 @@ class TimeEntry extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['duration_minutes', 'tech_ticket_assignment_id'], 'integer'],
-            [['entry_date', 'tech_ticket_assignment_id'], 'required'],
+            [['tech_time', 'overtime', 'travel_time', 'itinerate_time', 'user_id', 'ticket_id'], 'integer'],
+            [['entry_date', 'user_id', 'ticket_id'], 'required'],
             [['entry_date', 'created', 'modified'], 'safe'],
-            [['tech_ticket_assignment_id'], 'exist', 'skipOnError' => true, 'targetClass' => TechTicketAssignment::class, 'targetAttribute' => ['tech_ticket_assignment_id' => 'id']],
+            [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -46,22 +52,36 @@ class TimeEntry extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'duration_minutes' => 'Duration Minutes',
+            'tech_time' => 'Tech Time',
+            'overtime' => 'Overtime',
+            'travel_time' => 'Travel Time',
+            'itinerate_time' => 'Itinerate Time',
             'entry_date' => 'Entry Date',
-            'tech_ticket_assignment_id' => 'Tech Ticket Assignment ID',
+            'user_id' => 'User ID',
+            'ticket_id' => 'Ticket ID',
             'created' => 'Created',
             'modified' => 'Modified',
         ];
     }
 
     /**
-     * Gets query for [[TechTicketAssignment]].
+     * Gets query for [[Ticket]].
      *
-     * @return \yii\db\ActiveQuery|\app\models\query\TechTicketAssignmentQuery
+     * @return \yii\db\ActiveQuery|\app\models\query\TicketQuery
      */
-    public function getTechTicketAssignment()
+    public function getTicket()
     {
-        return $this->hasOne(TechTicketAssignment::class, ['id' => 'tech_ticket_assignment_id']);
+        return $this->hasOne(Ticket::class, ['id' => 'ticket_id']);
+    }
+
+    /**
+     * Gets query for [[User]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
     /**

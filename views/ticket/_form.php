@@ -3,8 +3,10 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 use app\models\Ticket;
+use app\models\TimeEntry;
 use yii\grid\GridView;
 use yii\bootstrap5\Modal;
+use yii\grid\ActionColumn;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap5\ActiveForm;
@@ -28,7 +30,7 @@ use yii\bootstrap5\ActiveForm;
                         'aria-expanded' => 'false',
                         'aria-controls' => '#tech-note'
                 ]); ?>
-                <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
+                <?= Html::submitButton('Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
         </div>
 
         <!-- pill nav -->
@@ -277,6 +279,19 @@ use yii\bootstrap5\ActiveForm;
                         <div class="subsection-info-block">
                                 <h2>Time entries</h2>
                                 <p>Hours spent on current ticket</p>
+                                <!-- modal window for time entries -->
+                                <?php 
+                                        Modal::begin([
+                                                'title' => 'Add Times',
+                                                'id' => 'modal',
+                                                'size' => 'modal-lg'
+                                        ]);
+
+                                        echo '<div id="modalContent">Modal opened</div>';
+
+                                        Modal::end(); 
+                                ?>
+                                <?= Html::button('New time entry', ['value' => Url::to('/time-entry/create'), 'id' => 'modalButton', 'class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
                                 <?= GridView::widget([
                                         'dataProvider' => $techTimeEntryDataProvider,
                                         'columns' => [
@@ -288,17 +303,6 @@ use yii\bootstrap5\ActiveForm;
                                                 'itinerate_time',
                                         ],
                                 ]); ?>
-
-                                <!-- modal start -->
-                                <?php Modal::begin([
-                                        'header' => 'Testing modal',
-                                        'id' => 'test-modal',
-                                ]);
-
-
-
-                                Modal::end(); ?>
-                                <button data-toggle='modal' data-target='#test-modal'>Modal test!</button>
                         </div>
                 </div>
         </div>
@@ -307,7 +311,7 @@ use yii\bootstrap5\ActiveForm;
                 <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
                 <?= Html::button('Assign tech', ['class' => 'btn btn-outline-secondary']); ?>
                 <?= Html::button('Add time entry', ['class' => 'btn btn-outline-secondary']); ?>
-                <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
+                <?= Html::submitButton('Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
         </div>
         <?php ActiveForm::end(); ?>
 
