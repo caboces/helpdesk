@@ -157,8 +157,6 @@ class TicketController extends Controller
             $model->loadDefaultValues();
         }
 
-        $this->layout = 'blank';
-
         return $this->render('create', [
             'model' => $model,
             // ticket tags

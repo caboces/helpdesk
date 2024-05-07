@@ -62,6 +62,10 @@ class TimeEntryController extends Controller
 
     /**
      * Creates a new TimeEntry model.
+     * 
+     * This can be seen in the Ticket Form
+     * Creation views are shown in a modal window, hence the modal-blank layout
+     * 
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
@@ -77,9 +81,9 @@ class TimeEntryController extends Controller
             $model->loadDefaultValues();
         }
 
-        $this->layout = 'modal-blank';
+        $this->layout = 'blank';
 
-        return $this->render('create', [
+        return $this->renderAjax('create', [
             'model' => $model,
         ]);
     }

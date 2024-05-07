@@ -283,15 +283,15 @@ use yii\bootstrap5\ActiveForm;
                                 <?php 
                                         Modal::begin([
                                                 'title' => 'Add Times',
-                                                'id' => 'modal',
+                                                'id' => 'time-entry-modal',
                                                 'size' => 'modal-lg'
                                         ]);
 
-                                        echo '<div id="modalContent">Modal opened</div>';
+                                        echo '<div id="time-entry-modal-content"></div>';
 
                                         Modal::end(); 
                                 ?>
-                                <?= Html::button('New time entry', ['value' => Url::to('/time-entry/create'), 'id' => 'modalButton', 'class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
+                                <?= Html::button('New time entry', ['value' => Url::to('/time-entry/create'), 'id' => 'time-entry-modal-button', 'class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
                                 <?= GridView::widget([
                                         'dataProvider' => $techTimeEntryDataProvider,
                                         'columns' => [
