@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'itinerate_time')->textInput() ?>
 
-    <?= $form->field($model, 'entry_date')->date() ?>
+    <?= $form->field($model, 'entry_date')->textInput() ?>
 
     <?= $form->field($model, 'user_id')->textInput() ?>
 

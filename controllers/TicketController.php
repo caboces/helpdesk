@@ -120,6 +120,18 @@ class TicketController extends Controller
     public function actionCreate()
     {
         $model = new Ticket();
+
+        // search tech time entries for ticket
+        $techTimeEntryDataProvider = new ArrayDataProvider([
+            'allModels' => $this->queryTechTimeEntryData($model->id),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'attributes' => ['id']
+            ],
+        ]);
+
         // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
@@ -157,8 +169,12 @@ class TicketController extends Controller
             $model->loadDefaultValues();
         }
 
+        $this->layout = 'blank-container';
+
         return $this->render('create', [
             'model' => $model,
+            // search time entries
+            'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,

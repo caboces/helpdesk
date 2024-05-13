@@ -22,6 +22,7 @@ $this->title = 'Create Ticket';
         '_form',
         [
             'model' => $model,
+            'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
