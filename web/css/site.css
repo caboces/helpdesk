@@ -342,7 +342,8 @@ ul.pagination li.active a {
 || FORMS
 =========================================================================================== */
 
-.question-box {
+.question-box,
+.question-box-no-trim {
   box-shadow: 3px 3px 5px rgba(32, 4, 63, 0.1);
   margin-bottom: 1rem;
   border: 1px solid rgba(32, 4, 63, 0.1);
@@ -351,6 +352,11 @@ ul.pagination li.active a {
   padding: 1rem;
 
   background-color: #fff;
+}
+
+.question-box-no-trim {
+  box-shadow: none;
+  border: 1px solid rgba(32, 4, 63, 0.1);
 }
 
 /* i don't know how to make bootstrap do what i want so this is a long rule oops */
@@ -373,7 +379,8 @@ button.bg-pacific-cyan:hover {
   background-color: #066882;
 }
 
-label.form-label {
+label.form-label,
+label.control-label {
   margin-bottom: 0.2rem;
 
   font-size: 0.9rem;

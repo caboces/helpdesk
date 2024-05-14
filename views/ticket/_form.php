@@ -292,17 +292,19 @@ use yii\bootstrap5\ActiveForm;
                                         Modal::end(); 
                                 ?>
                                 <?= Html::button('New time entry', ['value' => Url::to('/time-entry/create'), 'id' => 'time-entry-modal-button', 'class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
-                                <?= GridView::widget([
-                                        'dataProvider' => $techTimeEntryDataProvider,
-                                        'columns' => [
-                                                'entry_date',
-                                                'username',
-                                                'tech_time',
-                                                'overtime',
-                                                'travel_time',
-                                                'itinerate_time',
-                                        ],
-                                ]); ?>
+                                <div class="container-fluid overflow-x-scroll">
+                                        <?= GridView::widget([
+                                                'dataProvider' => $techTimeEntryDataProvider,
+                                                'columns' => [
+                                                        'entry_date',
+                                                        'username',
+                                                        'tech_time',
+                                                        'overtime',
+                                                        'travel_time',
+                                                        'itinerate_time',
+                                                ],
+                                        ]); ?>
+                                </div>
                         </div>
                 </div>
         </div>
