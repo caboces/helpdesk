@@ -20,7 +20,7 @@ use app\models\TechTicketAssignment;
             <div class="col">
                 <?= $form->field($model, 'user_id')
                     ->dropDownList(
-                        ArrayHelper::map(TechTicketAssignment::getTechNamesFromTicketId($ticketModel), 'user_id', 'username'),
+                        ArrayHelper::map(TechTicketAssignment::getTechNamesFromTicketId($model), 'user_id', 'username'),
                         [
                             'prompt' => 'Select tech'
                         ]

@@ -285,7 +285,6 @@ use yii\bootstrap5\ActiveForm;
                                                 'title' => 'Add Times',
                                                 'id' => 'time-entry-modal',
                                                 'size' => 'modal-lg',
-                                                'ticketModel' => $model
                                         ]);
 
                                         echo '<div id="time-entry-modal-content"></div>';
