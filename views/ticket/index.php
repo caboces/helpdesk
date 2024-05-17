@@ -75,7 +75,7 @@ $this->title = 'Ticket Management';
                         },
                         'columns' => [
                             [
-                                'class' => ActionColumn::className(),
+                                'class' => ActionColumn::class,
                                 'buttons' => [
                                     'images' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
                                         return Html::a('<span class="glyphicon glyphicon glyphicon-picture" aria-hidden="true"></span>', Url::to(['image/index', 'id' => $model->id]));
@@ -156,7 +156,7 @@ $this->title = 'Ticket Management';
                         },
                         'columns' => [
                             [
-                                'class' => ActionColumn::className(),
+                                'class' => ActionColumn::class,
                                 'buttons' => [
                                     'images' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
                                         return Html::a('<span class="glyphicon glyphicon glyphicon-picture" aria-hidden="true"></span>', Url::to(['image/index', 'id' => $model->id]));
@@ -241,7 +241,7 @@ $this->title = 'Ticket Management';
                         },
                         'columns' => [
                             [
-                                'class' => ActionColumn::className(),
+                                'class' => ActionColumn::class,
                                 'buttons' => [
                                     'images' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
                                         return Html::a('<span class="glyphicon glyphicon glyphicon-picture" aria-hidden="true"></span>', Url::to(['image/index', 'id' => $model->id]));

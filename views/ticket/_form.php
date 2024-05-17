@@ -259,7 +259,7 @@ use yii\bootstrap5\ActiveForm;
                                 <div class="question-box">
                                         <!-- all tech assignments -->
                                         <?php
-                                        echo $form->field($model, 'users')->widget(Select2::classname(), [
+                                        echo $form->field($model, 'users')->widget(Select2::class, [
                                                 'data' => $users,
                                                 'options' => ['label' => 'Assigned Techs', 'placeholder' => 'Add users ...'],
                                                 'pluginOptions' => [
