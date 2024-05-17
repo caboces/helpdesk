@@ -253,8 +253,8 @@ use yii\bootstrap5\ActiveForm;
                         <div class="subsection-info-block">
                                 <h2>Technicians</h2>
                                 <p>Technicians assigned to this ticket</p>
-                                <div class="alert alert-warning" role="alert">
-                                        Removing technicians will remove their recorded time entries!
+                                <div class="alert alert-warning p-2" role="alert">
+                                        Removing technicians will remove their recorded time entries
                                 </div>
                                 <div class="question-box">
                                         <!-- all tech assignments -->
@@ -292,7 +292,7 @@ use yii\bootstrap5\ActiveForm;
                 <div class="tab-pane fade" id="pills-time-entries" role="tabpanel" aria-labelledby="pills-time-entries-tab">
                         <div class="subsection-info-block">
                                 <h2>Time entries</h2>
-                                <p>Hours spent on current ticket</p>
+                                <p>Hours spent on the current ticket</p>
                                 <div class="table-container container-fluid overflow-x-scroll">
                                         <?= GridView::widget([
                                                 'dataProvider' => $techTimeEntryDataProvider,

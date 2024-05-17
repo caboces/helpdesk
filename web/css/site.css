@@ -5,6 +5,7 @@
 || GENERAL
 || TYPOGRAPHY
 || COLOR PALETTE
+|| ALERT MESSAGES
 
 || PILL NAV
 || GRIDVIEW WIDGET
@@ -173,13 +174,11 @@ h2 {
 }
 
 /* ===========================================================================================
-|| COLOR PALETTE
+|| ALERT MESSAGES
 =========================================================================================== */
 
-.bg-login {
-  background: url('./images/bg-login.jpg');
-  background-size: cover;
-  background-position: center;
+div.alert {
+  font-size: 0.8rem;
 }
 
 /* ===========================================================================================
@@ -472,6 +471,11 @@ div#ticket-customer_type_id {
 || LOGIN
 =========================================================================================== */
 
+.bg-login {
+  background: url('./images/bg-login.jpg');
+  background-size: cover;
+  background-position: center;
+}
 
 /* ===========================================================================================
 || ACTIVITY
