@@ -23,15 +23,29 @@ use yii\bootstrap5\ActiveForm;
         <!-- action buttons -->
         <div class='container-fluid p-2 | bg-dark shadow-sm'>
                 <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
-                <?= Html::button('Add tech note', [
-                        'class' => 'btn btn-secondary',
+                <?= Html::button('New tech note', [
+                        'class' => 'btn btn-primary bg-iris border-iris',
                         'data-bs-toggle' => 'collapse',
                         'data-bs-target' => '#tech-note',
                         'aria-expanded' => 'false',
                         'aria-controls' => '#tech-note'
                 ]); ?>
+                <?= Html::button('New time entry', ['value' => Url::to('/time-entry/create'), 'id' => 'time-entry-modal-button', 'class' => 'btn btn-primary bg-iris border-iris']) ?>
                 <?= Html::submitButton('Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
         </div>
+
+        <!-- modal window for time entries -->
+        <?php 
+        Modal::begin([
+                'title' => 'Add Times',
+                'id' => 'time-entry-modal',
+                'size' => 'modal-lg',
+        ]);
+
+        echo '<div id="time-entry-modal-content"></div>';
+
+        Modal::end(); 
+        ?>
 
         <!-- pill nav -->
         <ul class="nav nav-pills" id="pills-tab" role="tablist">
@@ -279,22 +293,10 @@ use yii\bootstrap5\ActiveForm;
                         <div class="subsection-info-block">
                                 <h2>Time entries</h2>
                                 <p>Hours spent on current ticket</p>
-                                <!-- modal window for time entries -->
-                                <?php 
-                                        Modal::begin([
-                                                'title' => 'Add Times',
-                                                'id' => 'time-entry-modal',
-                                                'size' => 'modal-lg',
-                                        ]);
-
-                                        echo '<div id="time-entry-modal-content"></div>';
-
-                                        Modal::end(); 
-                                ?>
-                                <?= Html::button('New time entry', ['value' => Url::to('/time-entry/create'), 'id' => 'time-entry-modal-button', 'class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
-                                <div class="container-fluid overflow-x-scroll">
+                                <div class="table-container container-fluid overflow-x-scroll">
                                         <?= GridView::widget([
                                                 'dataProvider' => $techTimeEntryDataProvider,
+                                                'tableOptions' => ['class' => 'table table-bordered'],
                                                 'columns' => [
                                                         'entry_date',
                                                         'username',
@@ -311,8 +313,9 @@ use yii\bootstrap5\ActiveForm;
         <!-- action buttons -->
         <div class='secondary-action-button-bar'>
                 <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
-                <?= Html::button('Assign tech', ['class' => 'btn btn-outline-secondary']); ?>
-                <?= Html::button('Add time entry', ['class' => 'btn btn-outline-secondary']); ?>
+                <?= Html::button('Technicians', ['class' => 'btn btn-outline-secondary']); ?>
+                <?= Html::button('Equipment', ['class' => 'btn btn-outline-secondary']); ?>
+                <?= Html::button('Time entries', ['class' => 'btn btn-outline-secondary']); ?>
                 <?= Html::submitButton('Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
         </div>
         <?php ActiveForm::end(); ?>

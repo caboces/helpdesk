@@ -14,44 +14,50 @@ use app\models\TechTicketAssignment;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <div class="question-box-no-trim">
-        <div class="row">
-            <?= $form->field($model, 'ticket_id', ['options' => ['style' => 'display:none;']])->textInput() ?>
-            <div class="col">
-                <?= $form->field($model, 'user_id')
-                    ->dropDownList(
-                        ArrayHelper::map(TechTicketAssignment::getTechNamesFromTicketId($model), 'user_id', 'username'),
-                        [
-                            'prompt' => 'Select tech'
-                        ]
-                    ); ?>
-            </div>
-            <div class="col">
-                <!-- ActiveForm won't take date input... -->
-                <div class="form-group field-timeentry-entry_date required">
-                    <label class="control-label" for="timeentry-entry_date">Entry Date</label>
-                    <input type="date" id="timeentry-entry_date" class="form-control" name="TimeEntry[entry_date]" placeholder="mm/dd/yyyy" aria-required="true">
+    <div class="entries-container">
+        <div class="question-box-no-trim">
+            <div class="row">
+                <?= $form->field($model, 'ticket_id', ['options' => ['style' => 'display:none;']])->textInput() ?>
+                <div class="col iris">
+                    <?= $form->field($model, 'user_id')
+                        ->dropDownList(
+                            ArrayHelper::map(TechTicketAssignment::getTechNamesFromTicketId($model), 'user_id', 'username'),
+                            [
+                                'prompt' => 'Select tech',
+                            ]
+                        ); ?>
+                </div>
+                <div class="col">
+                    <!-- ActiveForm won't take date input... -->
+                    <div class="form-group field-timeentry-entry_date required">
+                        <label class="control-label" for="timeentry-entry_date">Entry Date</label>
+                        <input type="date" id="timeentry-entry_date" class="form-control" name="TimeEntry[entry_date]" placeholder="mm/dd/yyyy" aria-required="true">
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-3 col-xs-auto">
-                <?= $form->field($model, 'tech_time')->textInput() ?>
+            <div class="row">
+                <div class="col-3 col-xs-auto">
+                    <?= $form->field($model, 'tech_time')->textInput() ?>
+                </div>
+                <div class="col-3 col-xs-auto">
+                    <?= $form->field($model, 'overtime')->textInput() ?>
+                </div>
+                <div class="col-3 col-xs-auto">
+                    <?= $form->field($model, 'travel_time')->textInput() ?>
+                </div>
+                <div class="col-3 col-xs-auto">
+                    <?= $form->field($model, 'itinerate_time')->textInput() ?>
+                </div>
             </div>
-            <div class="col-3 col-xs-auto">
-                <?= $form->field($model, 'overtime')->textInput() ?>
-            </div>
-            <div class="col-3 col-xs-auto">
-                <?= $form->field($model, 'travel_time')->textInput() ?>
-            </div>
-            <div class="col-3 col-xs-auto">
-                <?= $form->field($model, 'itinerate_time')->textInput() ?>
+            <div class="form-group">
+                <?= Html::button('Remove', ['class' => 'btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>
+                <?= Html::button('Duplicate', ['class' => 'btn btn-primary bg-iris border-iris btn-skinny']); ?>
             </div>
         </div>
     </div>
 
     <div class="form-group">
-        <?= Html::submitButton('Confirm new time entry', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
+        <?= Html::submitButton('Confirm new time entry', ['class' => 'mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
     </div>
 
     <?php ActiveForm::end(); ?>

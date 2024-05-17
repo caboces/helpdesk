@@ -34,7 +34,7 @@ $this->title = 'Ticket Management';
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Reset filters', ['index'], ['class' => 'btn btn-secondary']); ?>
-        <?= Html::a('Create', ['create'], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
+        <?= Html::a('New ticket', ['create'], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
     </div>
 
     <!-- pill nav -->
@@ -59,7 +59,7 @@ $this->title = 'Ticket Management';
                 <div class="alert alert-warning" role="alert">
                     Filters haven't been made yet! Currently showing all tickets.
                 </div>
-                <div class="container-fluid overflow-x-scroll">
+                <div class="table-container container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-assignments']); ?>
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,

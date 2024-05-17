@@ -27,8 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Back', ['index'], ['class' => 'btn btn-secondary']); ?>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Update ticket', ['update', 'id' => $model->id], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
+        <?= Html::a('Delete ticket', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger float-end',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',

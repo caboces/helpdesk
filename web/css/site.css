@@ -111,6 +111,7 @@ h2 {
 || COLOR PALETTE
 =========================================================================================== */
 
+/* that nice dark blue color */
 .slate {
   color: #070e33;
 }
@@ -123,6 +124,7 @@ h2 {
   background: rgba(7, 14, 51, 0.89);
 }
 
+/* trademark blue color */
 .pacific-cyan {
   color: #09a2c9;
 }
@@ -133,6 +135,32 @@ h2 {
 
 .border-pacific-cyan {
   border-color: #09a2c9;
+}
+
+/* secondary colors */
+
+.iris {
+  color: #5f4bb6;
+}
+
+.bg-iris {
+  background: #5f4bb6;
+}
+
+.border-iris {
+  border-color: #5f4bb6;
+}
+
+.imperial-red {
+  color: #F15152;
+}
+
+.bg-imperial-red {
+  background: #F15152;
+}
+
+.border-imperial-red {
+  border-color: #F15152;
 }
 
 /* i wanna use these i just don't know where yet */
@@ -191,6 +219,10 @@ h2 {
 || GRIDVIEW WIDGET
 =========================================================================================== */
 
+.table-container {
+  padding: 1rem 0 0 0;
+}
+
 /* change alternating table row colors to be prettier */
 tr:nth-child(odd) td {
   background-color: #f4f2ff;
@@ -198,7 +230,7 @@ tr:nth-child(odd) td {
 
 /* applied to ticket table rows when the priority is critical */
 .critical td {
-  box-shadow: inset 200px 200px #ff273967 !important;
+  box-shadow: inset 200px 200px #ff181867 !important;
 }
 
 .filters td {
@@ -338,17 +370,30 @@ ul.pagination li.active a {
   width: 100% !important;
 }
 
+/* make the tags a little prettier */
+li.select2-selection__choice {
+  padding: 0.15rem;
+
+  background: #5f4bb60c !important;
+}
+
+/* get rid of that gross box-shadow */
+.select2-container--krajee-bs5 .select2-selection {
+  box-shadow: none !important;
+  padding: 0.15rem;
+}
+
 /* ===========================================================================================
 || FORMS
 =========================================================================================== */
 
 .question-box,
 .question-box-no-trim {
-  box-shadow: 3px 3px 5px rgba(32, 4, 63, 0.1);
+  box-shadow: 3px 3px 5px rgba(255, 255, 255, 0.027);
   margin-bottom: 1rem;
   border: 1px solid rgba(32, 4, 63, 0.1);
-  border-left: 7px solid #09a2c9;
-  border-radius: 5px;
+  border-left: 5px solid #09a2c9;
+  border-radius: 3px;
   padding: 1rem;
 
   background-color: #fff;
@@ -366,19 +411,45 @@ ul.pagination li.active a {
   justify-content: flex-start;
   gap: 10px;
 
-  box-shadow: 3px 3px 5px rgba(32, 4, 63, 0.1);
+  box-shadow: 3px 3px 5px rgba(255, 255, 255, 0.027);
   border: 1px solid rgba(32, 4, 63, 0.1);
-  border-left: 7px solid #535353;
-  border-radius: 5px;
+  border-left: 5px solid #535353;
+  border-radius: 3px;
   padding: 1rem;
 
   background-color: #fff;
 }
 
-button.bg-pacific-cyan:hover {
+/* make buttons a little smaller than eveyrthing else */
+.btn {
+  font-size: 0.9rem;
+}
+
+/* don't use that ugly blue color on bootstrap5 buttons when hovering */
+button.bg-pacific-cyan:hover,
+a.btn.bg-pacific-cyan:hover {
+  border-color: #066882;
   background-color: #066882;
 }
 
+button.bg-iris:hover,
+a.btn.bg-iris:hover {
+  border-color: #3d3174;
+  background-color: #3d3174;
+}
+
+button.border-imperial-red:hover {
+  border-color: #F15152;
+  background-color: #F15152;
+}
+
+
+/* you can find these in the time entry forms. normal sized buttons are too large */
+button.btn-skinny {
+  font-size: .7rem;
+}
+
+/* make the form labels a little more appealing. helps to keep them from blending in with user input */
 label.form-label,
 label.control-label {
   margin-bottom: 0.2rem;
