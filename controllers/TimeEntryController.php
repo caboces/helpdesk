@@ -2,11 +2,12 @@
 
 namespace app\controllers;
 
-use app\models\TimeEntry;
-use app\models\TimeEntrySearch;
+use app\models\Ticket;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use app\models\TimeEntry;
 use yii\filters\VerbFilter;
+use app\models\TimeEntrySearch;
+use yii\web\NotFoundHttpException;
 
 /**
  * TimeEntryController implements the CRUD actions for TimeEntry model.
@@ -67,10 +68,12 @@ class TimeEntryController extends Controller
      * Creation views are shown in a modal window, hence the modal-blank layout
      * 
      * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param int $id of the ticket model time is being added to
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
+        $ticket = Ticket::findOne($id);
         $model = new TimeEntry();
 
         if ($this->request->isPost) {
@@ -85,6 +88,7 @@ class TimeEntryController extends Controller
 
         return $this->renderAjax('create', [
             'model' => $model,
+            'ticket' => $ticket
         ]);
     }
 

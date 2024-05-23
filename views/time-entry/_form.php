@@ -21,7 +21,7 @@ use app\models\TechTicketAssignment;
                 <div class="col iris">
                     <?= $form->field($model, 'user_id')
                         ->dropDownList(
-                            ArrayHelper::map(TechTicketAssignment::getTechNamesFromTicketId($model), 'user_id', 'username'),
+                            ArrayHelper::map(TechTicketAssignment::getTechNamesFromTicketId($ticket), 'user_id', 'username'),
                             [
                                 'prompt' => 'Select tech',
                             ]
@@ -33,6 +33,9 @@ use app\models\TechTicketAssignment;
                         <label class="control-label" for="timeentry-entry_date">Entry Date</label>
                         <input type="date" id="timeentry-entry_date" class="form-control" name="TimeEntry[entry_date]" placeholder="mm/dd/yyyy" aria-required="true">
                     </div>
+                </div>
+                <div class="col">
+                    <?= $form->field($model, 'ticket_id', ['inputOptions' => ['value' => $ticket->id]])->textInput(['readonly' => true, 'class' => 'read-only form-control']) ?>
                 </div>
             </div>
             <div class="row">

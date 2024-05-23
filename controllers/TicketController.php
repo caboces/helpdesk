@@ -214,7 +214,7 @@ class TicketController extends Controller
                 'pageSize' => 10,
             ],
             'sort' => [
-                'attributes' => ['id']
+                'attributes' => ['entry_date' => ['default' => SORT_DESC]],
             ],
         ]);
 

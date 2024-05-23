@@ -466,6 +466,10 @@ div#ticket-customer_type_id {
   padding-bottom: 6px;
 }
 
+.read-only {
+  background-color: #ddd7ff;
+  cursor: not-allowed;
+}
 
 /* ===========================================================================================
 || LOGIN

@@ -2,9 +2,10 @@
 
 use yii\helpers\Url;
 use yii\helpers\Html;
+use yii\widgets\Pjax;
 use app\models\Ticket;
-use app\models\TimeEntry;
 use yii\grid\GridView;
+use app\models\TimeEntry;
 use yii\bootstrap5\Modal;
 use yii\grid\ActionColumn;
 use kartik\select2\Select2;
@@ -30,7 +31,7 @@ use yii\bootstrap5\ActiveForm;
                         'aria-expanded' => 'false',
                         'aria-controls' => '#tech-note'
                 ]); ?>
-                <?= Html::button('New time entry', ['value' => Url::to('/time-entry/create'), 'id' => 'time-entry-modal-button', 'class' => 'btn btn-primary bg-iris border-iris']) ?>
+                <?= Html::button('New time entry', ['value' => Url::to('/time-entry/create?id=' . $model->id), 'id' => 'time-entry-modal-button', 'class' => 'btn btn-primary bg-iris border-iris']) ?>
                 <?= Html::submitButton('Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
         </div>
 
@@ -294,6 +295,7 @@ use yii\bootstrap5\ActiveForm;
                                 <h2>Time entries</h2>
                                 <p>Hours spent on the current ticket</p>
                                 <div class="table-container container-fluid overflow-x-scroll">
+                                <?php Pjax::begin(['id' => 'tech-time-entries']); ?>
                                         <?= GridView::widget([
                                                 'dataProvider' => $techTimeEntryDataProvider,
                                                 'tableOptions' => ['class' => 'table table-bordered'],
@@ -306,6 +308,7 @@ use yii\bootstrap5\ActiveForm;
                                                         'itinerate_time',
                                                 ],
                                         ]); ?>
+                                <?php Pjax::end(); ?>
                                 </div>
                         </div>
                 </div>
