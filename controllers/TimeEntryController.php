@@ -42,6 +42,8 @@ class TimeEntryController extends Controller
         $searchModel = new TimeEntrySearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $this->layout = 'blank-container';
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -56,6 +58,8 @@ class TimeEntryController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'blank-container';
+        
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -102,13 +106,17 @@ class TimeEntryController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $ticket = Ticket::findOne($model->ticket_id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $this->layout = 'blank-container';
+
         return $this->render('update', [
             'model' => $model,
+            'ticket' => $ticket
         ]);
     }
 
