@@ -254,7 +254,7 @@ use yii\bootstrap5\ActiveForm;
                         <div class="subsection-info-block">
                                 <h2>Technicians</h2>
                                 <p>Technicians assigned to this ticket</p>
-                                <div class="alert alert-warning p-2" role="alert">
+                                <div class="alert alert-info p-2" role="alert">
                                         Removing technicians will remove their recorded time entries
                                 </div>
                                 <div class="question-box">

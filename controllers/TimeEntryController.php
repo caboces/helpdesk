@@ -82,7 +82,7 @@ class TimeEntryController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['time-entry/view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();

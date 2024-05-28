@@ -12,12 +12,18 @@ use app\models\TechTicketAssignment;
 
 <div class="time-entry-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'id' => 'add-time-entry',
+        'method' => 'post',
+        'action' => 'time-entry/create?id=' . $ticket->id
+    ]); ?>
 
     <div class="entries-container">
+        <div class="alert alert-info p-2" role="alert">
+            <em>Please enter times in quarter hour increments (e.g. 0.25 => 15mins; 1.50 => 1hr 30mins; 2.75 => 2hrs 45mins)</em>
+        </div>
         <div class="question-box-no-trim">
             <div class="row">
-                <?= $form->field($model, 'ticket_id', ['options' => ['style' => 'display:none;']])->textInput() ?>
                 <div class="col iris">
                     <?= $form->field($model, 'user_id')
                         ->dropDownList(
@@ -63,6 +69,6 @@ use app\models\TechTicketAssignment;
         <?= Html::submitButton('Confirm new time entry', ['class' => 'mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
     </div>
 
-    <?php ActiveForm::end(); ?>
+    <?php ActiveForm::end()?>
 
 </div>

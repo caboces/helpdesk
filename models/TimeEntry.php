@@ -8,10 +8,10 @@ use Yii;
  * This is the model class for table "time_entry".
  *
  * @property int $id
- * @property int $tech_time
- * @property int $overtime
- * @property int $travel_time
- * @property int $itinerate_time
+ * @property decimal(4,2) $tech_time
+ * @property decimal(4,2) $overtime
+ * @property decimal(4,2) $travel_time
+ * @property decimal(4,2) $itinerate_time
  * @property string $entry_date
  * @property int $user_id
  * @property int $ticket_id
@@ -37,7 +37,8 @@ class TimeEntry extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tech_time', 'overtime', 'travel_time', 'itinerate_time', 'user_id', 'ticket_id'], 'integer'],
+            [['user_id', 'ticket_id'], 'integer'],
+            [['tech_time', 'overtime', 'travel_time', 'itinerate_time'], 'number'],
             [['entry_date', 'user_id', 'ticket_id'], 'required'],
             [['entry_date', 'created', 'modified'], 'safe'],
             [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],

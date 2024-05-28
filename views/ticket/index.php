@@ -56,7 +56,7 @@ $this->title = 'Ticket Management';
             <div class="subsection-info-block">
                 <h2>Assigned tickets</h2>
                 <p>All tickets currently assigned to this user</p>
-                <div class="alert alert-warning p-2" role="alert">
+                <div class="alert alert-info p-2" role="alert">
                     Filters haven't been made yet! Currently showing all tickets.
                 </div>
                 <div class="table-container container-fluid overflow-x-scroll">
@@ -222,7 +222,7 @@ $this->title = 'Ticket Management';
             <div class="subsection-info-block">
                 <h2>Resolved / Closed tickets</h2>
                 <p>All tickets that have been resolved / closed</p>
-                <div class="alert alert-warning p-2" role="alert">
+                <div class="alert alert-info p-2" role="alert">
                     Filters haven't been made yet! Currently showing all tickets.
                 </div>
                 <div class="container-fluid overflow-x-scroll">
