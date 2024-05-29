@@ -23,6 +23,9 @@ $this->title = 'Create Ticket';
         [
             'model' => $model,
             'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
+            // search time entries
+            'techTimeEntrySearch' => $techTimeEntrySearch,
+            'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,

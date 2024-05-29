@@ -48,6 +48,11 @@ class TimeEntrySearch extends TimeEntry
             'query' => $query,
         ]);
 
+        $dataProvider->sort = [
+            // show the most recently added time entries
+            'defaultOrder' => ['entry_date' => SORT_DESC],
+        ];
+
         $this->load($params);
 
         if (!$this->validate()) {

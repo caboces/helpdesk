@@ -24,6 +24,7 @@ use app\models\DistrictBuilding;
 use app\models\DepartmentBuilding;
 use app\models\TechTicketAssignment;
 use app\models\TimeEntry;
+use app\models\TimeEntrySearch;
 use yii\data\ArrayDataProvider;
 use yii\data\SqlDataProvider;
 use yii\web\NotFoundHttpException;
@@ -122,15 +123,8 @@ class TicketController extends Controller
         $model = new Ticket();
 
         // search tech time entries for ticket
-        $techTimeEntryDataProvider = new ArrayDataProvider([
-            'allModels' => $this->queryTechTimeEntryData($model->id),
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-            'sort' => [
-                'attributes' => ['id']
-            ],
-        ]);
+        $techTimeEntrySearch = new TimeEntrySearch();
+        $techTimeEntryDataProvider = $techTimeEntrySearch->search(Yii::$app->request->get());
 
         // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
@@ -174,6 +168,7 @@ class TicketController extends Controller
         return $this->render('create', [
             'model' => $model,
             // search time entries
+            'techTimeEntrySearch' => $techTimeEntrySearch,
             'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
             // ticket tags
             'categories' => $categories,
@@ -208,15 +203,8 @@ class TicketController extends Controller
         $model = $this->findModel($id);
 
         // search tech time entries for ticket
-        $techTimeEntryDataProvider = new ArrayDataProvider([
-            'allModels' => $this->queryTechTimeEntryData($model->id),
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-            'sort' => [
-                'attributes' => ['entry_date' => ['default' => SORT_DESC]],
-            ],
-        ]);
+        $techTimeEntrySearch = new TimeEntrySearch();
+        $techTimeEntryDataProvider = $techTimeEntrySearch->search(Yii::$app->request->get());
 
         // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
@@ -263,6 +251,7 @@ class TicketController extends Controller
         return $this->render('update', [
             'model' => $model,
             // search time entries
+            'techTimeEntrySearch' => $techTimeEntrySearch,
             'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
             // ticket tags
             'categories' => $categories,

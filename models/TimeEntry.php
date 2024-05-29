@@ -38,7 +38,7 @@ class TimeEntry extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'ticket_id'], 'integer'],
-            [['tech_time', 'overtime', 'travel_time', 'itinerate_time'], 'number'],
+            [['tech_time', 'overtime', 'travel_time', 'itinerate_time'], 'number', 'min' => 0, 'max' => 99.75],
             [['entry_date', 'user_id', 'ticket_id'], 'required'],
             [['entry_date', 'created', 'modified'], 'safe'],
             [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],
@@ -93,4 +93,10 @@ class TimeEntry extends \yii\db\ActiveRecord
     {
         return new \app\models\query\TimeEntryQuery(get_called_class());
     }
+
+    /**
+     * TODO - Rule validator: Tech time, overtime, travel time, and itinerate time must be
+     * divisible by .25 (quarter-hour increments: 0.25 = 15mins)
+     */
+
 }

@@ -13,9 +13,8 @@ use app\models\TechTicketAssignment;
 <div class="time-entry-form">
 
     <?php $form = ActiveForm::begin([
-        'id' => 'add-time-entry',
-        'method' => 'post',
-        'action' => 'time-entry/create?id=' . $ticket->id
+        'id' => 'add-time-entry-form',
+
     ]); ?>
 
     <div class="entries-container">
@@ -66,7 +65,10 @@ use app\models\TechTicketAssignment;
     </div>
 
     <div class="form-group">
-        <?= Html::submitButton('Confirm new time entry', ['class' => 'mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
+        <?= Html::submitButton('Confirm new time entry', [
+            'class' => 'mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan',
+            'form' => 'add-time-entry-form',
+        ]); ?>
     </div>
 
     <?php ActiveForm::end()?>
