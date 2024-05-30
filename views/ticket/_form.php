@@ -303,13 +303,8 @@ use yii\bootstrap5\ActiveForm;
                                                 'columns' => [
                                                         [
                                                                 'class' => ActionColumn::class,
-                                                                'buttons' => [
-                                                                    'images' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
-                                                                        return Html::a('<span class="glyphicon glyphicon glyphicon-picture" aria-hidden="true"></span>', Url::to(['image/index', 'id' => $model->id]));
-                                                                    }
-                                                                ],
-                                                                'urlCreator' => function ($action, TimeEntry $model, $key, $index, $column) {
-                                                                    return Url::toRoute([$action, 'id' => $model->id]);
+                                                                'urlCreator' => function ($action, TimeEntry $model, $key, $index) {
+                                                                    return Url::to(['time-entry/' . $action, 'id' => $model->id]);
                                                                 }
                                                         ],
                                                         'entry_date',
