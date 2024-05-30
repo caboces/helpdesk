@@ -14,7 +14,8 @@ use app\models\TechTicketAssignment;
 
     <?php $form = ActiveForm::begin([
         'id' => 'add-time-entry-form',
-
+        'enableClientValidation' => true,
+        'validateOnSubmit' => true,
     ]); ?>
 
     <div class="entries-container">

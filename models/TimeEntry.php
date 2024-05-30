@@ -8,10 +8,10 @@ use Yii;
  * This is the model class for table "time_entry".
  *
  * @property int $id
- * @property decimal(4,2) $tech_time
- * @property decimal(4,2) $overtime
- * @property decimal(4,2) $travel_time
- * @property decimal(4,2) $itinerate_time
+ * @property number $tech_time
+ * @property number $overtime
+ * @property number $travel_time
+ * @property number $itinerate_time
  * @property string $entry_date
  * @property int $user_id
  * @property int $ticket_id
@@ -38,11 +38,17 @@ class TimeEntry extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'ticket_id'], 'integer'],
+            // these times are decimals(4,2) in the db. Using min-max rules to police this.
             [['tech_time', 'overtime', 'travel_time', 'itinerate_time'], 'number', 'min' => 0, 'max' => 99.75],
-            [['entry_date', 'user_id', 'ticket_id'], 'required'],
+            [['ticket_id'], 'required'],
+            // TODO: entry_date not validating because I didn't use Yii helpers
+            [['entry_date'], 'required', 'skipOnEmpty' => false, 'skipOnError' => false, 'message' => 'Please select the date of the hours worked.'],
+            [['user_id'], 'required', 'message' => 'User ID is required. Please make sure the relevant tech is assigned to the ticket.'],
             [['entry_date', 'created', 'modified'], 'safe'],
             [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            // check to make sure time entries are divisible by 0.25 (represents quarter hours)
+            [['tech_time', 'overtime', 'travel_time', 'itinerate_time'], 'match', 'pattern' => '/^[1-9]?[0-9]?(\.(0|00|25|5|50|75))?$/', 'message' => 'Time must be recorded in quarter-hour increments (0.25 => 15mins).'],
         ];
     }
 
@@ -93,10 +99,4 @@ class TimeEntry extends \yii\db\ActiveRecord
     {
         return new \app\models\query\TimeEntryQuery(get_called_class());
     }
-
-    /**
-     * TODO - Rule validator: Tech time, overtime, travel time, and itinerate time must be
-     * divisible by .25 (quarter-hour increments: 0.25 = 15mins)
-     */
-
 }
