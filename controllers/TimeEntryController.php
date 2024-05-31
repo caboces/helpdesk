@@ -68,9 +68,6 @@ class TimeEntryController extends Controller
     /**
      * Creates a new TimeEntry model.
      * 
-     * This can be seen in the Ticket Form
-     * Creation views are shown in a modal window, hence the modal-blank layout
-     * 
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @param int $id of the ticket model time is being added to
      * @return string|\yii\web\Response
@@ -148,5 +145,37 @@ class TimeEntryController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Creates a new TimeEntry model within a modal from the Ticket form.
+     * 
+     * This can be seen in the Ticket Form
+     * Creation views are shown in a modal window, hence the modal-blank layout
+     * 
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param int $id of the ticket model time is being added to
+     * @return string|\yii\web\Response
+     */
+    public function actionCreateModal($id)
+    {
+        $ticket = Ticket::findOne($id);
+        $model = new TimeEntry();
+
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return ['code' => 200, 'message' => 'success'];
+            }
+        } else {
+            $model->loadDefaultValues();
+        }
+
+        $this->layout = 'blank';
+
+        return $this->renderAjax('create', [
+            'model' => $model,
+            'ticket' => $ticket
+        ]);
     }
 }

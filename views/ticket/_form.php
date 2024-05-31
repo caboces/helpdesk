@@ -41,9 +41,15 @@ use yii\bootstrap5\ActiveForm;
                         'data-bs-toggle' => 'collapse',
                         'data-bs-target' => '#tech-note',
                         'aria-expanded' => 'false',
-                        'aria-controls' => '#tech-note'
+                        'aria-controls' => '#tech-note',
                 ]); ?>
-                <?= Html::button('New time entry', ['value' => Url::to('/time-entry/create?id=' . $model->id), 'id' => 'time-entry-modal-button', 'class' => 'btn btn-primary bg-iris border-iris']) ?>
+                <?= Html::button('New time entry', [
+                        'value' => Url::to('/time-entry/create?id=' . $model->id),
+                        'id' => 'time-entry-modal-button',
+                        'class' => 'btn btn-primary bg-iris border-iris',
+                        // disable if creating a new ticket
+                        'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+                ]); ?>
                 <?= Html::submitButton('Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
         </div>
 
@@ -308,7 +314,12 @@ use yii\bootstrap5\ActiveForm;
                                                                 }
                                                         ],
                                                         'entry_date',
-                                                        'username',
+                                                        [
+                                                                'attribute' => 'user_name',
+                                                                'value' => 'user.username',
+                                                                'format' => 'text',
+                                                                'label' => 'Tech',
+                                                        ],
                                                         'tech_time',
                                                         'overtime',
                                                         'travel_time',
@@ -321,6 +332,7 @@ use yii\bootstrap5\ActiveForm;
                         </div>
                 </div>
         </div>
+
         <!-- action buttons -->
         <div class='secondary-action-button-bar'>
                 <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>

@@ -47,7 +47,11 @@ class TimeEntry extends \yii\db\ActiveRecord
             [['entry_date', 'created', 'modified'], 'safe'],
             [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
-            // check to make sure time entries are divisible by 0.25 (represents quarter hours)
+            /* TIME ENTRIES FORMAT VALIDATOR
+             * - time entries can have between 0-2 whole integers
+             * - time entries can have between 0-2 decimal places
+             * - decimals (if used) can be either .0, .00, .25, .5, .50, or .75
+             */
             [['tech_time', 'overtime', 'travel_time', 'itinerate_time'], 'match', 'pattern' => '/^[1-9]?[0-9]?(\.(0|00|25|5|50|75))?$/', 'message' => 'Time must be recorded in quarter-hour increments (0.25 => 15mins).'],
         ];
     }

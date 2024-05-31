@@ -233,6 +233,13 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
+     * Relation to get time entries attached to ticket via TimeEntry table
+     */
+    public function getTimeEntries() {
+        return $this->hasMany(TimeEntry::class, ['id'=>'ticket_id'])->viaTable('{{%time_entry}}', ['ticket_id'=>'id']);
+    }
+
+    /**
      * {@inheritdoc}
      * @return \app\models\query\TicketQuery the active query used by this AR class.
      */

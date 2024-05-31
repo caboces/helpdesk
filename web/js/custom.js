@@ -60,6 +60,12 @@ $('#time-entry-modal-button').click(function () {
     .load($(this).attr('value'));
 });
 
-// 
+/**
+ * Close TimeEntry modal instead of redirecting to view-view
+ */
+$('#confirm-time-entry').submit(function(e) {
+    e.preventDefault();
+    $('#time-entry-modal').modal('hide');
+});
 
 });

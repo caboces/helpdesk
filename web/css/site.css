@@ -442,6 +442,14 @@ button.border-imperial-red:hover {
   background-color: #F15152;
 }
 
+/* override bs5 disabled button styles */
+button.bg-iris:disabled,
+a.btn.bg-iris:disabled {
+  box-shadow: inset 2000px 2000px #0000001e;
+  border-color: #3d3174;
+  background-color: #3d3174;
+}
+
 
 /* you can find these in the time entry forms. normal sized buttons are too large */
 button.btn-skinny {

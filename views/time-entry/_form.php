@@ -40,6 +40,7 @@ use app\models\TechTicketAssignment;
                         <input type="date" id="timeentry-entry_date" class="form-control" name="TimeEntry[entry_date]" placeholder="mm/dd/yyyy" aria-required="true">
                     </div>
                 </div>
+                <!-- do not allow the techs to change this value, but still submit the ticket id as if it's new input -->
                 <div class="col">
                     <?= $form->field($model, 'ticket_id', ['inputOptions' => ['value' => $ticket->id]])->textInput(['readonly' => true, 'class' => 'read-only form-control']) ?>
                 </div>
@@ -67,6 +68,7 @@ use app\models\TechTicketAssignment;
 
     <div class="form-group">
         <?= Html::submitButton('Confirm new time entry', [
+            'id' => 'confirm-time-entry',
             'class' => 'mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan',
             'form' => 'add-time-entry-form',
         ]); ?>

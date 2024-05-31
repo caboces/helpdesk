@@ -25,8 +25,6 @@ use app\models\DepartmentBuilding;
 use app\models\TechTicketAssignment;
 use app\models\TimeEntry;
 use app\models\TimeEntrySearch;
-use yii\data\ArrayDataProvider;
-use yii\data\SqlDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 
@@ -81,7 +79,7 @@ class TicketController extends Controller
         $divisions = ArrayHelper::map(Division::getDivisions(), 'name', 'name');
         $buildings = ArrayHelper::map(Building::getBuildings(), 'name', 'name');
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('index', [
             // search all tickets
             'searchModel' => $ticketSearch,
@@ -204,6 +202,7 @@ class TicketController extends Controller
 
         // search tech time entries for ticket
         $techTimeEntrySearch = new TimeEntrySearch();
+        $techTimeEntrySearch->ticket_id = $model->id;
         $techTimeEntryDataProvider = $techTimeEntrySearch->search(Yii::$app->request->get());
 
         // ticket tags

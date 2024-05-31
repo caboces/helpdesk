@@ -13,7 +13,7 @@ $this->beginContent('@app/views/layouts/base.php');
 
 <!-- content start -->
 <main role="main" class="row">
-    <div class="col-12 col-xxl-7 flex-1 | px-2 py-5 px-lg-5">
+    <div class="col-12 col-xxl-8 flex-1 | px-2 py-5 px-lg-5">
         <div class="container-fluid">
             <?= Alert::widget() ?>
             <?= $content ?>
