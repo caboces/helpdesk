@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'columns' => [
                             [
                                 'class' => ActionColumn::className(),
-                                'template' => '{view} {update} {toggle-status} {delete}',
+                                'template' => '{view} {update} {toggle-status}',
                                 'buttons' => [
                                     'toggle-status' => function ($url, $model) {
                                         if ($model->status === $model::STATUS_INACTIVE) {

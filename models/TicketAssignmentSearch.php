@@ -2,14 +2,15 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
-use yii\data\ActiveDataProvider;
 use app\models\Ticket;
+use yii\data\ActiveDataProvider;
 
 /**
  * TicketSearch represents the model behind the search form of `app\models\Ticket`.
  */
-class TicketSearch extends Ticket
+class TicketAssignmentSearch extends Ticket
 {
     public $job_category_name;
     public $job_priority_name;
@@ -58,14 +59,14 @@ class TicketSearch extends Ticket
             'primaryTech primaryTech',
         ]);
 
-        $dataProvider = new ActiveDataProvider([
+        $ticketAssignmentDataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
                 'pageSize' => 10,
             ],
         ]);
 
-        $dataProvider->sort = [
+        $ticketAssignmentDataProvider->sort = [
             // show the most recently modified tickets first
             'defaultOrder' => ['job_priority_level' => SORT_DESC],
             'attributes' => [
@@ -87,7 +88,7 @@ class TicketSearch extends Ticket
         if (!($this->load($params) && $this->validate())) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
-            return $dataProvider;
+            return $ticketAssignmentDataProvider;
         }
 
         // grid filtering conditions
@@ -99,6 +100,8 @@ class TicketSearch extends Ticket
             'job_type_id' => $this->job_type_id,
             'created' => $this->created,
             'modified' => $this->modified,
+            // match the user to the primary tech
+            'primary_tech_id' => Yii::$app->user->id,
         ]);
 
         $query->andFilterWhere(['LIKE', 'summary', $this->summary])
@@ -107,6 +110,6 @@ class TicketSearch extends Ticket
             ->andFilterWhere(['LIKE', 'jobStatus.name', $this->job_status_name])
             ->andFilterWhere(['LIKE', 'jobType.name', $this->job_type_name]);
 
-        return $dataProvider;
+        return $ticketAssignmentDataProvider;
     }
 }

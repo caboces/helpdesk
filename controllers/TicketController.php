@@ -23,6 +23,7 @@ use yii\filters\AccessControl;
 use app\models\DistrictBuilding;
 use app\models\DepartmentBuilding;
 use app\models\TechTicketAssignment;
+use app\models\TicketAssignmentSearch;
 use app\models\TimeEntry;
 use app\models\TimeEntrySearch;
 use yii\web\NotFoundHttpException;
@@ -64,6 +65,9 @@ class TicketController extends Controller
      */
     public function actionIndex()
     {
+        // search assigned tickets
+        $ticketAssignmentSearch = new TicketAssignmentSearch();
+        $ticketAssignmentDataProvider = $ticketAssignmentSearch->search(Yii::$app->request->get());
         // search all tickets
         $ticketSearch = new TicketSearch();
         $dataProvider = $ticketSearch->search(Yii::$app->request->get());
@@ -81,6 +85,9 @@ class TicketController extends Controller
 
         $this->layout = 'blank-container';
         return $this->render('index', [
+            // search assigned tickets
+            'ticketAssignmentSearch' => $ticketAssignmentSearch,
+            'ticketAssignmentDataProvider' => $ticketAssignmentDataProvider,
             // search all tickets
             'searchModel' => $ticketSearch,
             'dataProvider' => $dataProvider,

@@ -347,17 +347,21 @@ ul.pagination li {
 }
 
 ul.pagination li a {
-  border-radius: 5px;
-  box-shadow: 1px 1px 3px #070e3331;
+  border-radius: 25%;
+  border: 2px solid #b3b3b3;
 
-  padding: 10px;
+  padding: 10px 13px;
 
+  font-size: .85rem;
   text-decoration: none;
   color: #09a2c9;
 }
 
 ul.pagination li.active a {
-  color: #070e33;
+  border-color: #5f4bb6;
+
+  font-weight: 600;
+  color: #5f4bb6;
 }
 
 /* ===========================================================================================

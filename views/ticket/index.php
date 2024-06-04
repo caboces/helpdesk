@@ -62,8 +62,8 @@ $this->title = 'Ticket Management';
                 <div class="table-container container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-assignments']); ?>
                     <?= GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        'filterModel' => $searchModel,
+                        'dataProvider' => $ticketAssignmentDataProvider,
+                        'filterModel' => $ticketAssignmentSearch,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
                             if ($model->jobPriority->name == 'Critical') {

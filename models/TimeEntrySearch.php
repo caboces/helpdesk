@@ -17,8 +17,8 @@ class TimeEntrySearch extends TimeEntry
     public function rules()
     {
         return [
-            [['id', 'tech_time', 'overtime', 'travel_time', 'itinerate_time', 'user_id', 'ticket_id'], 'integer'],
-            [['entry_date', 'created', 'modified'], 'safe'],
+            [['id', 'user_id', 'ticket_id', 'entry_creator_id'], 'integer'],
+            [['created', 'modified'], 'safe'],
         ];
     }
 
@@ -71,6 +71,7 @@ class TimeEntrySearch extends TimeEntry
             'entry_date' => $this->entry_date,
             'user_id' => $this->user_id,
             'ticket_id' => $this->ticket_id,
+            'entry_creator_id' => $this->entry_creator_id,
             'created' => $this->created,
             'modified' => $this->modified,
         ]);

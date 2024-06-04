@@ -324,7 +324,12 @@ use yii\bootstrap5\ActiveForm;
                                                         'overtime',
                                                         'travel_time',
                                                         'itinerate_time',
-                                                        'modified'
+                                                        [
+                                                                'attribute' => 'entry_creator_name',
+                                                                'value' => 'entry_creator.username',
+                                                                'format' => 'text',
+                                                        ],
+                                                        'ticket_id'
                                                 ],
                                         ]); ?>
                                 <?php Pjax::end(); ?>
