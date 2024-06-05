@@ -70,7 +70,8 @@ class TimeEntrySearch extends TimeEntry
             'itinerate_time' => $this->itinerate_time,
             'entry_date' => $this->entry_date,
             'user_id' => $this->user_id,
-            'ticket_id' => $this->ticket_id,
+            // new tickets (no ticket_id yet) should be showing NO time entries. Without the ternary, it shows ALL
+            'ticket_id' => ($this->ticket_id != null ? $this->ticket_id : false),
             'entry_creator_id' => $this->entry_creator_id,
             'created' => $this->created,
             'modified' => $this->modified,
