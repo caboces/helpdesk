@@ -23,37 +23,44 @@ $this->params['breadcrumbs'][] = $this->title;
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
-        <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
+        <?= Html::submitButton('Create user', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
     </div>
 
     <h2>General details</h2>
     <p>Details pertaining to the user</p>
-
-    <!-- $form->field($model, 'username')->textInput(['autofocus' => true]) -->
     <div class="question-box">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-6">
                 <?= $form->field($model, 'fname')->textInput()->label('First name') ?>
             </div>
-            <div class="col-md-6">
+            <div class="col-6">
                 <?= $form->field($model, 'lname')->textInput()->label('Last name') ?>
             </div>
         </div>
-
-        <?= $form->field($model, 'email') ?>
-
+        <div class="row">
+            <div class="col-md-6">
+                <?= $form->field($model, 'email') ?>
+            </div>
+        </div>
     </div>
     <div class="question-box">
-        <!-- this is where i'm putting the auto generated username -->
-        <?= $form->field($model, 'username')->textInput(['disabled' => true])->label('Username') ?>
-
-        <?= $form->field($model, 'password')->passwordInput() ?>
+        <div class="row">
+            <div class="col-md-6">
+                <!-- this is where i'm putting the auto generated username -->
+                <?= $form->field($model, 'username')->textInput(['disabled' => true])->label('Username') ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <?= $form->field($model, 'password')->passwordInput() ?>
+            </div>
+        </div>
     </div>
 
     <!-- action buttons -->
-    <div class='container-fluid border border-subtle py-2 | bg-light'>
+    <div class='secondary-action-button-bar'>
         <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
-        <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
+        <?= Html::submitButton('Create user', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
     </div>
 
     <?php ActiveForm::end(); ?>
