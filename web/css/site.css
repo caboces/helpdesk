@@ -343,14 +343,14 @@ a.desc:after {
 =========================================================================================== */
 
 ul.pagination li {
-  margin: 0 5px;
+  margin: 0 3px;
 }
 
 ul.pagination li a {
   border-radius: 25%;
   border: 2px solid #b3b3b3;
 
-  padding: 10px 13px;
+  padding: 5px 8px;
 
   font-size: .85rem;
   text-decoration: none;
