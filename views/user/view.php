@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'class' => 'btn btn-warning',
                     'data' => [
                         'method' => 'post',
-                        'confirm' => 'Danger! Are you sure? This user will be activated.',
+                        'confirm' => 'Danger! Are you sure? This user will be reactivated.',
                     ],
                 ])
                 : Html::a('Deactivate user', ['toggle-status', 'id' => $model->id], [
