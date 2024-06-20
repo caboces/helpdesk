@@ -10,7 +10,7 @@ use yii\data\ActiveDataProvider;
 /**
  * TicketSearch represents the model behind the search form of `app\models\Ticket`.
  */
-class TicketAssignmentSearch extends TicketSearch
+class TicketClosedResolvedSearch extends TicketSearch
 {
     public $job_category_name;
     public $job_priority_name;
@@ -39,11 +39,11 @@ class TicketAssignmentSearch extends TicketSearch
             'jobType jobType',
         ]);
 
-        $ticketAssignmentDataProvider = new ActiveDataProvider([
+        $ticketClosedResolvedDataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-        $ticketAssignmentDataProvider->sort = [
+        $ticketClosedResolvedDataProvider->sort = [
             // show the most recently modified tickets first
             'defaultOrder' => ['job_priority_level' => SORT_DESC],
             'attributes' => [
@@ -66,19 +66,17 @@ class TicketAssignmentSearch extends TicketSearch
         if (!($this->validate())) {
             // uncomment the following line if you do not want to return any records when validation fails
             $query->where('0=1');
-            return $ticketAssignmentDataProvider;
+            return $ticketClosedResolvedDataProvider;
         }
 
-        // grid filtering conditions
-        $currentUser = Yii::$app->user->id;
-        // ticket ids that the current user is associated with
-        $assigned_ticket = TechTicketAssignment::find()->select(['ticket_id'])->where(['user_id' => $currentUser]);
-
         $query->andFilterWhere([
-            'ticket.id' => $assigned_ticket,
+            'id' => $this->id,
             'job_category_id' => $this->job_category_id,
             'job_priority_id' => $this->job_priority_id,
+
+            // TODO: this needs to become an or statement. Use the job level to filter out jobs at a level below resolved (level 7)
             'job_status_id' => $this->job_status_id,
+
             'job_type_id' => $this->job_type_id,
             'created' => $this->created,
             'modified' => $this->modified,
@@ -90,6 +88,6 @@ class TicketAssignmentSearch extends TicketSearch
             ->andFilterWhere(['LIKE', 'jobStatus.name', $this->job_status_name])
             ->andFilterWhere(['LIKE', 'jobType.name', $this->job_type_name]);
 
-        return $ticketAssignmentDataProvider;
+        return $ticketClosedResolvedDataProvider;
     }
 }

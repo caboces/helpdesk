@@ -4,8 +4,8 @@ return [
     // okay gonna need a better user but this works for local rn
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=localhost;dbname=helpdesk2',
-    'username' => 'root',
-    'password' => '',
+    'username' => 'helpdesk',
+    'password' => 'lakeeffect22',
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)

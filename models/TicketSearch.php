@@ -60,9 +60,6 @@ class TicketSearch extends Ticket
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
         ]);
 
         $dataProvider->sort = [
@@ -84,9 +81,9 @@ class TicketSearch extends Ticket
 
         $this->load($params);
 
-        if (!($this->load($params) && $this->validate())) {
+        if (!($this->validate())) {
             // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+             $query->where('0=1');
             return $dataProvider;
         }
 

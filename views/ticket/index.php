@@ -55,15 +55,12 @@ $this->title = 'Ticket Management';
         <div class="tab-pane fade show active" id="pills-assignments" role="tabpanel" aria-labelledby="pills-assignments-tab">
             <div class="subsection-info-block">
                 <h2>Assigned tickets</h2>
-                <p>All tickets currently assigned to this user</p>
-                <div class="alert alert-info p-2" role="alert">
-                    Filters haven't been made yet! Currently showing all tickets.
-                </div>
+                <p>All tickets currently assigned to this user, including primary and secondary assingments</p>
                 <div class="table-container container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-assignments']); ?>
                     <?= GridView::widget([
                         'dataProvider' => $ticketAssignmentDataProvider,
-                        'filterModel' => $ticketAssignmentSearch,
+                        'filterModel' => $ticketAssignmentSearchModel,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
                             if ($model->jobPriority->name == 'Critical') {
@@ -92,11 +89,13 @@ $this->title = 'Ticket Management';
                             'summary',
                             'requester',
                             'primary_tech_id' => [
-                                'label' => 'Primary Tech',
                                 'attribute' => 'primary_tech_id',
                                 'value' => function($data) {
                                     return ($data->primaryTech != null ? $data->primaryTech->username : '');
-                                }
+                                },
+                                'format' => 'text',
+                                'label' => 'Primary Tech',
+                                'filter' => false,
                             ],
                             'location',
                             'job_category_name' => [
@@ -104,28 +103,28 @@ $this->title = 'Ticket Management';
                                 'value' => 'jobCategory.name',
                                 'format' => 'text',
                                 'label' => 'Category',
-                                'filter' => Html::activeDropDownList($searchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
                             ],
                             'job_priority_name' => [
                                 'attribute' => 'job_priority_name',
                                 'value' => 'jobPriority.name',
                                 'format' => 'text',
                                 'label' => 'Priority',
-                                'filter' => Html::activeDropDownList($searchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
                             ],
                             'job_status_name' => [
                                 'attribute' => 'job_status_name',
                                 'value' => 'jobStatus.name',
                                 'format' => 'text',
                                 'label' => 'Status',
-                                'filter' => Html::activeDropDownList($searchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
                             ],
                             'job_type_name' => [
                                 'attribute' => 'job_type_name',
                                 'value' => 'jobType.name',
                                 'format' => 'text',
                                 'label' => 'Type',
-                                'filter' => Html::activeDropDownList($searchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
                             ],
                             'created' => [
                                 'attribute' => 'created',
@@ -151,6 +150,8 @@ $this->title = 'Ticket Management';
                         'rowOptions' => function ($model) {
                             if ($model->jobPriority->name == 'Critical') {
                                 return ['class' => 'critical'];
+                            } else if ($model->jobPriority->name == 'High') {
+                                return ['class' => 'high'];
                             }
                             return [];
                         },
@@ -228,8 +229,8 @@ $this->title = 'Ticket Management';
                 <div class="container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-resolved-closed']); ?>
                     <?= GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        'filterModel' => $searchModel,
+                        'dataProvider' => $ticketClosedResolvedDataProvider,
+                        'filterModel' => $ticketClosedResolvedSearchModel,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
                             if ($model->jobPriority->name == 'Critical') {
@@ -269,28 +270,28 @@ $this->title = 'Ticket Management';
                                 'value' => 'jobCategory.name',
                                 'format' => 'text',
                                 'label' => 'Category',
-                                'filter' => Html::activeDropDownList($searchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
                             ],
                             'job_priority_name' => [
                                 'attribute' => 'job_priority_name',
                                 'value' => 'jobPriority.name',
                                 'format' => 'text',
                                 'label' => 'Priority',
-                                'filter' => Html::activeDropDownList($searchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
                             ],
                             'job_status_name' => [
                                 'attribute' => 'job_status_name',
                                 'value' => 'jobStatus.name',
                                 'format' => 'text',
                                 'label' => 'Status',
-                                'filter' => Html::activeDropDownList($searchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
                             ],
                             'job_type_name' => [
                                 'attribute' => 'job_type_name',
                                 'value' => 'jobType.name',
                                 'format' => 'text',
                                 'label' => 'Type',
-                                'filter' => Html::activeDropDownList($searchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
                             ],
                             'created' => [
                                 'attribute' => 'created',

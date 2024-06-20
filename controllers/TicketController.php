@@ -24,6 +24,7 @@ use app\models\DistrictBuilding;
 use app\models\DepartmentBuilding;
 use app\models\TechTicketAssignment;
 use app\models\TicketAssignmentSearch;
+use app\models\TicketClosedResolvedSearch;
 use app\models\TimeEntry;
 use app\models\TimeEntrySearch;
 use yii\web\NotFoundHttpException;
@@ -66,11 +67,14 @@ class TicketController extends Controller
     public function actionIndex()
     {
         // search assigned tickets
-        $ticketAssignmentSearch = new TicketAssignmentSearch();
-        $ticketAssignmentDataProvider = $ticketAssignmentSearch->search(Yii::$app->request->get());
+        $ticketAssignmentSearchModel = new TicketAssignmentSearch();
+        $ticketAssignmentDataProvider = $ticketAssignmentSearchModel->search($this->request->queryParams);
         // search all tickets
-        $ticketSearch = new TicketSearch();
-        $dataProvider = $ticketSearch->search(Yii::$app->request->get());
+        $searchModel = new TicketSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->get());
+        // search closed / resolved tickets
+        $ticketClosedResolvedSearchModel = new TicketClosedResolvedSearch();
+        $ticketClosedResolvedDataProvider = $ticketClosedResolvedSearchModel->search($this->request->queryParams);
         // search ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'name', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'name', 'name');
@@ -86,11 +90,14 @@ class TicketController extends Controller
         $this->layout = 'blank-container';
         return $this->render('index', [
             // search assigned tickets
-            'ticketAssignmentSearch' => $ticketAssignmentSearch,
+            'ticketAssignmentSearchModel' => $ticketAssignmentSearchModel,
             'ticketAssignmentDataProvider' => $ticketAssignmentDataProvider,
             // search all tickets
-            'searchModel' => $ticketSearch,
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            // search closed / resolved tickets
+            'ticketClosedResolvedSearchModel' => $ticketClosedResolvedSearchModel,
+            'ticketClosedResolvedDataProvider' => $ticketClosedResolvedDataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,

@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
             <div class="subsection-info-block">
                 <h2>All users</h2>
-                <p>All helpdesk users</p>
+                <p>All Help Desk users</p>
                 <div class="container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-all']); ?>
                     <?= GridView::widget([
@@ -112,11 +112,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="tab-pane fade" id="pills-active" role="tabpanel" aria-labelledby="pills-active-tab">
             <div class="subsection-info-block">
                 <h2>Active users</h2>
-                <p>All users that currently have access to the helpdesk</p>
+                <p>All users that currently have access to the Help Desk</p>
                 <?php Pjax::begin(['id' => 'grid-active']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $userActiveDataProvider,
                     'filterModel' => $userActiveSearchModel,
+                    'tableOptions' => ['class' => 'table table-bordered'],
                     'columns' => [
                         [
                             'class' => ActionColumn::className(),
@@ -167,7 +168,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         // 'status',
                     ],
-                    'tableOptions' => ['class' => 'table table-bordered'],
                 ]); ?>
                 <?php Pjax::end(); ?>
             </div>
@@ -175,7 +175,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="tab-pane fade" id="pills-inactive" role="tabpanel" aria-labelledby="pills-inactive">
             <div class="subsection-info-block">
                 <h2>Inactive users</h2>
-                <p>All users that currently do not have access to the helpdesk</p>
+                <p>All users that currently do not have access to the Help Desk</p>
                 <?php Pjax::begin(['id' => 'grid-inactive']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $userInactiveDataProvider,
