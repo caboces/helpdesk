@@ -169,23 +169,50 @@ class UserController extends Controller
      * @return \yii\web\Response
      * @throws ForbiddenHttpException if the user does not have permissions
      */
+
     public function actionToggleStatus($id)
-    {
-        if (Yii::$app->user->can('change-user-status')) {
-            $model = $this->findModel($id);
+    { 
 
-            if ($model->status === 10) {
-                $model->status = 9; // if active, deactivate
-            } else {
-                $model->status = 10; // if inactive, activate
+        if (!($this->findModel($id)->username === 'admin')) {   // don't delete admin!!!
+            if (Yii::$app->user->can('change-user-status')) {
+                $model = $this->findModel($id);
+    
+                if ($model->status === 10) {
+                    $model->status = 9; // if active, deactivate
+                } else {
+                    $model->status = 10; // if inactive, activate
+                }
+    
+                if ($this->request->isPost && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    throw new ForbiddenHttpException('You do not have permission to change user statuses.');
+                }
             }
-
-            if ($this->request->isPost && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                throw new ForbiddenHttpException('You do not have permission to change user activation.');
-            }
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to deactivate this user.');
         }
+
+        throw new ForbiddenHttpException('You do not have permission to change user statuses.');
+
+        
+        // the following code on its own is how this was originally, but it allows users to deactivate admin
+
+        // if (Yii::$app->user->can('change-user-status')) {
+        //     $model = $this->findModel($id);
+
+        //     if ($model->status === 10) {
+        //         $model->status = 9; // if active, deactivate
+        //     } else {
+        //         $model->status = 10; // if inactive, activate
+        //     }
+
+        //     if ($this->request->isPost && $model->save()) {
+        //         return $this->redirect(['view', 'id' => $model->id]);
+        //     } else {
+        //         throw new ForbiddenHttpException('You do not have permission to change user activation.');
+        //     }
+        // }
     }
 
     /**
