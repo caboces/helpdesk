@@ -142,23 +142,19 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-
-        /**
-         * TODO: What we really need it to prevent any users with the admin role from being deleted.
-         * Also, I would like to only have the delete option (in the index ActionColumn, _form, etc) for users WITHOUT any tickets. In theory
-         * you will not be able to delete them anyway because of fk constraints, however I don't
-         * want to give users the option to complain about
-         * 
-         * Ohhhh you know it would be cool if we could replace the delete button in view with 'Deactivate'
-         * accordingly. later though!
-         */
-
-        if (!($this->findModel($id)->username === 'admin')) {   // don't delete admin!!!
-            $this->findModel($id)->delete();
+        // if you're NOT trying to delete admin, check if the user has permission to change user status
+        if (!($this->findModel($id)->username === 'admin')) {
+            if (Yii::$app->user->can('delete-user')) {
+                $this->findModel($id)->delete();
+            } else {
+                // wrong permissions!
+                throw new ForbiddenHttpException('You do not have permission to delete users.');
+            }
         } else {
-            throw new ForbiddenHttpException('You do not have permission to delete this user.');
+            // don't delete admin!
+            throw new ForbiddenHttpException('Hey you!! Don\'t delete my admin account! :)');
         }
-
+        
         return $this->redirect(['index']);
     }
 
@@ -169,50 +165,31 @@ class UserController extends Controller
      * @return \yii\web\Response
      * @throws ForbiddenHttpException if the user does not have permissions
      */
-
     public function actionToggleStatus($id)
     { 
-
-        if (!($this->findModel($id)->username === 'admin')) {   // don't delete admin!!!
+        if (!($this->findModel($id)->username === 'admin')) {   // don't deactivate admin!!!
             if (Yii::$app->user->can('change-user-status')) {
                 $model = $this->findModel($id);
-    
+                // do the damn thing
                 if ($model->status === 10) {
                     $model->status = 9; // if active, deactivate
                 } else {
                     $model->status = 10; // if inactive, activate
                 }
-    
+                // go to the user view
                 if ($this->request->isPost && $model->save()) {
                     return $this->redirect(['view', 'id' => $model->id]);
                 } else {
+                    // wrong permissions!
                     throw new ForbiddenHttpException('You do not have permission to change user statuses.');
                 }
             }
         } else {
-            throw new ForbiddenHttpException('You do not have permission to deactivate this user.');
+            // don't delete admin!
+            throw new ForbiddenHttpException('Hey you!! Don\'t deactivate my admin account! :)');
         }
-
+        // something else went wrong idk.
         throw new ForbiddenHttpException('You do not have permission to change user statuses.');
-
-        
-        // the following code on its own is how this was originally, but it allows users to deactivate admin
-
-        // if (Yii::$app->user->can('change-user-status')) {
-        //     $model = $this->findModel($id);
-
-        //     if ($model->status === 10) {
-        //         $model->status = 9; // if active, deactivate
-        //     } else {
-        //         $model->status = 10; // if inactive, activate
-        //     }
-
-        //     if ($this->request->isPost && $model->save()) {
-        //         return $this->redirect(['view', 'id' => $model->id]);
-        //     } else {
-        //         throw new ForbiddenHttpException('You do not have permission to change user activation.');
-        //     }
-        // }
     }
 
     /**

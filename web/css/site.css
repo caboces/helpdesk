@@ -152,6 +152,18 @@ h2 {
   border-color: #5f4bb6;
 }
 
+.envy {
+  color: #1b6c44;
+}
+
+.bg-envy {
+  background: #1b6c44;
+}
+
+.border-envy {
+  border-color: #1b6c44;
+}
+
 .imperial-red {
   color: #F15152;
 }
@@ -445,6 +457,12 @@ a.btn.bg-iris:hover {
   background-color: #3d3174;
 }
 
+button.bg-envy:hover,
+a.btn.bg-envy:hover {
+  border-color: #0f3a25;
+  background-color: #0f3a25;
+}
+
 button.border-imperial-red:hover {
   border-color: #F15152;
   background-color: #F15152;
@@ -456,6 +474,13 @@ a.btn.bg-iris:disabled {
   box-shadow: inset 2000px 2000px #0000001e;
   border-color: #3d3174;
   background-color: #3d3174;
+}
+
+button.bg-envy:disabled,
+a.btn.bg-envy:disabled {
+  box-shadow: inset 2000px 2000px #0000001e;
+  border-color: #0f3a25;
+  background-color: #0f3a25;
 }
 
 

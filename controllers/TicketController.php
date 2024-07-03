@@ -295,12 +295,14 @@ class TicketController extends Controller
      */
     public function actionDelete($id)
     {
+        // must have the delete-ticket permission
         if (Yii::$app->user->can('delete-ticket')) {
             $this->findModel($id)->delete();
 
             return $this->redirect(['index']);
         } else {
-            throw new ForbiddenHttpException('You do not have permission to delete this ticket.');
+            // wrong permissions!
+            throw new ForbiddenHttpException('You do not have permission to delete tickets.');
         }
     }
 
@@ -396,22 +398,4 @@ class TicketController extends Controller
             ->asArray()
             ->all();
     }
-
-
-        // throw this whole thing out and try again
-        // $query = (new \yii\db\Query())
-        // ->select([
-        //     'time_entry.id', 
-        //     'tech_time', 
-        //     'overtime', 
-        //     'travel_time', 
-        //     'itinerate_time', 
-        //     'entry_date', 
-        //     'user_id', 
-        //     'ticket_id', 
-        //     'user.username'
-        // ])
-        // ->from(['time_entry'])
-        // ->innerJoin('user', 'time_entry.user_id = user.id')
-        // ->where(['ticket_id' => $model->id]);
 }

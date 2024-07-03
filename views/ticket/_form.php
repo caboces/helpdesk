@@ -50,6 +50,32 @@ use yii\bootstrap5\ActiveForm;
                         // disable if creating a new ticket
                         'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
                 ]); ?>
+                <!-- Depending on the current status level, show the relevant resolve/closed button -->
+                 <?php
+                        if ($model->jobStatus->level < 70 ) {
+                                echo Html::button('Resolve ticket', [
+                                        'value' => Url::to('/ticket/resolve?id=' . $model->id),
+                                        'class' => 'btn btn-primary bg-envy border-envy',
+                                        // disable if creating a new ticket
+                                        'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+                                ]);
+                        } elseif ($model->jobStatus->level == 70) {
+                                echo Html::button('Close ticket', [
+                                        'value' => Url::to('/ticket/close?id=' . $model->id),
+                                        'class' => 'btn btn-primary bg-envy border-envy',
+                                        // disable if creating a new ticket
+                                        'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+                                ]);
+                        } elseif ($model->jobStatus->level == 80) {
+                                echo Html::button('Reopen ticket', [
+                                        'value' => Url::to('/ticket/reopen?id=' . $model->id),
+                                        'class' => 'btn btn-primary bg-envy border-envy',
+                                        // disable if creating a new ticket
+                                        'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+                                ]);
+                        }
+                ?>
+                <!-- save changes -->
                 <?= Html::submitButton('Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
         </div>
 
