@@ -298,11 +298,35 @@ class TicketController extends Controller
         // must have the delete-ticket permission
         if (Yii::$app->user->can('delete-ticket')) {
             $this->findModel($id)->delete();
-
             return $this->redirect(['index']);
         } else {
             // wrong permissions!
             throw new ForbiddenHttpException('You do not have permission to delete tickets.');
+        }
+    }
+
+    /**
+     * Resolves the current ticket.
+     * If the user has permissions to resolve the ticket, it will be resolved and need
+     * supervisor approval to be closed/billed.
+     * TODO: Currently there is no way to un-resolve tickets...
+     */
+    public function actionResolve($id) {
+        // if the user is allowed to resolve tickets, move forward
+        if (Yii::$app->user->can('resolve-ticket')) {
+            $model = $this->findModel($id);
+            // set job status to resolved
+            $model->job_status_id = 14;
+            // save changes and go to the ticket view
+            if ($this->request->isPost && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                // something else went wrong idk.
+                throw new ForbiddenHttpException('Something went wrong. Please try again.');
+            }
+        } else {
+            // wrong permissions!
+            throw new ForbiddenHttpException('You do not have permission to resolve tickets.');
         }
     }
 

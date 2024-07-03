@@ -54,10 +54,14 @@ use yii\bootstrap5\ActiveForm;
                  <?php
                         if ($model->jobStatus->level < 70 ) {
                                 echo Html::button('Resolve ticket', [
-                                        'value' => Url::to('/ticket/resolve?id=' . $model->id),
+                                        'value' => Url::to('ticket/resolve?id=' . $model->id),
                                         'class' => 'btn btn-primary bg-envy border-envy',
                                         // disable if creating a new ticket
                                         'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+                                        'data' => [
+                                                    'method' => 'post',
+                                                    'confirm' => 'Are you sure you want to resolve this ticket? It will be closed for modification and submitted to a supervisor for approval.',
+                                                ],
                                 ]);
                         } elseif ($model->jobStatus->level == 70) {
                                 echo Html::button('Close ticket', [
@@ -66,7 +70,8 @@ use yii\bootstrap5\ActiveForm;
                                         // disable if creating a new ticket
                                         'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
                                 ]);
-                        } elseif ($model->jobStatus->level == 80) {
+                        // if the ticket has not been billed, allow it to be reopened after being closed/resolved
+                        } elseif ($model->jobStatus->level < 90) {
                                 echo Html::button('Reopen ticket', [
                                         'value' => Url::to('/ticket/reopen?id=' . $model->id),
                                         'class' => 'btn btn-primary bg-envy border-envy',

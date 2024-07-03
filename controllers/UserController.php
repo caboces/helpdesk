@@ -167,29 +167,33 @@ class UserController extends Controller
      */
     public function actionToggleStatus($id)
     { 
-        if (!($this->findModel($id)->username === 'admin')) {   // don't deactivate admin!!!
+        // if selected user is not admin, move forward
+        if (!($this->findModel($id)->username === 'admin')) {
+            // if current user has permissions to change user status, move forward
             if (Yii::$app->user->can('change-user-status')) {
                 $model = $this->findModel($id);
-                // do the damn thing
+                // switcheroo
                 if ($model->status === 10) {
                     $model->status = 9; // if active, deactivate
                 } else {
                     $model->status = 10; // if inactive, activate
                 }
-                // go to the user view
+                // save changes and go to the user view
                 if ($this->request->isPost && $model->save()) {
                     return $this->redirect(['view', 'id' => $model->id]);
                 } else {
                     // wrong permissions!
-                    throw new ForbiddenHttpException('You do not have permission to change user statuses.');
+                    throw new ForbiddenHttpException('Something went wrong. Please try again.');
                 }
+            } else {
+                throw new ForbiddenHttpException('You do not have permission to change user status.');
             }
         } else {
             // don't delete admin!
             throw new ForbiddenHttpException('Hey you!! Don\'t deactivate my admin account! :)');
         }
         // something else went wrong idk.
-        throw new ForbiddenHttpException('You do not have permission to change user statuses.');
+        throw new ForbiddenHttpException('Something went wrong..');
     }
 
     /**
