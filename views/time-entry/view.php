@@ -7,8 +7,6 @@ use yii\widgets\DetailView;
 /** @var app\models\TimeEntry $model */
 
 $this->title = 'View Time Entry: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Time Entries', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="time-entry-view">

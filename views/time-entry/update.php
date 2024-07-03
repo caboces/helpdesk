@@ -6,9 +6,6 @@ use yii\helpers\Html;
 /** @var app\models\TimeEntry $model */
 
 $this->title = 'Update Time Entry: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Time Entries', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="time-entry-update">
 

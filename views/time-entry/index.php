@@ -12,7 +12,6 @@ use yii\grid\ActionColumn;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Time Entries';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="time-entry-index">
 

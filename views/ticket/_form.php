@@ -340,6 +340,7 @@ use yii\bootstrap5\ActiveForm;
                                                 'columns' => [
                                                         [
                                                                 'class' => ActionColumn::class,
+                                                                'template' => '{delete}',
                                                                 'urlCreator' => function ($action, TimeEntry $model, $key, $index) {
                                                                     return Url::to(['time-entry/' . $action, 'id' => $model->id]);
                                                                 }
