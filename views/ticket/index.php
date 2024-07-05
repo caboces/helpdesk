@@ -97,7 +97,19 @@ $this->title = 'Ticket Management';
                                 'label' => 'Primary Tech',
                                 'filter' => false,
                             ],
-                            'location',
+                            'location' => [
+                                'attribute' => 'customer_type_id',
+                                'value' => function($model) {
+                                    if ($model->customer_type_id == 1) {
+                                        return $model->customer_type_id . ': ' . $model->department_id . ', ' . $model->department_building_id . ', ' . $model->location;
+                                    } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
+                                        return $model->customer_type_id . ': ' . $model->district_id . ', ' . $model->district_building_id . ', ' . $model->location;
+                                    } else {
+                                        return 'Customer not set, ' . $model->location;
+                                    }
+                                },
+                                'label' => 'Location',
+                            ],
                             'job_category_name' => [
                                 'attribute' => 'job_category_name',
                                 'value' => 'jobCategory.name',
@@ -178,8 +190,28 @@ $this->title = 'Ticket Management';
                              * Location is up in the air but i'm working on it.. -efox
                              */
                             'requester',
-                            'primary_tech',
-                            'location',
+                            'primary_tech_id' => [
+                                'attribute' => 'primary_tech_id',
+                                'value' => function($data) {
+                                    return ($data->primaryTech != null ? $data->primaryTech->username : '');
+                                },
+                                'format' => 'text',
+                                'label' => 'Primary Tech',
+                                'filter' => false,
+                            ],
+                            'location' => [
+                                'attribute' => 'customer_type_id',
+                                'value' => function($model) {
+                                    if ($model->customer_type_id == 1) {
+                                        return $model->customer_type_id . ': ' . $model->department_id . ', ' . $model->department_building_id . ', ' . $model->location;
+                                    } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
+                                        return $model->customer_type_id . ': ' . $model->district_id . ', ' . $model->district_building_id . ', ' . $model->location;
+                                    } else {
+                                        return 'Customer not set, ' . $model->location;
+                                    }
+                                },
+                                'label' => 'Location',
+                            ],
                             'job_category_name' => [
                                 'attribute' => 'job_category_name',
                                 'value' => 'jobCategory.name',
@@ -263,8 +295,28 @@ $this->title = 'Ticket Management';
                              * Location is up in the air but i'm working on it.. -efox
                              */
                             'requester',
-                            'primary_tech',
-                            'location',
+                            'primary_tech_id' => [
+                                'attribute' => 'primary_tech_id',
+                                'value' => function($data) {
+                                    return ($data->primaryTech != null ? $data->primaryTech->username : '');
+                                },
+                                'format' => 'text',
+                                'label' => 'Primary Tech',
+                                'filter' => false,
+                            ],
+                            'location' => [
+                                'attribute' => 'customer_type_id',
+                                'value' => function($model) {
+                                    if ($model->customer_type_id == 1) {
+                                        return $model->customer_type_id . ': ' . $model->department_id . ', ' . $model->department_building_id;
+                                    } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
+                                        return $model->customer_type_id . ': ' . $model->district_id . ', ' . $model->district_building_id;
+                                    } else {
+                                        return 'Not set';
+                                    }
+                                },
+                                'label' => 'Location',
+                            ],
                             'job_category_name' => [
                                 'attribute' => 'job_category_name',
                                 'value' => 'jobCategory.name',
