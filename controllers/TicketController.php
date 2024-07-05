@@ -223,6 +223,7 @@ class TicketController extends Controller
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
         $statuses = ArrayHelper::map(JobStatus::getStatuses(), 'id', 'name');
+        $nonSelectableStatuses = ArrayHelper::map(JobStatus::getNonSelectableStatuses(), 'id', 'name');
         $types = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
         // customers
         $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'code');
@@ -255,6 +256,8 @@ class TicketController extends Controller
                 }
             }
 
+            echo '<script>console.log("test2")</script>';
+
             // TODO: add tech note space
             // $model->link('activities', Yii::$app->user->identity);
 
@@ -270,6 +273,7 @@ class TicketController extends Controller
             'categories' => $categories,
             'priorities' => $priorities,
             'statuses' => $statuses,
+            'nonSelectableStatuses' => $nonSelectableStatuses,      // needed for resolved/closed/billed ticket forms
             'types' => $types,
             // customers
             'customerTypes' => $customerTypes,
@@ -309,14 +313,15 @@ class TicketController extends Controller
      * Resolves the current ticket.
      * If the user has permissions to resolve the ticket, it will be resolved and need
      * supervisor approval to be closed/billed.
-     * TODO: Currently there is no way to un-resolve tickets...
      */
     public function actionResolve($id) {
         // if the user is allowed to resolve tickets, move forward
         if (Yii::$app->user->can('resolve-ticket')) {
             $model = $this->findModel($id);
+
             // set job status to resolved
             $model->job_status_id = 14;
+            
             // save changes and go to the ticket view
             if ($this->request->isPost && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -327,6 +332,65 @@ class TicketController extends Controller
         } else {
             // wrong permissions!
             throw new ForbiddenHttpException('You do not have permission to resolve tickets.');
+        }
+    }
+
+    /**
+     * Closes the current ticket.
+     * If the user has permissions to close the ticket, it will be closed and is eligible to be
+     * billed.
+     * After the ticket is billed, it will NOT be eligible for re-opening
+     */
+    public function actionClose($id) {
+        // if the user is allowed to close tickets, move forward
+        if (Yii::$app->user->can('close-ticket')) {
+            $model = $this->findModel($id);
+
+            // set job status to closed
+            $model->job_status_id = 15;
+
+            // save changes and go to the ticket view
+            if ($this->request->isPost && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                // something else went wrong idk.
+                throw new ForbiddenHttpException('Something went wrong. Please try again.');
+            }
+        } else {
+            // wrong permissions!
+            throw new ForbiddenHttpException('You do not have permission to close tickets.');
+        }
+    }
+
+    /**
+     * Closes the current ticket.
+     * If the user has permissions to close the ticket, it will be closed and is eligible to be
+     * billed.
+     * After the ticket is billed, it will NOT be eligible for re-opening
+     */
+    public function actionReopen($id) {
+        // if the user is allowed to close tickets AND the ticket has not been billed, move forward
+        if (Yii::$app->user->can('reopen-ticket')) {
+            $model = $this->findModel($id);
+
+            // if the ticket has been billed, do not reopen.
+            if ($model->job_status_id == 17) {
+                throw new ForbiddenHttpException('This ticket has already been billed and cannot be reopened. Please create a new ticket.');
+            } else {
+                // set job status to open
+                $model->job_status_id = 9;
+            }
+
+            // save changes and go to the ticket view
+            if ($this->request->isPost && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                // something else went wrong idk.
+                throw new ForbiddenHttpException('Something went wrong. Please try again.');
+            }
+        } else {
+            // wrong permissions!
+            throw new ForbiddenHttpException('You do not have permission to close tickets.');
         }
     }
 

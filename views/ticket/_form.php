@@ -36,52 +36,90 @@ use yii\bootstrap5\ActiveForm;
         <!-- action buttons -->
         <div class='container-fluid p-2 | bg-dark shadow-sm'>
                 <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
-                <?= Html::button('New tech note', [
+                <?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
+                                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+                                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+                        </svg> New tech note', [
                         'class' => 'btn btn-primary bg-iris border-iris',
                         'data-bs-toggle' => 'collapse',
                         'data-bs-target' => '#tech-note',
                         'aria-expanded' => 'false',
                         'aria-controls' => '#tech-note',
                 ]); ?>
-                <?= Html::button('New time entry', [
+                <?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+                        </svg> New time entry', [
                         'value' => Url::to('/time-entry/create?id=' . $model->id),
                         'id' => 'time-entry-modal-button',
                         'class' => 'btn btn-primary bg-iris border-iris',
                         // disable if creating a new ticket
                         'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
                 ]); ?>
-                <!-- Depending on the current status level, show the relevant resolve/closed button -->
-                 <?php
-                        if ($model->jobStatus->level < 70 ) {
-                                echo Html::button('Resolve ticket', [
-                                        'value' => Url::to('ticket/resolve?id=' . $model->id),
-                                        'class' => 'btn btn-primary bg-envy border-envy',
+
+                <!-- Depending on the current status level, show the reopen button -->
+                <?php
+                // reopen the ticket. do not show this option on ticket creation screen.
+                if (!($model->jobStatus == NULL)){
+                        if ($model->jobStatus->level >= 70) {
+                                echo Html::a('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open" viewBox="0 0 16 16">
+                                                <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
+                                                <path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z"/>
+                                        </svg> Re-open ticket', Url::to('reopen?id=' . $model->id), [
+                                        'class' => 'btn btn-primary bg-lavender border-lavender',
                                         // disable if creating a new ticket
                                         'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
                                         'data' => [
-                                                    'method' => 'post',
-                                                    'confirm' => 'Are you sure you want to resolve this ticket? It will be closed for modification and submitted to a supervisor for approval.',
+                                                        'method' => 'post',
+                                                        'confirm' => 'Are you sure you want to re-open this ticket? It will be added back to the workflow and will not be billed until it is resolved and closed again.',
                                                 ],
                                 ]);
-                        } elseif ($model->jobStatus->level == 70) {
-                                echo Html::button('Close ticket', [
-                                        'value' => Url::to('/ticket/close?id=' . $model->id),
-                                        'class' => 'btn btn-primary bg-envy border-envy',
+                        }
+                }
+                ?>
+
+                <!-- Depending on the current status level, show the relevant resolve/closed button -->
+                <?php
+                // resolve the ticket. do not show this option on ticket creation screen.
+                if (!($model->jobStatus == NULL)){
+                        if ($model->jobStatus->level < 70 ) {
+                                echo Html::a('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-check" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                                                <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911z"/>
+                                        </svg> Resolve ticket', Url::to('resolve?id=' . $model->id), [
+                                        'class' => 'btn btn-primary bg-lavender border-lavender',
                                         // disable if creating a new ticket
                                         'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+                                        'data' => [
+                                                        'method' => 'post',
+                                                        'confirm' => 'Are you sure you want to resolve this ticket? It will be closed for modification and submitted to a supervisor for approval.',
+                                                ],
                                 ]);
-                        // if the ticket has not been billed, allow it to be reopened after being closed/resolved
-                        } elseif ($model->jobStatus->level < 90) {
-                                echo Html::button('Reopen ticket', [
-                                        'value' => Url::to('/ticket/reopen?id=' . $model->id),
-                                        'class' => 'btn btn-primary bg-envy border-envy',
+                        // close the ticket
+                        } elseif ($model->jobStatus->level == 70) {
+                                echo Html::a('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-closed" viewBox="0 0 16 16">
+                                                <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3zm1 13h8V2H4z"/>
+                                                <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/>
+                                        </svg> Close ticket', Url::to('close?id=' . $model->id), [
+                                        'class' => 'btn btn-primary bg-lavender border-lavender',
                                         // disable if creating a new ticket
                                         'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+                                        'data' => [
+                                                        'method' => 'post',
+                                                        'confirm' => 'Are you sure you want to close this ticket? It will be eligible for billing, and cannot be re-opened after it is billed.',
+                                                ],
                                 ]);
                         }
+                }
                 ?>
-                <!-- save changes -->
-                <?= Html::submitButton('Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
+
+                                <!-- save changes -->
+                                <?= Html::submitButton('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                                                                <path d="M11 2H9v3h2z"/>
+                                                                <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                                        </svg> Save ticket',
+                                                        ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
         </div>
 
         <!-- pill nav -->
@@ -275,8 +313,20 @@ use yii\bootstrap5\ActiveForm;
                                         </div>
                                         <div class="row">
                                                 <div class="col-md-6">
-                                                        <?= $form->field($model, 'job_status_id')
-                                                                ->dropDownList($statuses, ['prompt' => 'Select Status']) ?>
+                                                        <?php
+                                                        /**
+                                                         * For statuses: we need to only show the statuses that are selectable when tickets are still OPEN.
+                                                         * When tickets are closed/resolved, populate this field with the relevant status and DO NOT allow
+                                                         * users to change it. They must use the action buttons at the top instead. (open->resolve->close->reopen)
+                                                         */
+                                                        if ($model->jobStatus == NULL || $model->jobStatus->level < 70) {
+                                                                echo $form->field($model, 'job_status_id')
+                                                                        ->dropDownList($statuses, ['prompt' => 'Select Status']);
+                                                        } elseif ($model->jobStatus->level >= 70) {
+                                                                echo $form->field($model, 'job_status_id')
+                                                                        ->dropDownList($nonSelectableStatuses, ["disabled"=>"disabled"]);
+                                                        }
+                                                        ?>
                                                 </div>
                                                 <div class="col-md-6">
                                                         <?= $form->field($model, 'job_type_id')
@@ -376,7 +426,10 @@ use yii\bootstrap5\ActiveForm;
                 <?= Html::button('Technicians', ['class' => 'btn btn-outline-secondary']); ?>
                 <?= Html::button('Equipment', ['class' => 'btn btn-outline-secondary']); ?>
                 <?= Html::button('Time entries', ['class' => 'btn btn-outline-secondary']); ?>
-                <?= Html::submitButton('Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
+                <?= Html::submitButton('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                                                <path d="M11 2H9v3h2z"/>
+                                                <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                        </svg> Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
         </div>
         <?php ActiveForm::end(); ?>
 

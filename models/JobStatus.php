@@ -76,12 +76,21 @@ class JobStatus extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets all statuses
+     * Gets all SELECTABLE statuses
      * 
      * @return all statuses in an alphabetical array
      */
     public static function getStatuses() {
         return JobStatus::find()->where(['selectable' => 1])->orderBy('name ASC')->asArray()->all();
+    }
+
+    /**
+     * Gets all NON-SELECTABLE statuses
+     * 
+     * @return all statuses in an alphabetical array
+     */
+    public static function getNonSelectableStatuses() {
+        return JobStatus::find()->where(['selectable' => 0])->orderBy('name ASC')->asArray()->all();
     }
 
     /**
