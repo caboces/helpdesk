@@ -5,11 +5,32 @@ $(document).ready(function(){
 ==============================================================================================
 
 || GENERAL
+|| CUSTOMER SELECTION (TICKET FORM)
+|| TIME ENTRY MODAL (TICKET FORM)
 
 ==============================================================================================
 || GENERAL
 =========================================================================================== */
 
+/**
+ * Allow secondary pill navigation buttons (found bottom of ticket _form) to fire primary pill's
+ * action (secondary "Technicians" button will open Technicians content)
+ */
+$('#secondary-pill-nav-technicians').click(function(){
+    $('#pills-technicians-tab').click();
+});
+
+$('#secondary-pill-nav-equipment').click(function(){
+    $('#pills-equipment-tab').click();
+});
+
+$('#secondary-pill-nav-time-entries').click(function(){
+    $('#pills-time-entries-tab').click();
+});
+
+/* ===========================================================================================
+|| CUSTOMER SELECTION (TICKET FORM)
+=========================================================================================== */
 /**
  * OnChange: Customer Type Input Radio List
  * When the user selects a new customerTypeId for the ticket, show/hide/clear the second drop down
@@ -49,6 +70,10 @@ $('#ticket-customer_type_id').on('change', function() {
         $('#ticket-division_id').val('');
     }
 });
+
+/* ===========================================================================================
+|| TIME ENTRY MODAL (TICKET FORM)
+=========================================================================================== */
 
 /**
  * Get click of new time-entry button from ticket form.

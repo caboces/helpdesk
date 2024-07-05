@@ -284,7 +284,7 @@ $this->title = 'Ticket Management';
                                 'value' => 'jobStatus.name',
                                 'format' => 'text',
                                 'label' => 'Status',
-                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_status_name', $nonSelectableStatuses, ['class' => 'form-control', 'prompt' => '-All-']),
                             ],
                             'job_type_name' => [
                                 'attribute' => 'job_type_name',

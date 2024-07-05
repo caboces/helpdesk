@@ -79,6 +79,7 @@ class TicketController extends Controller
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'name', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'name', 'name');
         $statuses = ArrayHelper::map(JobStatus::getStatuses(), 'name', 'name');
+        $nonSelectableStatuses = ArrayHelper::map(JobStatus::getNonSelectableStatuses(), 'name', 'name');
         $types = ArrayHelper::map(JobType::getTypes(), 'name', 'name');
         // search customers
         $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'name', 'name');
@@ -102,6 +103,7 @@ class TicketController extends Controller
             'categories' => $categories,
             'priorities' => $priorities,
             'statuses' => $statuses,
+            'nonSelectableStatuses' => $nonSelectableStatuses,      // needed for resolved/closed/billed ticket forms
             'types' => $types,
             // customers
             'customerTypes' => $customerTypes,

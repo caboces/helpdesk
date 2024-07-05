@@ -88,7 +88,7 @@ class TicketClosedResolvedSearch extends TicketSearch
             ->andFilterWhere(['LIKE', 'jobStatus.name', $this->job_status_name])
             ->andFilterWhere(['LIKE', 'jobType.name', $this->job_type_name]);
 
-        $query->andFilterWhere(['>', 'jobStatus.level', 7]);
+        $query->andFilterWhere(['>=', 'jobStatus.level', 70]);
 
         return $ticketClosedResolvedDataProvider;
     }
