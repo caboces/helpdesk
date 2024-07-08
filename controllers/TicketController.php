@@ -392,7 +392,7 @@ class TicketController extends Controller
             }
         } else {
             // wrong permissions!
-            throw new ForbiddenHttpException('You do not have permission to close tickets.');
+            throw new ForbiddenHttpException('You do not have permission to reopen tickets.');
         }
     }
 

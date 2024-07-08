@@ -15,6 +15,7 @@ use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\SignupForm;
 use app\models\ContactForm;
+use yii\web\ForbiddenHttpException;
 
 /**
  * Site controller
@@ -144,15 +145,19 @@ class SiteController extends Controller
      */
     public function actionSignup()
     {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registering. Please check your inbox for a verification email.');
-            return $this->goHome();
-        }
+        if (Yii::$app->user->can('create-user')) {
+            $model = new SignupForm();
+            if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+                Yii::$app->session->setFlash('success', 'Thank you for registering. Please check your inbox for a verification email.');
+                return $this->goHome();
+            }
 
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
+            return $this->render('signup', [
+                'model' => $model,
+            ]);
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to create new users.');
+        }
     }
 
     /**
