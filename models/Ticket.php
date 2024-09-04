@@ -87,8 +87,8 @@ class Ticket extends \yii\db\ActiveRecord
             'description' => 'Description',
             'primary_tech_id' => 'Primary Technician',
             'users' => 'Assigned Technicians',
-            'requester' => 'Requester',
-            'location' => 'Location',
+            'requester' => 'Requester Full Name',
+            'location' => 'Additional Location Information',
             'requester_email' => 'Requester Email',
             'requester_phone' => 'Requester Phone',
 

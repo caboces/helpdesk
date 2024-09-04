@@ -91,9 +91,9 @@ $this->title = 'Ticket Management';
                             'primary_tech_id' => [
                                 'attribute' => 'primary_tech_id',
                                 'value' => function($data) {
-                                    return ($data->primaryTech != null ? $data->primaryTech->username : '');
+                                    return '<a href="/user/view?id=' . ($data->primaryTech != null ? $data->primaryTech->id : '') . '">' . ($data->primaryTech != null ? $data->primaryTech->username : '') . '</a>';
                                 },
-                                'format' => 'text',
+                                'format' => 'raw',
                                 'label' => 'Primary Tech',
                                 'filter' => false,
                             ],
@@ -105,9 +105,9 @@ $this->title = 'Ticket Management';
                                         return '<u>' . $model->customerType->code . '</u><br>-' . $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
                                     // WNYRIC and DISTRICT needs division, department, and department building (+ whatever the tech enters extra)
                                     } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
-                                        return $model->customerType->code . ': ' . $model->districtBuilding->districtName . ', ' . $model->districtBuilding->buildingName . ', "' . $model->location . '"';
+                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->districtBuilding->districtName . '<br>-' . $model->districtBuilding->buildingName . '<br>"' . $model->location . '"';
                                     } else {
-                                        return 'Customer not set, ' . $model->location;
+                                        return 'Customer not set, "' . $model->location . '"';
                                     }
                                 },
                                 'format' => 'raw',
@@ -160,6 +160,9 @@ $this->title = 'Ticket Management';
                                 'format' => 'text',
                                 'label' => 'Type',
                                 'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'font-weight: bold;'];
+                                },
                             ],
                             'created' => [
                                 'attribute' => 'created',
@@ -217,9 +220,9 @@ $this->title = 'Ticket Management';
                             'primary_tech_id' => [
                                 'attribute' => 'primary_tech_id',
                                 'value' => function($data) {
-                                    return ($data->primaryTech != null ? $data->primaryTech->username : '');
+                                    return '<a href="/user/view?id=' . ($data->primaryTech != null ? $data->primaryTech->id : '') . '">' . ($data->primaryTech != null ? $data->primaryTech->username : '') . '</a>';
                                 },
-                                'format' => 'text',
+                                'format' => 'raw',
                                 'label' => 'Primary Tech',
                                 'filter' => false,
                             ],
@@ -231,9 +234,9 @@ $this->title = 'Ticket Management';
                                         return '<u>' . $model->customerType->code . '</u><br>-' . $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
                                     // WNYRIC and DISTRICT needs division, department, and department building (+ whatever the tech enters extra)
                                     } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
-                                        return $model->customerType->code . ': ' . $model->districtBuilding->districtName . ', ' . $model->districtBuilding->buildingName . ', "' . $model->location . '"';
+                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->districtBuilding->districtName . '<br>-' . $model->districtBuilding->buildingName . '<br>"' . $model->location . '"';
                                     } else {
-                                        return 'Customer not set, ' . $model->location;
+                                        return 'Customer not set, "' . $model->location . '"';
                                     }
                                 },
                                 'format' => 'raw',
@@ -286,6 +289,9 @@ $this->title = 'Ticket Management';
                                 'format' => 'text',
                                 'label' => 'Type',
                                 'filter' => Html::activeDropDownList($searchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'font-weight: bold;'];
+                                },
                             ],
                             'created' => [
                                 'attribute' => 'created',
@@ -346,9 +352,9 @@ $this->title = 'Ticket Management';
                             'primary_tech_id' => [
                                 'attribute' => 'primary_tech_id',
                                 'value' => function($data) {
-                                    return ($data->primaryTech != null ? $data->primaryTech->username : '');
+                                    return '<a href="/user/view?id=' . ($data->primaryTech != null ? $data->primaryTech->id : '') . '">' . ($data->primaryTech != null ? $data->primaryTech->username : '') . '</a>';
                                 },
-                                'format' => 'text',
+                                'format' => 'raw',
                                 'label' => 'Primary Tech',
                                 'filter' => false,
                             ],
@@ -360,9 +366,9 @@ $this->title = 'Ticket Management';
                                         return '<u>' . $model->customerType->code . '</u><br>-' . $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
                                     // WNYRIC and DISTRICT needs division, department, and department building (+ whatever the tech enters extra)
                                     } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
-                                        return $model->customerType->code . ': ' . $model->districtBuilding->districtName . ', ' . $model->districtBuilding->buildingName . ', "' . $model->location . '"';
+                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->districtBuilding->districtName . '<br>-' . $model->districtBuilding->buildingName . '<br>"' . $model->location . '"';
                                     } else {
-                                        return 'Customer not set, ' . $model->location;
+                                        return 'Customer not set, "' . $model->location . '"';
                                     }
                                 },
                                 'format' => 'raw',
@@ -415,6 +421,9 @@ $this->title = 'Ticket Management';
                                 'format' => 'text',
                                 'label' => 'Type',
                                 'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'font-weight: bold;'];
+                                },
                             ],
                             'created' => [
                                 'attribute' => 'created',
