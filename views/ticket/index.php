@@ -55,7 +55,7 @@ $this->title = 'Ticket Management';
         <div class="tab-pane fade show active" id="pills-assignments" role="tabpanel" aria-labelledby="pills-assignments-tab">
             <div class="subsection-info-block">
                 <h2>Assigned tickets</h2>
-                <p>All tickets currently assigned to this user, including primary and secondary assingments</p>
+                <p>All tickets currently assigned to this user, including primary and secondary assignments</p>
                 <div class="table-container container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-assignments']); ?>
                     <?= GridView::widget([
@@ -100,36 +100,59 @@ $this->title = 'Ticket Management';
                             'location' => [
                                 'attribute' => 'customer_type_id',
                                 'value' => function($model) {
+                                    // CABOCES needs division, department, and department building (+ whatever the tech enters extra)
                                     if ($model->customer_type_id == 1) {
-                                        return $model->customer_type_id . ': ' . $model->department_id . ', ' . $model->department_building_id . ', ' . $model->location;
+                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
+                                    // WNYRIC and DISTRICT needs division, department, and department building (+ whatever the tech enters extra)
                                     } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
-                                        return $model->customer_type_id . ': ' . $model->district_id . ', ' . $model->district_building_id . ', ' . $model->location;
+                                        return $model->customerType->code . ': ' . $model->districtBuilding->districtName . ', ' . $model->districtBuilding->buildingName . ', "' . $model->location . '"';
                                     } else {
                                         return 'Customer not set, ' . $model->location;
                                     }
                                 },
+                                'format' => 'raw',
                                 'label' => 'Location',
                             ],
                             'job_category_name' => [
                                 'attribute' => 'job_category_name',
-                                'value' => 'jobCategory.name',
-                                'format' => 'text',
+                                'value' => function($model) {
+                                    $icon_path = $model->jobCategory->icon_path;
+                                    return '<img src="' . $icon_path . '"></img> ' . $model->jobCategory->name;
+                                },
+                                'format' => 'raw',
                                 'label' => 'Category',
                                 'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
                             ],
                             'job_priority_name' => [
                                 'attribute' => 'job_priority_name',
-                                'value' => 'jobPriority.name',
-                                'format' => 'text',
+                                'value' => function($model) {
+                                    $bgcolor = $model->jobPriority->color;
+                                    // want to add in a background color to these dots
+                                    return '<span class="dot" style="background-color:' . $bgcolor . ' "></span>' . $model->jobPriority->name;
+                                },
+                                'format' => 'raw',
                                 'label' => 'Priority',
                                 'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
                             ],
                             'job_status_name' => [
                                 'attribute' => 'job_status_name',
-                                'value' => 'jobStatus.name',
-                                'format' => 'text',
+                                'value' => function($model) {
+                                    $bgcolor = $model->jobStatus->color;
+                                    // want to add in a background color to these dots
+                                    return '<span class="dot" style="background-color:' . $bgcolor . ' "></span>' . $model->jobStatus->name;
+                                },
+                                'format' => 'raw',
                                 'label' => 'Status',
                                 'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
                             ],
                             'job_type_name' => [
                                 'attribute' => 'job_type_name',
@@ -140,6 +163,7 @@ $this->title = 'Ticket Management';
                             ],
                             'created' => [
                                 'attribute' => 'created',
+                                'format' => ['datetime', 'php:m/d/Y h:iA'],
                                 'label' => 'Date submitted',
                                 'filter' => false,
                             ],
@@ -202,36 +226,59 @@ $this->title = 'Ticket Management';
                             'location' => [
                                 'attribute' => 'customer_type_id',
                                 'value' => function($model) {
+                                    // CABOCES needs division, department, and department building (+ whatever the tech enters extra)
                                     if ($model->customer_type_id == 1) {
-                                        return $model->customer_type_id . ': ' . $model->department_id . ', ' . $model->department_building_id . ', ' . $model->location;
+                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
+                                    // WNYRIC and DISTRICT needs division, department, and department building (+ whatever the tech enters extra)
                                     } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
-                                        return $model->customer_type_id . ': ' . $model->district_id . ', ' . $model->district_building_id . ', ' . $model->location;
+                                        return $model->customerType->code . ': ' . $model->districtBuilding->districtName . ', ' . $model->districtBuilding->buildingName . ', "' . $model->location . '"';
                                     } else {
                                         return 'Customer not set, ' . $model->location;
                                     }
                                 },
+                                'format' => 'raw',
                                 'label' => 'Location',
                             ],
                             'job_category_name' => [
                                 'attribute' => 'job_category_name',
-                                'value' => 'jobCategory.name',
-                                'format' => 'text',
+                                'value' => function($model) {
+                                    $icon_path = $model->jobCategory->icon_path;
+                                    return '<img src="' . $icon_path . '"></img> ' . $model->jobCategory->name;
+                                },
+                                'format' => 'raw',
                                 'label' => 'Category',
-                                'filter' => Html::activeDropDownList($searchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
                             ],
                             'job_priority_name' => [
                                 'attribute' => 'job_priority_name',
-                                'value' => 'jobPriority.name',
-                                'format' => 'text',
+                                'value' => function($model) {
+                                    $bgcolor = $model->jobPriority->color;
+                                    // want to add in a background color to these dots
+                                    return '<span class="dot" style="background-color:' . $bgcolor . ' "></span>' . $model->jobPriority->name;
+                                },
+                                'format' => 'raw',
                                 'label' => 'Priority',
-                                'filter' => Html::activeDropDownList($searchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
                             ],
                             'job_status_name' => [
                                 'attribute' => 'job_status_name',
-                                'value' => 'jobStatus.name',
-                                'format' => 'text',
+                                'value' => function($model) {
+                                    $bgcolor = $model->jobStatus->color;
+                                    // want to add in a background color to these dots
+                                    return '<span class="dot" style="background-color:' . $bgcolor . ' "></span>' . $model->jobStatus->name;
+                                },
+                                'format' => 'raw',
                                 'label' => 'Status',
-                                'filter' => Html::activeDropDownList($searchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
                             ],
                             'job_type_name' => [
                                 'attribute' => 'job_type_name',
@@ -242,6 +289,7 @@ $this->title = 'Ticket Management';
                             ],
                             'created' => [
                                 'attribute' => 'created',
+                                'format' => ['datetime', 'php:m/d/Y h:iA'],
                                 'label' => 'Date submitted',
                                 'filter' => false,
                             ],
@@ -255,9 +303,9 @@ $this->title = 'Ticket Management';
             <div class="subsection-info-block">
                 <h2>Resolved / Closed tickets</h2>
                 <p>All tickets that have been resolved / closed</p>
-                <div class="alert alert-info p-2" role="alert">
+                <!-- <div class="alert alert-info p-2" role="alert">
                     Filters haven't been made yet! Currently showing all tickets.
-                </div>
+                </div> -->
                 <div class="container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-resolved-closed']); ?>
                     <?= GridView::widget([
@@ -307,36 +355,59 @@ $this->title = 'Ticket Management';
                             'location' => [
                                 'attribute' => 'customer_type_id',
                                 'value' => function($model) {
+                                    // CABOCES needs division, department, and department building (+ whatever the tech enters extra)
                                     if ($model->customer_type_id == 1) {
-                                        return $model->customer_type_id . ': ' . $model->department_id . ', ' . $model->department_building_id;
+                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
+                                    // WNYRIC and DISTRICT needs division, department, and department building (+ whatever the tech enters extra)
                                     } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
-                                        return $model->customer_type_id . ': ' . $model->district_id . ', ' . $model->district_building_id;
+                                        return $model->customerType->code . ': ' . $model->districtBuilding->districtName . ', ' . $model->districtBuilding->buildingName . ', "' . $model->location . '"';
                                     } else {
-                                        return 'Not set';
+                                        return 'Customer not set, ' . $model->location;
                                     }
                                 },
+                                'format' => 'raw',
                                 'label' => 'Location',
                             ],
                             'job_category_name' => [
                                 'attribute' => 'job_category_name',
-                                'value' => 'jobCategory.name',
-                                'format' => 'text',
+                                'value' => function($model) {
+                                    $icon_path = $model->jobCategory->icon_path;
+                                    return '<img src="' . $icon_path . '"></img> ' . $model->jobCategory->name;
+                                },
+                                'format' => 'raw',
                                 'label' => 'Category',
-                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
                             ],
                             'job_priority_name' => [
                                 'attribute' => 'job_priority_name',
-                                'value' => 'jobPriority.name',
-                                'format' => 'text',
+                                'value' => function($model) {
+                                    $bgcolor = $model->jobPriority->color;
+                                    // want to add in a background color to these dots
+                                    return '<span class="dot" style="background-color:' . $bgcolor . ' "></span>' . $model->jobPriority->name;
+                                },
+                                'format' => 'raw',
                                 'label' => 'Priority',
-                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
                             ],
                             'job_status_name' => [
                                 'attribute' => 'job_status_name',
-                                'value' => 'jobStatus.name',
-                                'format' => 'text',
+                                'value' => function($model) {
+                                    $bgcolor = $model->jobStatus->color;
+                                    // want to add in a background color to these dots
+                                    return '<span class="dot" style="background-color:' . $bgcolor . ' "></span>' . $model->jobStatus->name;
+                                },
+                                'format' => 'raw',
                                 'label' => 'Status',
-                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_status_name', $nonSelectableStatuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
                             ],
                             'job_type_name' => [
                                 'attribute' => 'job_type_name',
@@ -347,6 +418,7 @@ $this->title = 'Ticket Management';
                             ],
                             'created' => [
                                 'attribute' => 'created',
+                                'format' => ['datetime', 'php:m/d/Y h:iA'],
                                 'label' => 'Date submitted',
                                 'filter' => false,
                             ],

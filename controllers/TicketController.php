@@ -88,7 +88,7 @@ class TicketController extends Controller
         $divisions = ArrayHelper::map(Division::getDivisions(), 'name', 'name');
         $buildings = ArrayHelper::map(Building::getBuildings(), 'name', 'name');
 
-        $this->layout = 'blank-container';
+        $this->layout = 'blank';
         return $this->render('index', [
             // search assigned tickets
             'ticketAssignmentSearchModel' => $ticketAssignmentSearchModel,

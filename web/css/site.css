@@ -245,7 +245,7 @@ tr:nth-child(odd) td {
 }
 
 .high td {
-  box-shadow: inset 200px 200px #ff000067 !important;
+  box-shadow: inset 200px 200px #ff585894 !important;
 }
 
 .filters td {
@@ -312,6 +312,16 @@ a.desc:after {
   border-left: 3px solid #eed3d7;
   padding: 10px 20px;
   margin: 0 0 15px 0;
+}
+
+.dot {
+  display: inline-block;
+  border-radius: 50%;
+  margin-right: 10px;
+  width: 10px;
+  height: 10px;
+
+  background-color: rgb(219, 219, 219);
 }
 
 /* ===========================================================================================
@@ -505,6 +515,10 @@ div#ticket-customer_type_id {
 .form-check {
   padding-top: 5px;
   padding-bottom: 6px;
+}
+
+.grid-view .form-control {
+  padding: 2px 5px;
 }
 
 .read-only {

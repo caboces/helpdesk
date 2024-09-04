@@ -37,7 +37,7 @@ class JobPriority extends \yii\db\ActiveRecord
             [['level'], 'required'],
             [['status', 'level'], 'integer'],
             [['created', 'modified'], 'safe'],
-            [['name'], 'string', 'max' => 100],
+            [['name', 'color'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 500],
             [['name'], 'unique'],
         ];
@@ -54,6 +54,7 @@ class JobPriority extends \yii\db\ActiveRecord
             'level' => 'Level',
             'description' => 'Description',
             'status' => 'Status',
+            'color' => 'Color',
             'created' => 'Created',
             'modified' => 'Modified',
         ];

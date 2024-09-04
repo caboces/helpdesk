@@ -35,7 +35,7 @@ class JobCategory extends \yii\db\ActiveRecord
             [['name'], 'required'],
             [['status'], 'integer'],
             [['created', 'updated'], 'safe'],
-            [['name'], 'string', 'max' => 100],
+            [['name, icon_path'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 500],
             [['name'], 'unique'],
         ];
@@ -50,6 +50,7 @@ class JobCategory extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'description' => 'Description',
+            'icon_path' => 'Icon Path',
             'status' => 'Status',
             'created' => 'Created',
             'updated' => 'Updated',
