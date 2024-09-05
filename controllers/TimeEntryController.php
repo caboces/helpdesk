@@ -77,9 +77,11 @@ class TimeEntryController extends Controller
         $ticket = Ticket::findOne($id);
         $model = new TimeEntry();
 
+
         if ($this->request->isPost) {
+            // temp set to false so i can try to get results to save at all
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['time-entry/view', 'id' => $model->id]);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();
@@ -164,8 +166,7 @@ class TimeEntryController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-                return ['code' => 200, 'message' => 'success'];
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();

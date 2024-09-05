@@ -17,7 +17,7 @@ class TimeEntrySearch extends TimeEntry
     public function rules()
     {
         return [
-            [['id', 'user_id', 'ticket_id', 'entry_creator_id'], 'integer'],
+            [['id', 'user_id', 'ticket_id', 'last_modified_by_user_id'], 'integer'],
             [['created', 'modified'], 'safe'],
         ];
     }
@@ -72,7 +72,7 @@ class TimeEntrySearch extends TimeEntry
             'user_id' => $this->user_id,
             // new tickets (no ticket_id yet) should be showing NO time entries. Without the ternary, it shows ALL
             'ticket_id' => ($this->ticket_id != null ? $this->ticket_id : false),
-            'entry_creator_id' => $this->entry_creator_id,
+            'last_modified_by_user_id' => $this->last_modified_by_user_id,
             'created' => $this->created,
             'modified' => $this->modified,
         ]);

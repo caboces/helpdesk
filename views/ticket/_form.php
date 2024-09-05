@@ -407,8 +407,8 @@ use yii\bootstrap5\ActiveForm;
                                                         'travel_time',
                                                         'itinerate_time',
                                                         [
-                                                                'attribute' => 'entry_creator_name',
-                                                                'value' => 'entry_creator.username',
+                                                                'attribute' => 'last_modified_by',
+                                                                'value' => 'lastModifiedBy.username',
                                                                 'format' => 'text',
                                                         ],
                                                         'ticket_id'

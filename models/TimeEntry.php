@@ -15,12 +15,13 @@ use Yii;
  * @property string $entry_date
  * @property int $user_id
  * @property int $ticket_id
+ * @property int $last_modified_by_user_id
  * @property string|null $created
  * @property string|null $modified
  *
  * @property Ticket $ticket
  * @property User $user
- * @property EntryCreator $entry_creator
+ * @property LastModifiedBy $last_modified_by
  */
 class TimeEntry extends \yii\db\ActiveRecord
 {
@@ -38,19 +39,20 @@ class TimeEntry extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'ticket_id', 'entry_creator_id'], 'integer'],
+            [['user_id', 'ticket_id', 'last_modified_by_user_id'], 'integer'],
             // these times are decimals(4,2) in the db. Using min-max rules to police this.
             [['tech_time', 'overtime', 'travel_time', 'itinerate_time'], 'number', 'min' => 0, 'max' => 99.75],
             [['ticket_id'], 'required'],
             // TODO: entry_date not validating because I didn't use Yii helpers
+            // ALSO TODO: last_modified_by_user_id not working and failing validation checks with a redirect to an unstyled form...
             [['entry_date'], 'required', 'skipOnEmpty' => false, 'skipOnError' => false, 'message' => 'Please select the date of the hours worked.'],
             [['user_id'], 'required', 'message' => 'User ID is required. Please make sure the relevant tech is assigned to the ticket.'],
-            [['entry_creator_id'], 'required', 'message' => 'Entry creator required.'],
+            [['last_modified_by_user_id'], 'required', 'message' => 'Entry editor id is required.'],
             [['entry_date', 'created', 'modified'], 'safe'],
             // foreign keys
             [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['entry_creator_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['last_modified_by_user_id' => 'id']],
             /* TIME ENTRIES FORMAT VALIDATOR
              * - time entries can have between 0-2 whole integers
              * - time entries can have between 0-2 decimal places
@@ -74,7 +76,7 @@ class TimeEntry extends \yii\db\ActiveRecord
             'entry_date' => 'Entry Date',
             'user_id' => 'User',
             'ticket_id' => 'Ticket ID',
-            'entry_creator_id' => 'Entry Creator',
+            'last_modified_by_user_id' => 'Last Entry Editor',
             'created' => 'Created',
             'modified' => 'Modified',
         ];
@@ -105,9 +107,9 @@ class TimeEntry extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
      */
-    public function getEntryCreator()
+    public function getLastModifiedBy()
     {
-        return $this->hasOne(User::class, ['id' => 'entry_creator_id']);
+        return $this->hasOne(User::class, ['id' => 'last_modified_by_user_id']);
     }
 
     /**
