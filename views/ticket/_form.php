@@ -402,10 +402,30 @@ use yii\bootstrap5\ActiveForm;
                                                                 'format' => 'text',
                                                                 'label' => 'Tech',
                                                         ],
-                                                        'tech_time',
-                                                        'overtime',
-                                                        'travel_time',
-                                                        'itinerate_time',
+                                                        'tech_time' => [
+                                                                'attribute' => 'tech_time',
+                                                                'value' => function ($model) {
+                                                                        return ($model->tech_time == 0 ? '' : $model->tech_time);
+                                                                }
+                                                        ],
+                                                        'overtime' => [
+                                                                'attribute' => 'overtime',
+                                                                'value' => function ($model) {
+                                                                        return ($model->overtime == 0 ? '' : $model->overtime);
+                                                                }
+                                                        ],
+                                                        'travel_time' => [
+                                                                'attribute' => 'travel_time',
+                                                                'value' => function ($model) {
+                                                                        return ($model->travel_time == 0 ? '' : $model->travel_time);
+                                                                }
+                                                        ],
+                                                        'itinerate_time' => [
+                                                                'attribute' => 'itinerate_time',
+                                                                'value' => function ($model) {
+                                                                        return ($model->itinerate_time == 0 ? '' : $model->itinerate_time);
+                                                                }
+                                                        ],
                                                         [
                                                                 'attribute' => 'last_modified_by',
                                                                 'value' => 'lastModifiedBy.username',
