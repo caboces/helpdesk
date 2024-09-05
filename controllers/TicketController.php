@@ -12,6 +12,7 @@ use app\models\Building;
 use app\models\District;
 use app\models\Division;
 use app\models\JobStatus;
+use app\models\TimeEntry;
 use app\models\Department;
 use app\models\JobCategory;
 use app\models\JobPriority;
@@ -20,15 +21,15 @@ use app\models\CustomerType;
 use app\models\TicketSearch;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
+use app\models\TimeEntrySearch;
 use app\models\DistrictBuilding;
 use app\models\DepartmentBuilding;
-use app\models\TechTicketAssignment;
-use app\models\TicketAssignmentSearch;
-use app\models\TicketClosedResolvedSearch;
-use app\models\TimeEntry;
-use app\models\TimeEntrySearch;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
+use app\models\TechTicketAssignment;
+use app\models\TimeEntryStatsSearch;
+use app\models\TicketAssignmentSearch;
+use app\models\TicketClosedResolvedSearch;
 
 /**
  * TicketController implements the CRUD actions for Ticket model.
@@ -139,6 +140,9 @@ class TicketController extends Controller
         // search tech time entries for ticket
         $techTimeEntrySearch = new TimeEntrySearch();
         $techTimeEntryDataProvider = $techTimeEntrySearch->search(Yii::$app->request->get());
+        // avgs for tech time entries
+        $techTimeEntryStatsSearch = new TimeEntryStatsSearch();
+        $techTimeEntryStatsDataProvider = $techTimeEntryStatsSearch->search(Yii::$app->request->get());
 
         // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
@@ -184,6 +188,9 @@ class TicketController extends Controller
             // search time entries
             'techTimeEntrySearch' => $techTimeEntrySearch,
             'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
+            // avg for time entries
+            'techTimeEntryStatsSearch' => $techTimeEntryStatsSearch,
+            'techTimeEntryStatsDataProvider' => $techTimeEntryStatsDataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
@@ -220,6 +227,11 @@ class TicketController extends Controller
         $techTimeEntrySearch = new TimeEntrySearch();
         $techTimeEntrySearch->ticket_id = $model->id;
         $techTimeEntryDataProvider = $techTimeEntrySearch->search(Yii::$app->request->get());
+
+        // stats
+        $techTimeEntryStatsSearch = new TimeEntrySearch();
+        $techTimeEntryStatsSearch->ticket_id = $model->id;
+        $techTimeEntryStatsDataProvider = $techTimeEntrySearch->search(Yii::$app->request->get());
 
         // ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
@@ -271,6 +283,9 @@ class TicketController extends Controller
             // search time entries
             'techTimeEntrySearch' => $techTimeEntrySearch,
             'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
+            // avg for time entries
+            'techTimeEntryStatsSearch' => $techTimeEntryStatsSearch,
+            'techTimeEntryStatsDataProvider' => $techTimeEntryStatsDataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,

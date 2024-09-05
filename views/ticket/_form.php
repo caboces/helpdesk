@@ -380,6 +380,21 @@ use yii\bootstrap5\ActiveForm;
                         <div class="subsection-info-block">
                                 <h2>Time entries</h2>
                                 <p>Hours spent on the current ticket</p>
+                                <h3>Time stats</h3>
+                                <div class="table-container container-fluid overflow-x-scroll">
+                                <?php Pjax::begin(['id' => 'tech-time-entries']); ?>
+                                        <?= GridView::widget([
+                                                'dataProvider' => $techTimeEntryStatsDataProvider,
+                                                'filterModel' => $techTimeEntryStatsSearch,
+                                                // 'showFooter' => true,
+                                                'tableOptions' => ['class' => 'table table-bordered'],
+                                                'columns' => [
+                                                        
+                                                ],
+                                        ]); ?>
+                                <?php Pjax::end(); ?>
+                                </div>
+                                <h3>All entries</h3>
                                 <div class="table-container container-fluid overflow-x-scroll">
                                 <?php Pjax::begin(['id' => 'tech-time-entries']); ?>
                                         <?= GridView::widget([
@@ -433,10 +448,8 @@ use yii\bootstrap5\ActiveForm;
                                                                 'value' => function($model) {
                                                                         return '<a href="/user/view?id=' . ($model->last_modified_by_user_id != null ? $model->last_modified_by_user_id : '') . '">' . ($model->last_modified_by_user_id != null ? $model->lastModifiedBy->username : '') . '</a>';
                                                                 },
-                                                                // 'value' => 'lastModifiedBy.username',
                                                                 'format' => 'raw',
                                                         ],
-                                                        // 'ticket_id'
                                                 ],
                                         ]); ?>
                                 <?php Pjax::end(); ?>

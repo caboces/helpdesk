@@ -25,6 +25,9 @@ $this->title = 'Update Ticket: ' . $model->id;
             // search time entries
             'techTimeEntrySearch' => $techTimeEntrySearch,
             'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
+            // avg for time entries
+            'techTimeEntryStatsSearch' => $techTimeEntryStatsSearch,
+            'techTimeEntryStatsDataProvider' => $techTimeEntryStatsDataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
