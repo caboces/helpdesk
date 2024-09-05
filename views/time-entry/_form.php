@@ -25,7 +25,14 @@ use app\models\TechTicketAssignment;
         <div class="question-box-no-trim">
 
             <!-- eventually this will be a hidden field -->
-            <?= $form->field($model, 'last_modified_by_user_id', ['inputOptions' => ['value' => Yii::$app->user->id]])->textInput(['readonly' => true, 'class' => 'read-only form-control']) ?>
+            <?= $form->field($model, 'last_modified_by_user_id', [
+                    'template' => '{input}',
+                    'options' => ['tag' => false],
+                    'inputOptions' => ['value' => Yii::$app->user->id]
+                ])->hiddenInput([
+                    'readonly' => true, 
+                ])->label(false)
+            ?>
 
             <div class="row">
                 <div class="col iris">

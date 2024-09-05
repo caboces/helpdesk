@@ -411,7 +411,7 @@ use yii\bootstrap5\ActiveForm;
                                                                 'value' => 'lastModifiedBy.username',
                                                                 'format' => 'text',
                                                         ],
-                                                        'ticket_id'
+                                                        // 'ticket_id'
                                                 ],
                                         ]); ?>
                                 <?php Pjax::end(); ?>
