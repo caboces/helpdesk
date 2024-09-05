@@ -396,10 +396,12 @@ use yii\bootstrap5\ActiveForm;
                                                                 }
                                                         ],
                                                         'entry_date',
-                                                        [
+                                                        'tech' => [
                                                                 'attribute' => 'user_name',
-                                                                'value' => 'user.username',
-                                                                'format' => 'text',
+                                                                'value' => function($model) {
+                                                                        return '<a href="/user/view?id=' . ($model->user_id != null ? $model->user_id : '') . '">' . ($model->user_id != null ? $model->user->username : '') . '</a>';
+                                                                },
+                                                                'format' => 'raw',
                                                                 'label' => 'Tech',
                                                         ],
                                                         'tech_time' => [
@@ -428,8 +430,11 @@ use yii\bootstrap5\ActiveForm;
                                                         ],
                                                         [
                                                                 'attribute' => 'last_modified_by',
-                                                                'value' => 'lastModifiedBy.username',
-                                                                'format' => 'text',
+                                                                'value' => function($model) {
+                                                                        return '<a href="/user/view?id=' . ($model->last_modified_by_user_id != null ? $model->last_modified_by_user_id : '') . '">' . ($model->last_modified_by_user_id != null ? $model->lastModifiedBy->username : '') . '</a>';
+                                                                },
+                                                                // 'value' => 'lastModifiedBy.username',
+                                                                'format' => 'raw',
                                                         ],
                                                         // 'ticket_id'
                                                 ],
