@@ -382,17 +382,7 @@ use yii\bootstrap5\ActiveForm;
                                 <p>Hours spent on the current ticket</p>
                                 <h3>Time stats</h3>
                                 <div class="table-container container-fluid overflow-x-scroll">
-                                <?php Pjax::begin(['id' => 'tech-time-entries']); ?>
-                                        <?= GridView::widget([
-                                                'dataProvider' => $techTimeEntryStatsDataProvider,
-                                                'filterModel' => $techTimeEntryStatsSearch,
-                                                // 'showFooter' => true,
-                                                'tableOptions' => ['class' => 'table table-bordered'],
-                                                'columns' => [
-                                                        
-                                                ],
-                                        ]); ?>
-                                <?php Pjax::end(); ?>
+
                                 </div>
                                 <h3>All entries</h3>
                                 <div class="table-container container-fluid overflow-x-scroll">
