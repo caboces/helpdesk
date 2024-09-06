@@ -381,15 +381,6 @@ use yii\bootstrap5\ActiveForm;
                                 <h2>Time entries</h2>
                                 <p>Hours spent on the current ticket</p>
                                 <div id="ticket-time-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
-                                        <div class="total-billable-hours-box stat-box flex-fill | fw-bold">
-                                                <p>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
-                                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-                                                </svg>
-                                                        Total Billable Hours
-                                                </p>
-                                                <p id="total-ticket-hours" class="totaled-hours"><?= TimeEntry::getTotalTicketTimeFor($model->id, 'all') ?> (hrs)</p>
-                                        </div>
                                         <div class="stat-box flex-fill">
                                                 <p>
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
@@ -426,6 +417,15 @@ use yii\bootstrap5\ActiveForm;
                                                         Total Itinerate Time
                                                 </p>
                                                 <p id="total-ticket-itinerate-time" class="totaled-hours"><?= TimeEntry::getTotalTicketTimeFor($model->id, 'itinerate_time') ?> (hrs)</p>
+                                        </div>
+                                        <div class="total-billable-hours-box stat-box flex-fill | fw-bold">
+                                                <p>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
+                                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                                                </svg>
+                                                        Total Billable Hours
+                                                </p>
+                                                <p id="total-ticket-hours" class="totaled-hours"><?= TimeEntry::getTotalTicketTimeFor($model->id, 'all') ?> (hrs)</p>
                                         </div>
                                 </div>
                                 <div class="table-container container-fluid overflow-x-scroll">
