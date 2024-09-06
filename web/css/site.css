@@ -241,11 +241,11 @@ tr:nth-child(odd) td {
 
 /* applied to ticket table rows when the priority is critical */
 .critical td {
-  box-shadow: inset 200px 200px #5d18ff67 !important;
+  box-shadow: inset 200px 200px #5d18ff2a !important;
 }
 
 .high td {
-  box-shadow: inset 200px 200px #ff585894 !important;
+  box-shadow: inset 200px 200px #ff585841 !important;
 }
 
 .filters td {
