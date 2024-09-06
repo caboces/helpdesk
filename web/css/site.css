@@ -236,7 +236,7 @@ div.alert {
 
 /* change alternating table row colors to be prettier */
 tr:nth-child(odd) td {
-  background-color: #f4f2ff;
+  background-color: #f8f7ff;
 }
 
 /* applied to ticket table rows when the priority is critical */
@@ -324,6 +324,14 @@ a.desc:after {
   background-color: rgb(219, 219, 219);
 }
 
+.table-header {
+  margin: 2rem 0 -.5rem;
+}
+
+/* hyperlinks in table need to be adjusted, shaded parts didn't originally have enough contrast and broke ADA rules */
+.grid-view a {
+  color:rgb(0, 101, 134);
+}
 /* ===========================================================================================
 || DETAILVIEW WIDGET
 =========================================================================================== */
@@ -525,6 +533,31 @@ div#ticket-customer_type_id {
   background-color: #ddd7ff;
   cursor: not-allowed;
 }
+
+/* this is for the time entry stats in the ticket form */
+#ticket-time-stats p {
+  margin: 0;
+}
+
+.stat-box {
+  margin: 5px;
+  border: 1px solid rgb(230, 230, 230);
+  border-radius: 5%;
+  min-width: 200px;
+  padding: .5rem;
+
+  text-align: center;
+}
+
+.total-billable-hours-box {
+  background:#09a3c91c;
+}
+
+.totaled-hours {
+  color: #00708b;
+}
+
+
 
 /* ===========================================================================================
 || LOGIN

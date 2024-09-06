@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "time_entry".
@@ -119,5 +120,40 @@ class TimeEntry extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \app\models\query\TimeEntryQuery(get_called_class());
+    }
+
+    /**
+     * Query to find the total hours worked on a ticket for tech_time, overtime, travel_time,
+     * itinerate_time, or the sum of all four.
+     * 
+     * Will return 0 if the $column_name isn't found in the array (acceptable_columns") or set to "all".
+     */
+    public static function getTotalTicketTimeFor($ticket_id, $column_name) {
+        $total_ticket_time = 0.00;
+        $acceptable_columns = array('tech_time', 'overtime', 'travel_time', 'itinerate_time');
+
+        if (in_array($column_name, $acceptable_columns)) {
+            $query = new Query;
+            $query->select([$column_name])
+                    ->from('time_entry')
+                    ->where(['ticket_id' => $ticket_id]);
+            if ($total_ticket_time = $query->sum($column_name) != NULL) {
+                $total_ticket_time = $query->sum($column_name);
+            } else {
+                $total_ticket_time = 'None';
+            };
+        } elseif ($column_name == 'all') {
+            $query = new Query;
+            $query->select('SUM(tech_time) + SUM(overtime) + SUM(travel_time) + SUM(itinerate_time)')
+                    ->from('time_entry')
+                    ->where(['ticket_id' => $ticket_id]);
+            if ($query->scalar() != NULL) {
+                $total_ticket_time = $query->scalar();
+            } else {
+                $total_ticket_time = 'None';
+            }
+        }
+
+        return $total_ticket_time;
     }
 }

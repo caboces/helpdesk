@@ -380,11 +380,54 @@ use yii\bootstrap5\ActiveForm;
                         <div class="subsection-info-block">
                                 <h2>Time entries</h2>
                                 <p>Hours spent on the current ticket</p>
-                                <h3>Time stats</h3>
-                                <div class="table-container container-fluid overflow-x-scroll">
-
+                                <div id="ticket-time-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
+                                        <div class="total-billable-hours-box stat-box flex-fill | fw-bold">
+                                                <p>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
+                                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                                                </svg>
+                                                        Total Billable Hours
+                                                </p>
+                                                <p id="total-ticket-hours" class="totaled-hours"><?= TimeEntry::getTotalTicketTimeFor($model->id, 'all') ?> (hrs)</p>
+                                        </div>
+                                        <div class="stat-box flex-fill">
+                                                <p>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                                                        </svg>
+                                                        Total Tech Time
+                                                </p>
+                                                <p id="total-ticket-tech-time" class="totaled-hours"><?= TimeEntry::getTotalTicketTimeFor($model->id, 'tech_time') ?> (hrs)</p>
+                                        </div>
+                                        <div class="stat-box flex-fill">
+                                                <p>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-alarm-fill" viewBox="0 0 16 16">
+                                                                <path d="M6 .5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1H9v1.07a7.001 7.001 0 0 1 3.274 12.474l.601.602a.5.5 0 0 1-.707.708l-.746-.746A6.97 6.97 0 0 1 8 16a6.97 6.97 0 0 1-3.422-.892l-.746.746a.5.5 0 0 1-.707-.708l.602-.602A7.001 7.001 0 0 1 7 2.07V1h-.5A.5.5 0 0 1 6 .5m2.5 5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9zM.86 5.387A2.5 2.5 0 1 1 4.387 1.86 8.04 8.04 0 0 0 .86 5.387M11.613 1.86a2.5 2.5 0 1 1 3.527 3.527 8.04 8.04 0 0 0-3.527-3.527"/>
+                                                        </svg>
+                                                        Total Overtime
+                                                </p>
+                                                <p id="total-ticket-overtime" class="totaled-hours"><?= TimeEntry::getTotalTicketTimeFor($model->id, 'overtime') ?> (hrs)</p>
+                                        </div>
+                                        <div class="stat-box flex-fill">
+                                                <p>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-car-front-fill" viewBox="0 0 16 16">
+                                                                <path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17s3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"/>
+                                                        </svg>
+                                                        Total Travel Time
+                                                </p>
+                                                <p id="total-ticket-travel-time" class="totaled-hours"><?= TimeEntry::getTotalTicketTimeFor($model->id, 'travel_time') ?> (hrs)</p>
+                                        </div>
+                                        <div class="stat-box flex-fill">
+                                                <p>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-luggage-fill" viewBox="0 0 16 16">
+                                                                <path d="M2 1.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V5h.5A1.5 1.5 0 0 1 8 6.5V7H7v-.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5H4v1H2.5v.25a.75.75 0 0 1-1.5 0v-.335A1.5 1.5 0 0 1 0 13.5v-7A1.5 1.5 0 0 1 1.5 5H2zM3 5h2V2H3z"/>
+                                                                <path d="M2.5 7a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v-5a.5.5 0 0 1 .5-.5m10 1v-.5A1.5 1.5 0 0 0 11 6h-1a1.5 1.5 0 0 0-1.5 1.5V8H8v8h5V8zM10 7h1a.5.5 0 0 1 .5.5V8h-2v-.5A.5.5 0 0 1 10 7M5 9.5A1.5 1.5 0 0 1 6.5 8H7v8h-.5A1.5 1.5 0 0 1 5 14.5zm9 6.5V8h.5A1.5 1.5 0 0 1 16 9.5v5a1.5 1.5 0 0 1-1.5 1.5z"/>
+                                                        </svg>
+                                                        Total Itinerate Time
+                                                </p>
+                                                <p id="total-ticket-itinerate-time" class="totaled-hours"><?= TimeEntry::getTotalTicketTimeFor($model->id, 'itinerate_time') ?> (hrs)</p>
+                                        </div>
                                 </div>
-                                <h3>All entries</h3>
                                 <div class="table-container container-fluid overflow-x-scroll">
                                 <?php Pjax::begin(['id' => 'tech-time-entries']); ?>
                                         <?= GridView::widget([
@@ -392,6 +435,7 @@ use yii\bootstrap5\ActiveForm;
                                                 'filterModel' => $techTimeEntrySearch,
                                                 // 'showFooter' => true,
                                                 'tableOptions' => ['class' => 'table table-bordered'],
+                                                'summary' => '',
                                                 'columns' => [
                                                         [
                                                                 'class' => ActionColumn::class,
