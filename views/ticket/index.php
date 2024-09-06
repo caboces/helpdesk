@@ -23,7 +23,7 @@ $this->title = 'Ticket Management';
 <div class="ticket-index">
 
     <div class="title-icon d-flex align-items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" class="bi bi-ticket-detailed-fill" viewBox="0 0 16 16">
+        <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" class="bi bi-ticket-detailed-fill" viewBox="0 0 16 16" aria-hidden="true">
             <path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5V6a.5.5 0 0 1-.5.5 1.5 1.5 0 0 0 0 3 .5.5 0 0 1 .5.5v1.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5V10a.5.5 0 0 1 .5-.5 1.5 1.5 0 1 0 0-3A.5.5 0 0 1 0 6zm4 1a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5m0 5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5M4 8a1 1 0 0 0 1 1h6a1 1 0 1 0 0-2H5a1 1 0 0 0-1 1" />
         </svg>
         <h1><?= Html::encode($this->title) ?></h1>
@@ -34,7 +34,7 @@ $this->title = 'Ticket Management';
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Reset filters', ['index'], ['class' => 'btn btn-secondary']); ?>
-        <?= Html::a('New ticket', ['create'], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
+        <?= Html::a('New ticket', ['create'], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark']) ?>
     </div>
 
     <!-- pill nav -->
@@ -117,7 +117,7 @@ $this->title = 'Ticket Management';
                                 'attribute' => 'job_category_name',
                                 'value' => function($model) {
                                     $icon_path = $model->jobCategory->icon_path;
-                                    return '<img src="' . $icon_path . '"></img> ' . $model->jobCategory->name;
+                                    return '<img src="' . $icon_path . '" aria-hidden="true"></img> ' . $model->jobCategory->name;
                                 },
                                 'format' => 'raw',
                                 'label' => 'Category',

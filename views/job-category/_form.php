@@ -15,7 +15,7 @@ use yii\bootstrap5\ActiveForm;
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
-        <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark']) ?>
     </div>
 
     <h2>General details</h2>
@@ -29,7 +29,7 @@ use yii\bootstrap5\ActiveForm;
     <!-- action buttons -->
     <div class='container-fluid border border-subtle py-2 | bg-light'>
         <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
-        <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']); ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark']); ?>
     </div>
 
     <?php ActiveForm::end(); ?>
