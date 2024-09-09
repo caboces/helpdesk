@@ -50,19 +50,52 @@ $this->params['breadcrumbs'][] = $this->title;
             ]) ?>
         </div>
     </div>
+    <!-- detail widget for general details -->
+    <div class="detail-view-container">
+        <div class="table-container">
+            <?= DetailView::widget([
+                'model' => $model,
+                'attributes' => [
+                    'id',
+                    'username',
+                    'fname',
+                    'lname',
+                    'email:email',
+                    'status' => [
+                        'attribute' => 'status',
+                        'value' => function($model) {
+                            $status = '';
+                            switch($model->status) {
+                                case 10:
+                                    $status = 'Active';
+                                    break;
+                                case 9:
+                                    $status = 'Inactive';
+                                    break;
+                                default:
+                                    $status = 'Unknown';
+                                    break;
+                            }
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'username',
-            'fname',
-            'lname',
-            'email:email',
-            'status',
-            'created_at',
-            'updated_at',
-        ],
-    ]) ?>
+                            return $status;
+                        }
+                    ],
+                    'created_at:date',
+                    'updated_at:date',
+                ],
+            ]) ?>
+        </div>
+    </div>
 
+    <div class="detail-view-container">
+        <h3>Current Assignments</h3>
+        <div class="table-container">
+        </div>
+    </div>
+
+    <div class="detail-view-container">
+        <h3>Past Assignments</h3>
+        <div class="table-container">
+        </div>
+    </div>
 </div>
