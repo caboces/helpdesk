@@ -472,8 +472,9 @@ li.select2-selection__choice {
   background-color: #fff;
 }
 
-/* make buttons a little smaller than eveyrthing else */
+/* make buttons a little smaller than eveyrthing else + give them margin so they stack nicely */
 .btn {
+  margin: 3px 0;
   font-size: 0.9rem;
 }
 
