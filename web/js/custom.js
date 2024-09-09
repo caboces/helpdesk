@@ -89,7 +89,7 @@ $('#time-entry-modal-button').click(function () {
  * Close TimeEntry modal instead of redirecting to view-view
  */
 $('#confirm-time-entry').submit(function(e) {
-    e.preventDefault();
+    // e.preventDefault();
     $('#time-entry-modal').modal('hide');
 });
 

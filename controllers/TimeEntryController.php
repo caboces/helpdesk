@@ -68,7 +68,7 @@ class TimeEntryController extends Controller
     /**
      * Creates a new TimeEntry model.
      * 
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * If creation is successful, the browser will be redirected to the related ticket's 'update' page.
      * @param int $id of the ticket model time is being added to
      * @return string|\yii\web\Response
      */
@@ -81,18 +81,19 @@ class TimeEntryController extends Controller
         if ($this->request->isPost) {
             // temp set to false so i can try to get results to save at all
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['/ticket/update', 'id' => $ticket->id]);
             }
         } else {
             $model->loadDefaultValues();
         }
 
-        $this->layout = 'blank';
+        // This was only useful when I wasn't using a modal
+        // $this->layout = 'blank';
 
-        return $this->renderAjax('create', [
-            'model' => $model,
-            'ticket' => $ticket
-        ]);
+        // return $this->renderAjax('create', [
+        //     'model' => $model,
+        //     'ticket' => $ticket
+        // ]);
     }
 
     /**
@@ -128,9 +129,10 @@ class TimeEntryController extends Controller
      */
     public function actionDelete($id)
     {
+        $ticket_id = $this->findModel($id)->ticket_id;
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
     }
 
     /**
@@ -147,36 +149,5 @@ class TimeEntryController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    /**
-     * Creates a new TimeEntry model within a modal from the Ticket form.
-     * 
-     * This can be seen in the Ticket Form
-     * Creation views are shown in a modal window, hence the modal-blank layout
-     * 
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @param int $id of the ticket model time is being added to
-     * @return string|\yii\web\Response
-     */
-    public function actionCreateModal($id)
-    {
-        $ticket = Ticket::findOne($id);
-        $model = new TimeEntry();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        $this->layout = 'blank';
-
-        return $this->renderAjax('create', [
-            'model' => $model,
-            'ticket' => $ticket
-        ]);
     }
 }
