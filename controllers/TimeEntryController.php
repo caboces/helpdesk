@@ -77,7 +77,6 @@ class TimeEntryController extends Controller
         $ticket = Ticket::findOne($id);
         $model = new TimeEntry();
 
-
         if ($this->request->isPost) {
             // temp set to false so i can try to get results to save at all
             if ($model->load($this->request->post()) && $model->save()) {
@@ -87,13 +86,12 @@ class TimeEntryController extends Controller
             $model->loadDefaultValues();
         }
 
-        // This was only useful when I wasn't using a modal
-        // $this->layout = 'blank';
+        $this->layout = 'blank';
 
-        // return $this->renderAjax('create', [
-        //     'model' => $model,
-        //     'ticket' => $ticket
-        // ]);
+        return $this->renderAjax('create', [
+            'model' => $model,
+            'ticket' => $ticket
+        ]);
     }
 
     /**
