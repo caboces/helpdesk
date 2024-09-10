@@ -239,7 +239,7 @@ div.alert {
 
 /* change alternating table row colors to be prettier */
 tr:nth-child(odd) td {
-  background-color: #f8f7ff;
+  background-color: #fbfaff;
 }
 
 /* applied to ticket table rows when the priority is critical */
