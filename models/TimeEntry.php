@@ -128,6 +128,8 @@ class TimeEntry extends \yii\db\ActiveRecord
      * Query to find the total hours worked on a ticket for tech_time, overtime, travel_time,
      * itinerate_time, or the sum of all four.
      * 
+     * ex) if you wanted total tech time for ticket 18, getTotalTicketTimeFor(18, 'tech_time')
+     * 
      * Will return 0 if the $column_name isn't found in the array (acceptable_columns") or set to "all".
      */
     public static function getTotalTicketTimeFor($ticket_id, $column_name) {
