@@ -21,6 +21,7 @@ use app\models\CustomerType;
 use app\models\TicketSearch;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
+use app\models\JobTypeCategory;
 use app\models\TimeEntrySearch;
 use app\models\DistrictBuilding;
 use app\models\DepartmentBuilding;
@@ -145,6 +146,7 @@ class TicketController extends Controller
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
         $statuses = ArrayHelper::map(JobStatus::getStatuses(), 'id', 'name');
         $types = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
+        $jobTypeCategoryData = JobTypeCategory::getJobCategoryNamesFromJobTypeId($model);
         // customers
         $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'name');
         $districts = ArrayHelper::map(District::getDistricts(), 'id', 'name');
@@ -189,6 +191,7 @@ class TicketController extends Controller
             'priorities' => $priorities,
             'statuses' => $statuses,
             'types' => $types,
+            'jobTypeCategoryData' => $jobTypeCategoryData,
             // customers
             'customerTypes' => $customerTypes,
             'districts' => $districts,
@@ -227,6 +230,7 @@ class TicketController extends Controller
         $statuses = ArrayHelper::map(JobStatus::getStatuses(), 'id', 'name');
         $nonSelectableStatuses = ArrayHelper::map(JobStatus::getNonSelectableStatuses(), 'id', 'name');
         $types = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
+        $jobTypeCategoryData = JobTypeCategory::getJobCategoryNamesFromJobTypeId($model);
         // customers
         $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'code');
         // tack the corresponding division name onto department options
@@ -277,6 +281,7 @@ class TicketController extends Controller
             'statuses' => $statuses,
             'nonSelectableStatuses' => $nonSelectableStatuses,      // needed for resolved/closed/billed ticket forms
             'types' => $types,
+            'jobTypeCategoryData' => $jobTypeCategoryData,
             // customers
             'customerTypes' => $customerTypes,
             'departments' => $departments,
@@ -457,6 +462,32 @@ class TicketController extends Controller
             if (!empty($rows)) {
                 foreach ($rows as $row) {
                     $data[] = ['id' => $row['id'], 'name' => $row['name']];
+                }
+            } else {
+                $data = '';
+            }
+
+            return $this->asJson($data);
+    }
+
+    /**
+     * Populate the ticket categories DDL based on selected job type id
+     * Can probably remove the job type naming and stuff, think i only need category stuff. not sure what ill do yet
+     */
+    public function actionJobCategoryDependentDropdownQuery() {
+        $search_reference = Yii::$app->request->post('job_category_search_reference');
+            $query = new Query;
+            $query->select(['job_type_category.id', 'job_type_category.job_type_id', 'job_type_category.job_category_id', 'job_category.name'])
+                    ->from('job_type_category')
+                    ->innerJoin('job_category', 'job_type_category.job_category_id = job_category.id')
+                    ->where(['job_type_id' => $search_reference])
+                    ->orderBy('name ASC');
+            $rows = $query->all();
+
+            $data = [];
+            if (!empty($rows)) {
+                foreach ($rows as $row) {
+                    $data[] = ['id' => $row['id'], 'name' => $row['name'], 'job_category' => $row['job_category_id']];
                 }
             } else {
                 $data = '';

@@ -123,6 +123,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attributes' => [
                     // ticket tags
                     [
+                        'attribute' => 'jobType.name',
+                        'label' => 'Type'
+                    ],
+                    [
                         'attribute' => 'jobCategory.name',
                         'label' => 'Category'
                     ],
@@ -133,10 +137,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'attribute' => 'jobStatus.name',
                         'label' => 'Status'
-                    ],
-                    [
-                        'attribute' => 'jobType.name',
-                        'label' => 'Type'
                     ],
                 ],
             ])?>

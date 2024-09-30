@@ -31,6 +31,7 @@ $this->title = 'Create Ticket';
             'priorities' => $priorities,
             'statuses' => $statuses,
             'types' => $types,
+            'jobTypeCategoryData' => $jobTypeCategoryData,
             // customers
             'customerTypes' => $customerTypes,
             'districts' => $districts,

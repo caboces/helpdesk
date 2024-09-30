@@ -31,6 +31,7 @@ $this->title = 'Update Ticket: ' . $model->id;
             'statuses' => $statuses,
             'nonSelectableStatuses' => $nonSelectableStatuses,      // needed for resolved/closed/billed ticket forms
             'types' => $types,
+            'jobTypeCategoryData' => $jobTypeCategoryData,
             // customers
             'customerTypes' => $customerTypes,
             'districts' => $districts,

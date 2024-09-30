@@ -1,5 +1,6 @@
 <?php
 
+use app\models\JobCategory;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
@@ -303,15 +304,57 @@ use yii\bootstrap5\ActiveForm;
                                 <div class="question-box">
                                         <div class="row">
                                                 <div class="col-md-6">
-                                                        <?= $form->field($model, 'job_category_id')
-                                                                ->dropDownList($categories, ['prompt' => 'Select Category']) ?>
+                                                        <!-- Types will affect which options are shown for categories, determined by the junction table job_type_category -->
+                                                        <?= $form->field($model, 'job_type_id')->dropDownList($types, [
+                                                                'prompt' => 'Select Type',
+                                                                'onchange' => '
+                                                                        $.ajax({
+                                                                                type: "POST",
+                                                                                url: "'.Yii::$app->urlManager->createUrl(["ticket/job-category-dependent-dropdown-query"]) . '",
+                                                                                data: {job_category_search_reference: $(this).val()},
+                                                                                dataType: "json",
+                                                                                success: function(response) {
+                                                                                        // clear the current job_category selection
+                                                                                        $("#ticket-job_category_id").empty();
+                                                                                        var count = response.length;
+
+                                                                                        if (count === 0) {
+                                                                                                $("#ticket-job_category_id").empty();
+                                                                                                $("#ticket-job_category_id").empty().append("<option value=\'" + id + "\'>Sorry, no categories available for this type</option>");
+                                                                                        } else {
+                                                                                                $("#ticket-job_category_id").append("<option value=\'" + id + "\'>Select Category</option>");
+                                                                                                for (var i = 0; i < count; i++) {
+                                                                                                        var id = response[i][\'id\'];
+                                                                                                        var name = response[i][\'name\'];
+                                                                                                        $("#ticket-job_category_id").append("<option value=\'" + id + "\'>" + name + "</option");
+                                                                                                }
+                                                                                        }
+                                                                                }
+                                                                        });
+                                                                '
+                                                        ]); ?>
+                                                        
+                                                        <!-- ?= $form->field($model, 'job_type_id')
+                                                                ->dropDownList($types, ['prompt' => 'Select Type']) ?> -->
                                                 </div>
+                                                <div class="col-md-6">
+                                                        <!-- This is the dependent table, based on Type input -->
+                                                        <?= $form->field($model, 'job_category_id')->dropDownList(ArrayHelper::map($jobTypeCategoryData, 'job_category_id', 'name'),
+                                                                [
+                                                                        'prompt' => 'Select Category'
+                                                                ]
+                                                        ); ?>
+
+                                                        <!-- Older version -->
+                                                        <!-- ?= $form->field($model, 'job_category_id')
+                                                                ->dropDownList($categories, ['prompt' => 'Select Category']) ?> -->
+                                                </div>
+                                        </div>
+                                        <div class="row">
                                                 <div class="col-md-6">
                                                         <?= $form->field($model, 'job_priority_id')
                                                                 ->dropDownList($priorities, ['prompt' => 'Select Priority']) ?>
                                                 </div>
-                                        </div>
-                                        <div class="row">
                                                 <div class="col-md-6">
                                                         <?php
                                                         /**
@@ -327,10 +370,6 @@ use yii\bootstrap5\ActiveForm;
                                                                         ->dropDownList($nonSelectableStatuses, ["disabled"=>"disabled"]);
                                                         }
                                                         ?>
-                                                </div>
-                                                <div class="col-md-6">
-                                                        <?= $form->field($model, 'job_type_id')
-                                                                ->dropDownList($types, ['prompt' => 'Select Type']) ?>
                                                 </div>
                                         </div>
                                 </div>
