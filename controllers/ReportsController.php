@@ -52,4 +52,15 @@ class ReportsController extends Controller
             // placeholder
         ]);
     }
+
+    /**
+     * Displays billing detail report
+     *
+     * @return mixed
+     */
+    public function actionBillingDetailReport()
+    {
+        $this->layout = 'blank';
+        return $this->render('billing-detail-report');
+    }
 }
