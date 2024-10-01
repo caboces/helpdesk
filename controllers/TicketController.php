@@ -487,7 +487,7 @@ class TicketController extends Controller
             $data = [];
             if (!empty($rows)) {
                 foreach ($rows as $row) {
-                    $data[] = ['id' => $row['id'], 'name' => $row['name'], 'job_category' => $row['job_category_id']];
+                    $data[] = ['id' => $row['job_category_id'], 'name' => $row['name']];
                 }
             } else {
                 $data = '';
