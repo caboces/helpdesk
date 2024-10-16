@@ -1,13 +1,14 @@
 <?php
 
 use yii\helpers\Html;
+use kartik\grid\GridView;
 use kartik\export\ExportMenu;
 
 /** @var yii\web\View $this */
 
-$this->title = 'Billing Detail Report';
+$this->title = 'Master Ticket Summary';
 ?>
-<div class="reports-billing-detail-report">
+<div class="master-ticket-summary">
 
     <div class="title-icon d-flex align-items-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16" aria-hidden="true">
@@ -16,11 +17,19 @@ $this->title = 'Billing Detail Report';
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
     <div class="please-work">
-        <!-- ?php
+        <?php
             echo ExportMenu::widget([
                 'dataProvider' => $dataProvider,
                 'columns' => $gridColumns,
+                'dropdownOptions' => [
+                    'label' => 'Export All',
+                    'class' => 'btn btn-outline-secondary btn-default'
+                ]
+            ]) . "<hr>\n" .
+            GridView::widget([
+                'dataProvider' => $dataProvider,
+                'columns' => $gridColumns,
             ]);
-        ?> -->
+        ?>
     </div>
 </div>

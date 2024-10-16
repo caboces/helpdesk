@@ -28,6 +28,7 @@ $this->title = 'Reports';
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item p-2"><?= Html::a('Billing detail report', ['reports/billing-detail-report']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('Master ticket summary', ['reports/master-ticket-summary']) ?></li>
                 </ul>
             </div>
         </div>
@@ -42,7 +43,7 @@ $this->title = 'Reports';
                     </div>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item p-2"><?= Html::a('Support and repair labor billing', ['reports/support-and-repair-labor-billing'], ['class' => 'wip-link']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('Support and repair labor billing', ['reports/support-and-repair-labor-billing']) ?></li>
                     <li class="list-group-item p-2"><?= Html::a('Support and repair telecom billing', ['reports/support-and-repair-telecom-billing'], ['class' => 'wip-link']) ?></li>
                 </ul>
             </div>

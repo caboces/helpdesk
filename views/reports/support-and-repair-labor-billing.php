@@ -5,9 +5,9 @@ use kartik\export\ExportMenu;
 
 /** @var yii\web\View $this */
 
-$this->title = 'Billing Detail Report';
+$this->title = 'Support and Repair Labor Billing Report';
 ?>
-<div class="reports-billing-detail-report">
+<div class="support-and-repair-labor-billing">
 
     <div class="title-icon d-flex align-items-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16" aria-hidden="true">

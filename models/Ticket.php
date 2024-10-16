@@ -240,6 +240,24 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
+     * Junction relation to get assets attached to a ticket via asset table
+     *
+     * */
+    public function getAssets()
+    {
+        return $this->hasMany(Asset::class,['id'=>'ticket_id'])->viaTable('{{%asset}}',['ticket_id'=>'id']); 
+    }
+
+    /**
+     * Junction relation to get parts attached to a ticket via part table
+     *
+     * */
+    public function getParts()
+    {
+        return $this->hasMany(Part::class,['id'=>'ticket_id'])->viaTable('{{%part}}',['ticket_id'=>'id']); 
+    }
+
+    /**
      * {@inheritdoc}
      * @return \app\models\query\TicketQuery the active query used by this AR class.
      */

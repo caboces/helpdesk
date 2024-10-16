@@ -102,10 +102,10 @@ $this->title = 'Ticket Management';
                                 'value' => function($model) {
                                     // CABOCES needs division, department, and department building (+ whatever the tech enters extra)
                                     if ($model->customer_type_id == 1) {
-                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
+                                        return $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
                                     // WNYRIC and DISTRICT needs division, department, and department building (+ whatever the tech enters extra)
                                     } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
-                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->districtBuilding->districtName . '<br>-' . $model->districtBuilding->buildingName . '<br>"' . $model->location . '"';
+                                        return $model->districtBuilding->districtName . '<br>-' . $model->districtBuilding->buildingName . '<br>"' . $model->location . '"';
                                     } else {
                                         return 'Customer not set, "' . $model->location . '"';
                                     }
@@ -231,10 +231,10 @@ $this->title = 'Ticket Management';
                                 'value' => function($model) {
                                     // CABOCES needs division, department, and department building (+ whatever the tech enters extra)
                                     if ($model->customer_type_id == 1) {
-                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
+                                        return $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
                                     // WNYRIC and DISTRICT needs division, department, and department building (+ whatever the tech enters extra)
                                     } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
-                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->districtBuilding->districtName . '<br>-' . $model->districtBuilding->buildingName . '<br>"' . $model->location . '"';
+                                        return $model->districtBuilding->districtName . '<br>-' . $model->districtBuilding->buildingName . '<br>"' . $model->location . '"';
                                     } else {
                                         return 'Customer not set, "' . $model->location . '"';
                                     }
@@ -363,10 +363,10 @@ $this->title = 'Ticket Management';
                                 'value' => function($model) {
                                     // CABOCES needs division, department, and department building (+ whatever the tech enters extra)
                                     if ($model->customer_type_id == 1) {
-                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
+                                        return $model->division->name . ' > ' . $model->departmentBuilding->departmentName . '<br>-' . $model->departmentBuilding->buildingName . '<br>"' . $model->location . '"';
                                     // WNYRIC and DISTRICT needs division, department, and department building (+ whatever the tech enters extra)
                                     } elseif ($model->customer_type_id == 2 || $model->customer_type_id == 4) {
-                                        return '<u>' . $model->customerType->code . '</u><br>-' . $model->districtBuilding->districtName . '<br>-' . $model->districtBuilding->buildingName . '<br>"' . $model->location . '"';
+                                        return $model->districtBuilding->districtName . '<br>-' . $model->districtBuilding->buildingName . '<br>"' . $model->location . '"';
                                     } else {
                                         return 'Customer not set, "' . $model->location . '"';
                                     }

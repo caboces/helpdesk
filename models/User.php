@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 
 use yii\base\model;
+use app\models\Part;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
@@ -188,6 +189,15 @@ class User extends ActiveRecord implements IdentityInterface
     public function getTickets()
     {
         return $this->hasMany(Ticket::class,['id'=>'ticket_id'])->viaTable('{{%tech_ticket_assignment}}',['user_id'=>'id']); 
+    }
+
+    /**
+     * Junction relation to get parts added to tickets by a user via part table
+     *
+     * */
+    public function getParts()
+    {
+        return $this->hasMany(Part::class,['id'=>'user_id'])->viaTable('{{%part}}',['user_id'=>'id']); 
     }
 
     /**
