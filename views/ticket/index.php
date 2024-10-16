@@ -1,5 +1,6 @@
 <?php
 
+use app\controllers\TicketController;
 use app\models\User;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
@@ -12,6 +13,7 @@ use yii\grid\ActionColumn;
 use app\models\JobCategory;
 use app\models\JobPriority;
 use yii\helpers\ArrayHelper;
+use yii\helpers\StringHelper;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
@@ -63,12 +65,17 @@ $this->title = 'Ticket Management';
                         'filterModel' => $ticketAssignmentSearchModel,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
+                            // Make entire grid rows clickable, route to that ticket's update page
+                            $url = StringHelper::basename(get_class($model));
+                            $url = Url::toRoute(['/' . strtolower($url) . '/update']);
+
+                            // Add critical/high class to rows with those priorities
                             if ($model->jobPriority->name == 'Critical') {
-                                return ['class' => 'critical'];
+                                return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'critical'];
                             } else if ($model->jobPriority->name == 'High') {
-                                return ['class' => 'high'];
+                                return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'high'];
                             }
-                            return [];
+                            return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);',];
                         },
                         'columns' => [
                             [
@@ -187,12 +194,17 @@ $this->title = 'Ticket Management';
                         'filterModel' => $searchModel,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
+                            // Make entire grid rows clickable, route to that ticket's update page
+                            $url = StringHelper::basename(get_class($model));
+                            $url = Url::toRoute(['/' . strtolower($url) . '/update']);
+
+                            // Add critical/high class to rows with those priorities
                             if ($model->jobPriority->name == 'Critical') {
-                                return ['class' => 'critical'];
+                                return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'critical'];
                             } else if ($model->jobPriority->name == 'High') {
-                                return ['class' => 'high'];
+                                return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'high'];
                             }
-                            return [];
+                            return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);',];
                         },
                         'columns' => [
                             [
@@ -319,12 +331,17 @@ $this->title = 'Ticket Management';
                         'filterModel' => $ticketClosedResolvedSearchModel,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
+                            // Make entire grid rows clickable, route to that ticket's update page
+                            $url = StringHelper::basename(get_class($model));
+                            $url = Url::toRoute(['/' . strtolower($url) . '/update']);
+
+                            // Add critical/high class to rows with those priorities
                             if ($model->jobPriority->name == 'Critical') {
-                                return ['class' => 'critical'];
+                                return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'critical'];
                             } else if ($model->jobPriority->name == 'High') {
-                                return ['class' => 'high'];
+                                return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'high'];
                             }
-                            return [];
+                            return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);',];
                         },
                         'columns' => [
                             [

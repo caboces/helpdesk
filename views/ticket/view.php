@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>You are currently viewing all of the details and recent activity of this ticket. To make modifications, click the "Update" button.</p>
 
     <!-- action buttons -->
-    <div class='container-fluid p-2 | bg-dark shadow-sm'>
+    <div class='container-fluid primary-action-button-bar'>
         <?= Html::a('Back', ['index'], ['class' => 'btn btn-secondary']); ?>
         <?= Html::a('Update ticket', ['update', 'id' => $model->id], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
         <?= Html::a('Delete ticket', ['delete', 'id' => $model->id], [
@@ -37,18 +37,46 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </div>
 
+    <div class="quick-glance">
+        <div class="quick-glance-segment">
+            <p class="quick-glance-label"><?= $model->summary ?></p>
+            <p><?= $model->description ?></p>
+        </div>
+        <div class="quick-glance-contact-info | container-fluid">
+            <div class="row">
+                <div class="col-md-auto col-lg-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-person-raised-hand" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a1 1 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207"/>
+                        <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                    </svg> 
+                    <?= $model->requester ?>
+                </div>
+                <div class="col col-lg-4">
+                    <?= '<a href="mailto:' . $model->requester_email . '">'?>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16" aria-hidden="true">
+                            <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
+                        </svg> 
+                        <?= $model->requester_email ?>
+                    </a>
+                </div>
+                <div class="col-md-auto col-lg-4">
+                    <?= '<a href="Tel:' . $model->requester_phone . '">'?>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z"/>
+                        </svg> 
+                        <?= $model->requester_phone ?>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- detail widget for general details -->
     <div class="detail-view-container">
         <div class="table-container">
             <?= DetailView::widget([
                 'model' => $model,
                 'attributes' => [
-                    'id',
-                    'summary',
-                    'description' => [
-                        'attribute' => 'description',
-                        'contentOptions' => ['class' => 'apply-word-break']
-                    ],
                     // show the primary tech
                     [
                         'label' => 'Primary Technician',

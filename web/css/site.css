@@ -15,6 +15,8 @@
 || SELECT2
 || FORMS
 
+|| TICKET VIEWS
+
 || LOGIN
 
 || ACTIVITY
@@ -337,6 +339,14 @@ a.desc:after {
 .grid-view a {
   color:#06738f;
 }
+
+/* highlight rows on hover (this is at the bottom of this section because of the obnoxious amount of important rules needed to change GridView appearance...) */
+/* right now this applies to the ticket index page only */
+.ticket-index .grid-view table tbody tr:hover td {
+  box-shadow: none !important;
+  background-color: #09a3c94f;
+  cursor: pointer;
+}
 /* ===========================================================================================
 || DETAILVIEW WIDGET
 =========================================================================================== */
@@ -361,9 +371,13 @@ a.desc:after {
   border-radius: 0 5px 5px 5px;
   border: 1px solid rgba(32, 4, 63, 0.1);
   height: auto;
-  padding: .5rem .5rem 0rem .5rem;
+  padding: 0;
 
   background: #fff;
+}
+
+.detail-view-container .table-container .table {
+  margin-bottom: 0;
 }
 
 .detail-view th {
@@ -577,7 +591,54 @@ div#ticket-customer_type_id {
   color: #00708b;
 }
 
+/* ===========================================================================================
+|| VIEWS
+=========================================================================================== */
 
+/* primary action bars */
+.primary-action-button-bar {
+  padding: 0.5rem;
+
+  background-color: #070e33;
+}
+
+/* contact bar */
+.quick-glance-contact-info {
+  /* border-top: 1px solid #0bb2db; */
+  padding: 1rem 1rem;
+
+  text-align: center;
+
+  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+  background-color: #f7f7f7;
+}
+
+.quick-glance-contact-info a {
+  color: #06738f;
+}
+
+/* quick-glance info sections */
+.quick-glance {
+  box-shadow: 3px 3px 5px rgba(32, 4, 63, 0.1);
+  border: 1px solid rgba(32, 4, 63, 0.1);
+  border-radius: 0 5px 5px 5px;
+
+  background-color: #fff;
+}
+
+.quick-glance-segment {
+  padding: 1.5rem;
+}
+
+p.quick-glance-label {
+  margin: 15px 0;
+
+  font-size: 2rem;
+  color: #0f667c;
+}
 
 /* ===========================================================================================
 || LOGIN
