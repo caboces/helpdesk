@@ -2,7 +2,18 @@
 
 use app\models\User;
 use yii\helpers\Html;
+use yii\web\YiiAsset;
+use app\models\JobType;
+use app\models\Building;
+use app\models\District;
+use app\models\Division;
+use app\models\JobStatus;
+use app\models\Department;
+use app\models\JobCategory;
+use app\models\JobPriority;
 use yii\widgets\DetailView;
+use app\models\DistrictBuilding;
+use app\models\DepartmentBuilding;
 use app\models\TechTicketAssignment;
 
 /** @var yii\web\View $this */
@@ -38,11 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <div class="quick-glance">
-        <div class="quick-glance-segment">
-            <p class="quick-glance-label"><?= $model->summary ?></p>
-            <p><?= $model->description ?></p>
-        </div>
-        <div class="quick-glance-contact-info | container-fluid">
+    <div class="quick-glance-contact-info | container-fluid">
             <div class="row">
                 <div class="col-md-auto col-lg-4">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-person-raised-hand" viewBox="0 0 16 16" aria-hidden="true">
@@ -69,119 +76,93 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
         </div>
-    </div>
+        <div class="quick-glance-segment">
+            <p class="quick-glance-label"><?= $model->summary ?></p>
+            <p><?= $model->description ?></p>
+        </div>
+        <div class="quick-glance-segment">
+            <div class="quick-glance-info-line">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                </svg>
+                <p>
+                    <?= $primary_tech = $model->primary_tech_id != NULL ? User::findOne($model->primary_tech_id)->username: 'Unassigned'; ?>
+                </p>
+            </div>
+            <div class="quick-glance-info-line">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                </svg>
+                <p>
+                    <?= $model->getUsers()->select('id', 'username')->column() != NULL ? $secondary_techs = implode(', ', $model->getUsers()->select('id', 'username')->column()) : 'No additional assigned techs';?>
+                </p>
+            </div>
+            <div class="quick-glance-info-line">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-geo-fill" viewBox="0 0 16 16" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.3 1.3 0 0 0-.37.265.3.3 0 0 0-.057.09V14l.002.008.016.033a.6.6 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.6.6 0 0 0 .146-.15l.015-.033L12 14v-.004a.3.3 0 0 0-.057-.09 1.3 1.3 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465s-2.462-.172-3.34-.465c-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411"/>
+                </svg>
+                <p>
+                <?php
+                    $location_string = '';
+                    $requester_location = $model->location;
 
-    <!-- detail widget for general details -->
-    <div class="detail-view-container">
-        <div class="table-container">
-            <?= DetailView::widget([
-                'model' => $model,
-                'attributes' => [
-                    // show the primary tech
-                    [
-                        'label' => 'Primary Technician',
-                        // if there is an assigned primary tech, display their username
-                        'value' => (User::findOne($model->primary_tech_id) != null ? User::findOne($model->primary_tech_id)->username : null),
-                    ],
-                    // show the assigned techs (username)
-                    [
-                        'label' => 'All Assigned Technicians',
-                        'value' => implode(', ', $model->getUsers()
-                            ->select('id', 'username')
-                            ->column())
-                    ],
-                ],
-            ])?>
+                    if($model->customer_type_id == 1) {
+                        // BOCES: get division > department, department building
+                        $division = $model->division->name;
+                        $department = $model->department->name;
+                        $department_building = Building::findOne(DepartmentBuilding::findOne($model->department_building_id)->building_id)->name;
+
+                        $location_string = $division . ' > ' . $department . ', ' . $department_building . '<br>"' . $requester_location . '"';
+                    } elseif($model->customer_type_id == 2 || $model->customer_type_id == 4) {
+                        // WNYRIC or District: get district, district building
+                        $district = $model->district->name;
+                        $district_building = Building::findOne(DistrictBuilding::findOne($model->district_building_id)->building_id)->name;
+
+                        $location_string = $district . ', ' . $district_building . '<br>"' . $requester_location . '"';
+                    }
+                    echo $location_string;
+                ?>
+                </p>
+            </div>
+        </div>
+        <div class="quick-glance-segment">
+            <div class="quick-glance-info-line">
+                <?php
+                    $type = $model->jobType->name;
+                    $category = $model->jobCategory->name;
+                    $priority = $model->jobPriority->name;
+                    $status = $model->jobStatus->name;
+
+                    echo '<strong>' . $type . ':</strong> ' . $category;
+                ?>
+            </div>
+            <?php
+                $job_priority = $model->jobPriority->name;
+                $bgcolor = $model->jobPriority->color;
+                echo '<span class="dot" style="background-color:' . $bgcolor . ' "></span>' . $job_priority . ' priority<br>';
+            ?>
+            <?php
+                $job_status = $model->jobStatus->name;
+                $bgcolor = $model->jobStatus->color;
+                // want to add in a background color to these dots
+                echo '<span class="dot" style="background-color:' . $bgcolor . ' "></span>' . $job_status;
+            ?>
+        </div>
+        <div class="quick-glance-segment">
+            <div class="quick-glance-info-line timestamp">
+                <p>Ticket created:
+                    <?php
+                        echo date('m/d/Y, h:iA', strtotime($model->created));
+                    ?>
+                </p>
+            </div>
+            <div class="quick-glance-info-line timestamp">
+                <p>Last modified: 
+                    <?php
+                        echo date('m/d/Y, h:iA', strtotime($model->modified));
+                    ?>
+                </p>
+            </div>
         </div>
     </div>
-
-    <!-- detail widget for customer/requester details -->
-    <div class="detail-view-container">
-        <h3>Customer and Requester</h3>
-        <div class="table-container">
-            <?= DetailView::widget([
-                'model' => $model,
-                'attributes' => [
-                    // customer
-                    [
-                        'attribute' => 'customerType.name',
-                        'label' => 'Customer Type',
-                    ],
-                    [
-                        'attribute' => 'district.name',
-                        'label' => 'District',
-                        'visible' => !empty($model->district)
-                    ],
-                    [
-                        'attribute' => 'division.name',
-                        'label' => 'Division',
-                        'visible' => !empty($model->division)
-                    ],
-                    [
-                        'attribute' => 'department.name',
-                        'label' => 'Department',
-                        'visible' => !empty($model->department)
-                    ],
-                    [
-                        'attribute' => 'departmentBuilding.buildingName',
-                        'label' => 'Department Building',
-                        'visible' => !empty($model->departmentBuilding)
-                    ],
-                    [
-                        'attribute' => 'districtBuilding.buildingName',
-                        'label' => 'District Building',
-                        'visible' => !empty($model->districtBuilding)
-                    ],
-                    // requester
-                    'requester',
-                    'requester_email',
-                    'requester_phone',
-                    'location',
-                ],
-            ])?>
-        </div>
-    </div>
-
-    <!-- detail widget for ticket tag details -->
-    <div class="detail-view-container">
-        <h3>Ticket Tags</h3>
-        <div class="table-container">
-            <?= DetailView::widget([
-                'model' => $model,
-                'attributes' => [
-                    // ticket tags
-                    [
-                        'attribute' => 'jobType.name',
-                        'label' => 'Type'
-                    ],
-                    [
-                        'attribute' => 'jobCategory.name',
-                        'label' => 'Category'
-                    ],
-                    [
-                        'attribute' => 'jobPriority.name',
-                        'label' => 'Priority'
-                    ],
-                    [
-                        'attribute' => 'jobStatus.name',
-                        'label' => 'Status'
-                    ],
-                ],
-            ])?>
-        </div>
-    </div>
-
-    <div class="detail-view-container">
-        <h3>Creation / Modification Dates</h3>
-        <div class="table-container">
-            <?= DetailView::widget([
-                'model' => $model,
-                'attributes' => [
-                    'created',
-                    'modified',
-                ],
-            ]) ?>
-        </div>
-    </div>
-
 </div>

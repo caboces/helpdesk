@@ -604,16 +604,15 @@ div#ticket-customer_type_id {
 
 /* contact bar */
 .quick-glance-contact-info {
-  /* border-top: 1px solid #0bb2db; */
   padding: 1rem 1rem;
 
   text-align: center;
 
   white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
-  background-color: #f7f7f7;
+  background-color: #ebebeb;
 }
 
 .quick-glance-contact-info a {
@@ -622,15 +621,20 @@ div#ticket-customer_type_id {
 
 /* quick-glance info sections */
 .quick-glance {
-  box-shadow: 3px 3px 5px rgba(32, 4, 63, 0.1);
   border: 1px solid rgba(32, 4, 63, 0.1);
-  border-radius: 0 5px 5px 5px;
+  border-radius: 0 0px 5px 5px;
 
   background-color: #fff;
 }
 
 .quick-glance-segment {
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
+}
+
+.quick-glance-info-line {
+  display: flex;
+  gap: 5px;
+  line-height: 1.2;
 }
 
 p.quick-glance-label {
@@ -638,6 +642,14 @@ p.quick-glance-label {
 
   font-size: 2rem;
   color: #0f667c;
+}
+
+.quick-glance .timestamp {
+  margin: 0;
+
+  line-height: 1;
+  font-size: 0.8rem;
+  color: #707070;
 }
 
 /* ===========================================================================================
