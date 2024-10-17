@@ -95,6 +95,35 @@ class TimeEntryController extends Controller
     }
 
     /**
+     * Creates a new TimeEntry model from the Ticket View.
+     * 
+     * If creation is successful, the browser will be redirected to the related ticket's 'view' page.
+     * @param int $id of the ticket model time is being added to
+     * @return string|\yii\web\Response
+     */
+    public function actionCreateFromView($id)
+    {
+        $ticket = Ticket::findOne($id);
+        $model = new TimeEntry();
+
+        if ($this->request->isPost) {
+            // temp set to false so i can try to get results to save at all
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['/ticket/view', 'id' => $ticket->id]);
+            }
+        } else {
+            $model->loadDefaultValues();
+        }
+
+        $this->layout = 'blank';
+
+        return $this->renderAjax('create', [
+            'model' => $model,
+            'ticket' => $ticket
+        ]);
+    }
+
+    /**
      * Updates an existing TimeEntry model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID

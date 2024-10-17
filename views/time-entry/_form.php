@@ -23,8 +23,6 @@ use app\models\TechTicketAssignment;
             <em>Please enter times in quarter hour increments (e.g. 0.25 => 15mins; 1.50 => 1hr 30mins; 2.75 => 2hrs 45mins)</em>
         </div>
         <div class="question-box-no-trim">
-
-            <!-- eventually this will be a hidden field -->
             <?= $form->field($model, 'last_modified_by_user_id', [
                     'template' => '{input}',
                     'options' => ['tag' => false],
@@ -33,7 +31,6 @@ use app\models\TechTicketAssignment;
                     'readonly' => true, 
                 ])->label(false)
             ?>
-
             <div class="row">
                 <div class="col iris">
                     <?= $form->field($model, 'user_id')

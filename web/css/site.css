@@ -494,6 +494,14 @@ li.select2-selection__choice {
   font-size: 0.9rem;
 }
 
+/* stupid "More" button on action bars */
+.dropdown-toggle,
+.dropdown-toggle button:hover,
+.dropdown-toggle button:active,
+.dropdown-toggle button:visited {
+  color: #fff !important;
+}
+
 /* don't use that ugly blue color on bootstrap5 buttons when hovering */
 button.bg-pacific-cyan:hover,
 a.btn.bg-pacific-cyan:hover {
@@ -645,8 +653,6 @@ p.quick-glance-label {
 }
 
 .quick-glance .timestamp p {
-  margin-bottom: 0;
-
   line-height: 1;
   font-size: 0.8rem;
   color: #707070;
