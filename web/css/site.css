@@ -644,8 +644,8 @@ p.quick-glance-label {
   color: #0f667c;
 }
 
-.quick-glance .timestamp {
-  margin: 0;
+.quick-glance .timestamp p {
+  margin-bottom: 0;
 
   line-height: 1;
   font-size: 0.8rem;

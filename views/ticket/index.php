@@ -65,9 +65,9 @@ $this->title = 'Ticket Management';
                         'filterModel' => $ticketAssignmentSearchModel,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
-                            // Make entire grid rows clickable, route to that ticket's update page
+                            // Make entire grid rows clickable, route to that ticket's view page
                             $url = StringHelper::basename(get_class($model));
-                            $url = Url::toRoute(['/' . strtolower($url) . '/update']);
+                            $url = Url::toRoute(['/' . strtolower($url) . '/view']);
 
                             // Add critical/high class to rows with those priorities
                             if ($model->jobPriority->name == 'Critical') {
@@ -194,9 +194,9 @@ $this->title = 'Ticket Management';
                         'filterModel' => $searchModel,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
-                            // Make entire grid rows clickable, route to that ticket's update page
+                            // Make entire grid rows clickable, route to that ticket's view page
                             $url = StringHelper::basename(get_class($model));
-                            $url = Url::toRoute(['/' . strtolower($url) . '/update']);
+                            $url = Url::toRoute(['/' . strtolower($url) . '/view']);
 
                             // Add critical/high class to rows with those priorities
                             if ($model->jobPriority->name == 'Critical') {
@@ -331,9 +331,9 @@ $this->title = 'Ticket Management';
                         'filterModel' => $ticketClosedResolvedSearchModel,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
-                            // Make entire grid rows clickable, route to that ticket's update page
+                            // Make entire grid rows clickable, route to that ticket's view page
                             $url = StringHelper::basename(get_class($model));
-                            $url = Url::toRoute(['/' . strtolower($url) . '/update']);
+                            $url = Url::toRoute(['/' . strtolower($url) . '/view']);
 
                             // Add critical/high class to rows with those priorities
                             if ($model->jobPriority->name == 'Critical') {
