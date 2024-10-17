@@ -119,13 +119,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         $department = $model->department->name;
                         $department_building = Building::findOne(DepartmentBuilding::findOne($model->department_building_id)->building_id)->name;
 
-                        $location_string = $division . ' > ' . $department . ', ' . $department_building . '<br>"' . $requester_location . '"';
+                        $location_string = $division . ' > ' . $department . '<br>' . $department_building . '<br>"' . $requester_location . '"';
                     } elseif($model->customer_type_id == 2 || $model->customer_type_id == 4) {
                         // WNYRIC or District: get district, district building
                         $district = $model->district->name;
                         $district_building = Building::findOne(DistrictBuilding::findOne($model->district_building_id)->building_id)->name;
 
-                        $location_string = $district . ', ' . $district_building . '<br>"' . $requester_location . '"';
+                        $location_string = $district . '<br>' . $district_building . '<br>"' . $requester_location . '"';
                     }
                     echo $location_string;
                 ?>
