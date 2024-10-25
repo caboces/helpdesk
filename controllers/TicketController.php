@@ -297,9 +297,33 @@ class TicketController extends Controller
         ]);
     }
 
+
+     /**
+     * Soft-deletes an existing Ticket model.
+     * If soft-delete is successful, the browser will be redirected to the 'index' page.
+     * 
+     * @param int $id ID
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionSoftDelete($id)
+    {
+        // must have the delete-ticket permission
+        if (Yii::$app->user->can('soft-delete-ticket')) {
+            $model = $this->findModel($id);
+            $model->status = '9';
+            $model->save();
+            return $this->redirect(['index']);
+        } else {
+            // wrong permissions!
+            throw new ForbiddenHttpException('You do not have permission to delete tickets.');
+        }
+    }
+
     /**
      * Deletes an existing Ticket model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
+     * 
      * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
@@ -312,7 +336,7 @@ class TicketController extends Controller
             return $this->redirect(['index']);
         } else {
             // wrong permissions!
-            throw new ForbiddenHttpException('You do not have permission to delete tickets.');
+            throw new ForbiddenHttpException('You do not have permission to permanently delete tickets.');
         }
     }
 

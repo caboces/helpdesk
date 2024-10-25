@@ -82,6 +82,8 @@ class TicketAssignmentSearch extends TicketSearch
             'job_type_id' => $this->job_type_id,
             'created' => $this->created,
             'modified' => $this->modified,
+            // filter out soft-deletion tickets
+            'ticket.status' => '10'
         ]);
 
         $query->andFilterWhere(['LIKE', 'summary', $this->summary])

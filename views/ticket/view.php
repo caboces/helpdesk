@@ -63,22 +63,18 @@ $this->params['breadcrumbs'][] = $this->title;
         ]); ?>
         <?= Html::a('Update ticket', ['update', 'id' => $model->id], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
         <?= ButtonDropdown::widget([
-            'label' => 'Action',
+            'label' => 'More',
             'dropdown' => [
                 'items' => [
                     [
-                        'label' => 'Delete',
-                        'url' => 'delete?id'
+                        'label' => 'Delete ticket',
+                        'url' => '/ticket/soft-delete?id=' . $model->id,
+                        'linkOptions' => [
+                            'onclick' => 'return confirm("Are you sure you want to delete this ticket?")',
+                            'method' => 'post',
+                        ],
                     ],
-                    ['label' => 'DropdownB', 'url' => '#'],
                 ],
-            ],
-        ]) ?>
-        <?= Html::a('Delete ticket', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger float-end',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
             ],
         ]) ?>
     </div>
