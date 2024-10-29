@@ -326,7 +326,7 @@ class TicketController extends Controller
      */
     public function actionSoftDelete($id)
     {
-        // must have the delete-ticket permission
+        // must have the soft-delete-ticket permission
         if (Yii::$app->user->can('soft-delete-ticket')) {
             $model = $this->findModel($id);
             $model->status = '9';
@@ -336,7 +336,31 @@ class TicketController extends Controller
             return $this->redirect(['index']);
         } else {
             // wrong permissions!
-            throw new ForbiddenHttpException('You do not have permission to delete tickets.');
+            throw new ForbiddenHttpException('You do not have permission to mark tickets for deletion.');
+        }
+    }
+
+    /**
+     * Undo soft-deletion on an existing Ticket model.
+     * If undoing the soft-delete is successful, the browser will be redirected to the 'index' page.
+     * 
+     * @param int $id ID
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUndoSoftDelete($id)
+    {
+        // must have the undo-soft-delete-ticket permission
+        if (Yii::$app->user->can('undo-soft-delete-ticket')) {
+            $model = $this->findModel($id);
+            $model->status = '10';
+            $model->soft_deleted_by_user_id = NULL;
+            $model->soft_deletion_timestamp = NULL;
+            $model->save();
+            return $this->redirect(['index']);
+        } else {
+            // wrong permissions!
+            throw new ForbiddenHttpException('You do not have permission to return tickets marked for deletion to the workflow.');
         }
     }
 
