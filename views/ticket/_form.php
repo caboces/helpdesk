@@ -130,7 +130,7 @@ use yii\bootstrap5\ButtonDropdown;
                         'dropdown' => [
                                 'items' => [
                                 [
-                                        'label' => 'Delete ticket',
+                                        'label' => 'Mark for deletion',
                                         'url' => '/ticket/soft-delete?id=' . $model->id,
                                         'linkOptions' => [
                                         'onclick' => 'return confirm("Are you sure you want to mark this ticket for deletion?")',

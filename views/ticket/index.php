@@ -538,7 +538,8 @@ $this->title = 'Ticket Management';
         <div class="tab-pane fade" id="pills-recently-deleted" role="tabpanel" aria-labelledby="pills-recently-deleted-tab">
             <div class="subsection-info-block">
                 <h2>Marked for Deletion</h2>
-                <p>These tickets have been soft-deleted. If you choose to delete the ticket again, the ticket itself and all records associated with it (tech time, worked equipment, etc.) <strong>will be permanently dropped</strong>.</p>
+                <p>These tickets have been soft-deleted. If you choose to delete the ticket again, the ticket itself and all records associated with it (tech time, worked equipment, history, etc.) <strong>will be permanently deleted</strong>.</p>
+                <p>Please only use permanent deletion to clear out duplicate / accidental ticket entries. Return the rest to the workflow for record keeping purposes.</p>
                 <div class="table-container container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-recently-deleted']); ?>
                     <?= GridView::widget([

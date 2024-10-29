@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property int $user_id
  * @property int $ticket_id
+ * 
  */
 class TechTicketAssignment extends \yii\db\ActiveRecord
 {
@@ -44,6 +45,26 @@ class TechTicketAssignment extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * Gets query for [[Ticket]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\Ticket
+     */
+    public function getTicket()
+    {
+        return $this->hasOne(Ticket::class, ['id' => 'ticket_id']);
+    }
+
+    /**
+     * Gets query for [[User]].
+     */
+    public function getUser() {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * Find all assignments
+     */
     public static function getTechAssignments() {
         return TechTicketAssignment::find()->asArray()->all();
     }

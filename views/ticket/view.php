@@ -61,14 +61,37 @@ $this->params['breadcrumbs'][] = $this->title;
                         'id' => 'time-entry-modal-button',
                         'class' => 'btn btn-primary bg-iris border-iris',
         ]); ?>
-        <?= Html::a('Update ticket', ['update', 'id' => $model->id], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
+        <?= Html::button('Update ticket', [
+                'class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark',
+                'id' => 'update',
+                'disabled' => ($model->status == '9') ? 'disabled' : '',
+        ]) ?>
         <?= ButtonDropdown::widget([
             'label' => 'More',
             'dropdown' => [
                 'items' => [
                     [
-                        'label' => 'Delete ticket',
+                        'label' => 'Mark for deletion',
                         'url' => '/ticket/soft-delete?id=' . $model->id,
+                        'visible' => ($model->status == 10) ? true : false,
+                        'linkOptions' => [
+                            'onclick' => 'return confirm("Are you sure you want to mark this ticket for deletion?")',
+                            'method' => 'post',
+                        ],
+                    ],
+                    [
+                        'label' => 'Return to workflow',
+                        'url' => '/ticket/undo-soft-delete?id=' . $model->id,
+                        'visible' => ($model->status == 9) ? true : false,
+                        'linkOptions' => [
+                            'onclick' => 'return confirm("Are you sure you want to return this ticket to the workflow?")',
+                            'method' => 'post',
+                        ],
+                    ],
+                    [
+                        'label' => 'Delete',
+                        'url' => '/ticket/delete?id=' . $model->id,
+                        'visible' => ($model->status == 9) ? true : false,
                         'linkOptions' => [
                             'onclick' => 'return confirm("Are you sure you want to mark this ticket for deletion?")',
                             'method' => 'post',

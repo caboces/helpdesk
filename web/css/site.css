@@ -530,6 +530,13 @@ button.border-imperial-red:hover {
 }
 
 /* override bs5 disabled button styles */
+button.bg-pacific-cyan:disabled,
+a.btn.bg-pacific-cyan:disabled {
+  box-shadow: inset 2000px 2000px #0000001e;
+  border-color: #0bb2db;
+  background-color: #0bb2db;
+}
+
 button.bg-iris:disabled,
 a.btn.bg-iris:disabled {
   box-shadow: inset 2000px 2000px #0000001e;
