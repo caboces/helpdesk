@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use DateTime;
 use yii\db\Query;
 use app\models\User;
 use app\models\Ticket;
@@ -30,6 +31,7 @@ use yii\web\ForbiddenHttpException;
 use app\models\TechTicketAssignment;
 use app\models\TicketAssignmentSearch;
 use app\models\TicketClosedResolvedSearch;
+use app\models\TicketRecentlyDeletedSearch;
 
 /**
  * TicketController implements the CRUD actions for Ticket model.
@@ -76,6 +78,9 @@ class TicketController extends Controller
         // search closed / resolved tickets
         $ticketClosedResolvedSearchModel = new TicketClosedResolvedSearch();
         $ticketClosedResolvedDataProvider = $ticketClosedResolvedSearchModel->search($this->request->queryParams);
+        // search recently deleted ticketd
+        $ticketRecentlyDeletedSearchModel = new TicketRecentlyDeletedSearch();
+        $ticketRecentlyDeletedDataProvider = $ticketRecentlyDeletedSearchModel->search($this->request->queryParams);
         // search ticket tags
         $categories = ArrayHelper::map(JobCategory::getCategories(), 'name', 'name');
         $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'name', 'name');
@@ -100,6 +105,9 @@ class TicketController extends Controller
             // search closed / resolved tickets
             'ticketClosedResolvedSearchModel' => $ticketClosedResolvedSearchModel,
             'ticketClosedResolvedDataProvider' => $ticketClosedResolvedDataProvider,
+            // search recently deleted tickets
+            'ticketRecentlyDeletedSearchModel' => $ticketRecentlyDeletedSearchModel,
+            'ticketRecentlyDeletedDataProvider' => $ticketRecentlyDeletedDataProvider,
             // ticket tags
             'categories' => $categories,
             'priorities' => $priorities,
@@ -216,85 +224,95 @@ class TicketController extends Controller
      */
     public function actionUpdate($id)
     {
-        Yii::$app->cache->flush();
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can('update-ticket')) {
+            Yii::$app->cache->flush();
+            $model = $this->findModel($id);
+            if ($model->status == '10') {
 
-        // search tech time entries for ticket
-        $techTimeEntrySearch = new TimeEntrySearch();
-        $techTimeEntrySearch->ticket_id = $model->id;
-        $techTimeEntryDataProvider = $techTimeEntrySearch->search(Yii::$app->request->get());
+                // search tech time entries for ticket
+                $techTimeEntrySearch = new TimeEntrySearch();
+                $techTimeEntrySearch->ticket_id = $model->id;
+                $techTimeEntryDataProvider = $techTimeEntrySearch->search(Yii::$app->request->get());
 
-        // ticket tags
-        $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
-        $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
-        $statuses = ArrayHelper::map(JobStatus::getStatuses(), 'id', 'name');
-        $nonSelectableStatuses = ArrayHelper::map(JobStatus::getNonSelectableStatuses(), 'id', 'name');
-        $types = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
-        $jobTypeCategoryData = JobTypeCategory::getJobCategoryNamesFromJobTypeId($model);
-        // customers
-        $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'code');
-        // tack the corresponding division name onto department options
-        $departments = ArrayHelper::map(Department::getSortedDepartments(), 'id', function($model) {return Division::findOne($model['division_id'])->name . ' > ' . $model['name'];});
-        $districts = ArrayHelper::map(District::getDistricts(), 'id', 'name');
-        $divisions = ArrayHelper::map(Division::getDivisions(), 'id', 'name');
-        $buildings = ArrayHelper::map(Building::getBuildings(), 'id', 'name');
-        // customer buildings
-        $departmentBuildingData = DepartmentBuilding::getBuildingNamesFromDepartmentId($model);
-        $districtBuildingData = DistrictBuilding::getBuildingNamesFromDistrictId($model);
-        // users
-        $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
-        $assignedTechData = TechTicketAssignment::getTechNamesFromTicketId($model);
+                // ticket tags
+                $categories = ArrayHelper::map(JobCategory::getCategories(), 'id', 'name');
+                $priorities = ArrayHelper::map(JobPriority::getPriorities(), 'id', 'name');
+                $statuses = ArrayHelper::map(JobStatus::getStatuses(), 'id', 'name');
+                $nonSelectableStatuses = ArrayHelper::map(JobStatus::getNonSelectableStatuses(), 'id', 'name');
+                $types = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
+                $jobTypeCategoryData = JobTypeCategory::getJobCategoryNamesFromJobTypeId($model);
+                // customers
+                $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'code');
+                // tack the corresponding division name onto department options
+                $departments = ArrayHelper::map(Department::getSortedDepartments(), 'id', function($model) {return Division::findOne($model['division_id'])->name . ' > ' . $model['name'];});
+                $districts = ArrayHelper::map(District::getDistricts(), 'id', 'name');
+                $divisions = ArrayHelper::map(Division::getDivisions(), 'id', 'name');
+                $buildings = ArrayHelper::map(Building::getBuildings(), 'id', 'name');
+                // customer buildings
+                $departmentBuildingData = DepartmentBuilding::getBuildingNamesFromDepartmentId($model);
+                $districtBuildingData = DistrictBuilding::getBuildingNamesFromDistrictId($model);
+                // users
+                $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
+                $assignedTechData = TechTicketAssignment::getTechNamesFromTicketId($model);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+                if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
 
-            // To update the tech_ticket_assignment junction table
-            // This is kind of a lazy way of doing this, probably should check to see if any records need to be deleted instead of always doing it, but I'm keeping it for now :)
-            // First delete existing tech assignments in the table (otherwise it will not touch removed techs if you remove some but not all from a list)
-            foreach ($model->users as $user) {
-                // pass "true" because we want to delete the records, not just nullify all columns
-                $model->unlink('users', $user, true);
-            }
-            // If the selection is empty, we are done. If there is some data, insert a row into the tech_ticket_assignment table for each selected tech
-            if (!empty($_POST['Ticket']['users'])) {
-                foreach ($_POST['Ticket']['users'] as $user_id) {
-                    $user = User::findOne($user_id);
-                    $model->link('users', $user);
+                    // To update the tech_ticket_assignment junction table
+                    // This is kind of a lazy way of doing this, probably should check to see if any records need to be deleted instead of always doing it, but I'm keeping it for now :)
+                    // First delete existing tech assignments in the table (otherwise it will not touch removed techs if you remove some but not all from a list)
+                    foreach ($model->users as $user) {
+                        // pass "true" because we want to delete the records, not just nullify all columns
+                        $model->unlink('users', $user, true);
+                    }
+                    // If the selection is empty, we are done. If there is some data, insert a row into the tech_ticket_assignment table for each selected tech
+                    if (!empty($_POST['Ticket']['users'])) {
+                        foreach ($_POST['Ticket']['users'] as $user_id) {
+                            $user = User::findOne($user_id);
+                            $model->link('users', $user);
+                        }
+                    }
+
+                    echo '<script>console.log("test2")</script>';
+
+                    // TODO: add tech note space
+                    // $model->link('activities', Yii::$app->user->identity);
+
+                    return $this->redirect(['view', 'id' => $model->id]);
                 }
+
+                return $this->render('update', [
+                    'model' => $model,
+                    // search time entries
+                    'techTimeEntrySearch' => $techTimeEntrySearch,
+                    'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
+                    // ticket tags
+                    'categories' => $categories,
+                    'priorities' => $priorities,
+                    'statuses' => $statuses,
+                    'nonSelectableStatuses' => $nonSelectableStatuses,      // needed for resolved/closed/billed ticket forms
+                    'types' => $types,
+                    'jobTypeCategoryData' => $jobTypeCategoryData,
+                    // customers
+                    'customerTypes' => $customerTypes,
+                    'departments' => $departments,
+                    'districts' => $districts,
+                    'divisions' => $divisions,
+                    'buildings' => $buildings,
+                    // customer buildings
+                    'departmentBuildingData' => $departmentBuildingData,
+                    'districtBuildingData' => $districtBuildingData,
+                    // users
+                    'assignedTechData' => $assignedTechData,
+                    'users' => $users,
+                ]);
+            } else {
+                // ticket isn't active!
+                throw new ForbiddenHttpException('This ticket is not in your current workflow and cannot be edited. It has likely been marked for deletion, but can be added back to your workflow by an admin/supervisor.');
             }
-
-            echo '<script>console.log("test2")</script>';
-
-            // TODO: add tech note space
-            // $model->link('activities', Yii::$app->user->identity);
-
-            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            // wrong permissions!
+            throw new ForbiddenHttpException('You do not have permission to edit tickets.');
         }
-
-        return $this->render('update', [
-            'model' => $model,
-            // search time entries
-            'techTimeEntrySearch' => $techTimeEntrySearch,
-            'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
-            // ticket tags
-            'categories' => $categories,
-            'priorities' => $priorities,
-            'statuses' => $statuses,
-            'nonSelectableStatuses' => $nonSelectableStatuses,      // needed for resolved/closed/billed ticket forms
-            'types' => $types,
-            'jobTypeCategoryData' => $jobTypeCategoryData,
-            // customers
-            'customerTypes' => $customerTypes,
-            'departments' => $departments,
-            'districts' => $districts,
-            'divisions' => $divisions,
-            'buildings' => $buildings,
-            // customer buildings
-            'departmentBuildingData' => $departmentBuildingData,
-            'districtBuildingData' => $districtBuildingData,
-            // users
-            'assignedTechData' => $assignedTechData,
-            'users' => $users,
-        ]);
     }
 
 
@@ -312,6 +330,8 @@ class TicketController extends Controller
         if (Yii::$app->user->can('soft-delete-ticket')) {
             $model = $this->findModel($id);
             $model->status = '9';
+            $model->soft_deleted_by_user_id = Yii::$app->user->id;
+            $model->soft_deletion_timestamp = (new DateTime())->format('Y-m-d H:i:s');
             $model->save();
             return $this->redirect(['index']);
         } else {

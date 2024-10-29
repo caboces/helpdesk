@@ -70,7 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'label' => 'Delete ticket',
                         'url' => '/ticket/soft-delete?id=' . $model->id,
                         'linkOptions' => [
-                            'onclick' => 'return confirm("Are you sure you want to delete this ticket?")',
+                            'onclick' => 'return confirm("Are you sure you want to mark this ticket for deletion?")',
                             'method' => 'post',
                         ],
                     ],

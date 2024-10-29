@@ -50,13 +50,16 @@ $this->title = 'Ticket Management';
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="pills-resolved-closed-tab" data-bs-toggle="pill" data-bs-target="#pills-resolved-closed" type="button" role="tab" aria-controls="pills-resolved-closed" aria-selected="false">Resolved / Closed</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-recently-deleted-tab" data-bs-toggle="pill" data-bs-target="#pills-recently-deleted" type="button" role="tab" aria-controls="pills-recently-deleted" aria-selected="false">Marked for Deletion</button>
+        </li>
     </ul>
 
     <!-- pill content -->
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-assignments" role="tabpanel" aria-labelledby="pills-assignments-tab">
             <div class="subsection-info-block">
-                <h2>Assigned tickets</h2>
+                <h2>Current Assignments</h2>
                 <p>All tickets currently assigned to this user, including primary and secondary assignments</p>
                 <div class="table-container container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-assignments']); ?>
@@ -65,6 +68,12 @@ $this->title = 'Ticket Management';
                         'filterModel' => $ticketAssignmentSearchModel,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
+                            /**
+                             * The following code block does not currently work. The intention was to make rows clickable, but the onclick
+                             * interferes with the "confirm" messages used by the Delete/Soft-Delete action buttons. When the confirm message
+                             * pops up, the user is quickly taken back to the model's view and the delete action is not carried out.
+                             */
+                            /*
                             // Make entire grid rows clickable, route to that ticket's view page
                             $url = StringHelper::basename(get_class($model));
                             $url = Url::toRoute(['/' . strtolower($url) . '/view']);
@@ -76,6 +85,14 @@ $this->title = 'Ticket Management';
                                 return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'high'];
                             }
                             return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);',];
+                            */
+
+                            // (CURRENTLY REPLACING ABOVE CODE)Add critical/high class to rows with those priorities
+                            if ($model->jobPriority->name == 'Critical') {
+                                return ['id' => $model['id'], 'class' => 'critical'];
+                            } else if ($model->jobPriority->name == 'High') {
+                                return ['id' => $model['id'], 'class' => 'high'];
+                            }
                         },
                         'columns' => [
                             [
@@ -83,19 +100,19 @@ $this->title = 'Ticket Management';
                                 'template' => '{view} {update} {soft-delete}',
                                 'buttons' => [
                                     'soft-delete' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
-                                        return Html::a('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f15152" class="bi bi-trash-fill" viewBox="0 0 16 16" aria-label="hidden">
-                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-                                      </svg>', 
+                                        return Html::a('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f15152" class="bi bi-bookmark-x-fill" viewBox="0 0 16 16" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293z"/>
+                                            </svg>', 
                                             [
                                                 '/ticket/soft-delete',
                                                 'id' => $model->id,
                                             ], 
                                             [
-                                                'title' => "Soft Delete",
+                                                'title' => "Mark for Deletion",
                                                 'class' => '',
                                                 'data' => [
                                                     'method' => 'post',
-                                                    'confirm' => 'Are you sure you want to delete this ticket?',
+                                                    'confirm' => 'Are you sure you want to mark this ticket for deletion?',
                                             ],
                                         ]);
                                     }
@@ -197,7 +214,7 @@ $this->title = 'Ticket Management';
         </div>
         <div class="tab-pane fade" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
             <div class="subsection-info-block">
-                <h2>All tickets</h2>
+                <h2>All Tickets in Workflow</h2>
                 <p>All tickets in the current workflow</p>
                 <div class="container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-all']); ?>
@@ -206,6 +223,12 @@ $this->title = 'Ticket Management';
                         'filterModel' => $searchModel,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
+                           /**
+                             * The following code block does not currently work. The intention was to make rows clickable, but the onclick
+                             * interferes with the "confirm" messages used by the Delete/Soft-Delete action buttons. When the confirm message
+                             * pops up, the user is quickly taken back to the model's view and the delete action is not carried out.
+                             */
+                            /*
                             // Make entire grid rows clickable, route to that ticket's view page
                             $url = StringHelper::basename(get_class($model));
                             $url = Url::toRoute(['/' . strtolower($url) . '/view']);
@@ -217,18 +240,38 @@ $this->title = 'Ticket Management';
                                 return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'high'];
                             }
                             return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);',];
+                            */
+
+                            // (CURRENTLY REPLACING ABOVE CODE)Add critical/high class to rows with those priorities
+                            if ($model->jobPriority->name == 'Critical') {
+                                return ['id' => $model['id'], 'class' => 'critical'];
+                            } else if ($model->jobPriority->name == 'High') {
+                                return ['id' => $model['id'], 'class' => 'high'];
+                            }
                         },
                         'columns' => [
                             [
                                 'class' => ActionColumn::class,
+                                'template' => '{view} {update} {soft-delete}',
                                 'buttons' => [
-                                    'images' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
-                                        return Html::a('<span class="glyphicon glyphicon glyphicon-picture" aria-hidden="true"></span>', Url::to(['image/index', 'id' => $model->id]));
+                                    'soft-delete' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
+                                        return Html::a('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f15152" class="bi bi-bookmark-x-fill" viewBox="0 0 16 16" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293z"/>
+                                            </svg>', 
+                                            [
+                                                '/ticket/soft-delete',
+                                                'id' => $model->id,
+                                            ], 
+                                            [
+                                                'title' => "Mark for Deletion",
+                                                'class' => '',
+                                                'data' => [
+                                                    'method' => 'post',
+                                                    'confirm' => 'Are you sure you want to mark this ticket for deletion?',
+                                            ],
+                                        ]);
                                     }
                                 ],
-                                'urlCreator' => function ($action, Ticket $model, $key, $index, $column) {
-                                    return Url::toRoute([$action, 'id' => $model->id]);
-                                }
                             ],
                             'id' => [
                                 'attribute' => 'id',
@@ -331,7 +374,7 @@ $this->title = 'Ticket Management';
         </div>
         <div class="tab-pane fade" id="pills-resolved-closed" role="tabpanel" aria-labelledby="pills-resolved-closed-tab">
             <div class="subsection-info-block">
-                <h2>Resolved / Closed tickets</h2>
+                <h2>Resolved / Closed</h2>
                 <p>All tickets that have been resolved / closed</p>
                 <!-- <div class="alert alert-info p-2" role="alert">
                     Filters haven't been made yet! Currently showing all tickets.
@@ -343,6 +386,12 @@ $this->title = 'Ticket Management';
                         'filterModel' => $ticketClosedResolvedSearchModel,
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'rowOptions' => function ($model) {
+                            /**
+                             * The following code block does not currently work. The intention was to make rows clickable, but the onclick
+                             * interferes with the "confirm" messages used by the Delete/Soft-Delete action buttons. When the confirm message
+                             * pops up, the user is quickly taken back to the model's view and the delete action is not carried out.
+                             */
+                            /*
                             // Make entire grid rows clickable, route to that ticket's view page
                             $url = StringHelper::basename(get_class($model));
                             $url = Url::toRoute(['/' . strtolower($url) . '/view']);
@@ -354,18 +403,38 @@ $this->title = 'Ticket Management';
                                 return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'high'];
                             }
                             return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);',];
+                            */
+
+                            // (CURRENTLY REPLACING ABOVE CODE)Add critical/high class to rows with those priorities
+                            if ($model->jobPriority->name == 'Critical') {
+                                return ['id' => $model['id'], 'class' => 'critical'];
+                            } else if ($model->jobPriority->name == 'High') {
+                                return ['id' => $model['id'], 'class' => 'high'];
+                            }
                         },
                         'columns' => [
                             [
                                 'class' => ActionColumn::class,
+                                'template' => '{view} {update} {soft-delete}',
                                 'buttons' => [
-                                    'images' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
-                                        return Html::a('<span class="glyphicon glyphicon glyphicon-picture" aria-hidden="true"></span>', Url::to(['image/index', 'id' => $model->id]));
+                                    'soft-delete' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name
+                                        return Html::a('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f15152" class="bi bi-bookmark-x-fill" viewBox="0 0 16 16" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293z"/>
+                                            </svg>', 
+                                            [
+                                                '/ticket/soft-delete',
+                                                'id' => $model->id,
+                                            ], 
+                                            [
+                                                'title' => "Mark for Deletion",
+                                                'class' => '',
+                                                'data' => [
+                                                    'method' => 'post',
+                                                    'confirm' => 'Are you sure you want to mark this ticket for deletion?',
+                                            ],
+                                        ]);
                                     }
                                 ],
-                                'urlCreator' => function ($action, Ticket $model, $key, $index, $column) {
-                                    return Url::toRoute([$action, 'id' => $model->id]);
-                                }
                             ],
                             'id' => [
                                 'attribute' => 'id',
@@ -458,6 +527,135 @@ $this->title = 'Ticket Management';
                                 'attribute' => 'created',
                                 'format' => ['datetime', 'php:m/d/Y h:iA'],
                                 'label' => 'Date submitted',
+                                'filter' => false,
+                            ],
+                        ],
+                    ]); ?>
+                    <?php Pjax::end(); ?>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-recently-deleted" role="tabpanel" aria-labelledby="pills-recently-deleted-tab">
+            <div class="subsection-info-block">
+                <h2>Marked for Deletion</h2>
+                <p>These tickets have been soft-deleted. If you choose to delete the ticket again, the ticket itself and all records associated with it (tech time, worked equipment, etc.) <strong>will be permanently dropped</strong>.</p>
+                <div class="table-container container-fluid overflow-x-scroll">
+                    <?php Pjax::begin(['id' => 'grid-recently-deleted']); ?>
+                    <?= GridView::widget([
+                        'dataProvider' => $ticketRecentlyDeletedDataProvider,
+                        'filterModel' => $ticketRecentlyDeletedSearchModel,
+                        'tableOptions' => ['class' => 'table table-bordered'],
+                        'rowOptions' => function ($model) {
+                            /**
+                             * The following code block does not currently work. The intention was to make rows clickable, but the onclick
+                             * interferes with the "confirm" messages used by the Delete/Soft-Delete action buttons. When the confirm message
+                             * pops up, the user is quickly taken back to the model's view and the delete action is not carried out.
+                             */
+                            /*
+                            // Make entire grid rows clickable, route to that ticket's view page
+                            $url = StringHelper::basename(get_class($model));
+                            $url = Url::toRoute(['/' . strtolower($url) . '/view']);
+
+                            // Add critical/high class to rows with those priorities
+                            if ($model->jobPriority->name == 'Critical') {
+                                return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'critical'];
+                            } else if ($model->jobPriority->name == 'High') {
+                                return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'high'];
+                            }
+                            return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);',];
+                            */
+
+                            // (CURRENTLY REPLACING ABOVE CODE)Add critical/high class to rows with those priorities
+                            if ($model->jobPriority->name == 'Critical') {
+                                return ['id' => $model['id'], 'class' => 'critical'];
+                            } else if ($model->jobPriority->name == 'High') {
+                                return ['id' => $model['id'], 'class' => 'high'];
+                            }
+                        },
+                        'columns' => [
+                            [
+                                'class' => ActionColumn::class,
+                                'template' => '{view} {delete}',
+                            ],
+                            'id' => [
+                                'attribute' => 'id',
+                                'filter' => false,
+                            ],
+                            'summary',
+                            'requester',
+                            'primary_tech_id' => [
+                                'attribute' => 'primary_tech_id',
+                                'value' => function($data) {
+                                    return '<a href="/user/view?id=' . ($data->primaryTech != null ? $data->primaryTech->id : '') . '">' . ($data->primaryTech != null ? $data->primaryTech->username : '') . '</a>';
+                                },
+                                'format' => 'raw',
+                                'label' => 'Primary Tech',
+                                'filter' => false,
+                            ],
+                            'job_category_name' => [
+                                'attribute' => 'job_category_name',
+                                'value' => function($model) {
+                                    $icon_path = $model->jobCategory->icon_path;
+                                    return '<img src="' . $icon_path . '" aria-hidden="true"></img> ' . $model->jobCategory->name;
+                                },
+                                'format' => 'raw',
+                                'label' => 'Category',
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
+                            ],
+                            'job_priority_name' => [
+                                'attribute' => 'job_priority_name',
+                                'value' => function($model) {
+                                    $bgcolor = $model->jobPriority->color;
+                                    // want to add in a background color to these dots
+                                    return '<span class="dot" style="background-color:' . $bgcolor . ' "></span>' . $model->jobPriority->name;
+                                },
+                                'format' => 'raw',
+                                'label' => 'Priority',
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
+                            ],
+                            'job_status_name' => [
+                                'attribute' => 'job_status_name',
+                                'value' => function($model) {
+                                    $bgcolor = $model->jobStatus->color;
+                                    // want to add in a background color to these dots
+                                    return '<span class="dot" style="background-color:' . $bgcolor . ' "></span>' . $model->jobStatus->name;
+                                },
+                                'format' => 'raw',
+                                'label' => 'Status Prior to Deletion',
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'white-space: nowrap;'];
+                                },
+                            ],
+                            'job_type_name' => [
+                                'attribute' => 'job_type_name',
+                                'value' => 'jobType.name',
+                                'format' => 'text',
+                                'label' => 'Type',
+                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_type_name', $types, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'contentOptions' => function ($model) {
+                                    return ['style' => 'font-weight: bold;'];
+                                },
+                            ],
+                            'soft_deleted_by_user_id' => [
+                                'attribute' => 'soft_deleted_by_user_id',
+                                'value' => function($data) {
+                                    return '<a href="/user/view?id=' . ($data->softDeletedBy != null ? $data->softDeletedBy->id : '') . '">' . ($data->softDeletedBy != null ? $data->softDeletedBy->username : '') . '</a>';
+                                },
+                                'format' => 'raw',
+                                'label' => 'Marked for Deletion By',
+                                'filter' => false,
+                            ],
+                            'soft_deletion_timestamp' => [
+                                'attribute' => 'soft_deletion_timestamp',
+                                'format' => ['datetime', 'php:m/d/Y h:iA'],
+                                'label' => 'Date Marked for Deletion',
                                 'filter' => false,
                             ],
                         ],

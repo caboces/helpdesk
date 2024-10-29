@@ -14,6 +14,7 @@
 $.pjax.reload({container: '#grid-all'});
 $.pjax.reload({container: '#grid-assignments'});
 $.pjax.reload({container: '#grid-resolved-closed'});
+$.pjax.reload({container: '#grid-recently-deleted'});
 
 // ajax for the other grids that only require active/inactive filters
 $.pjax.reload({container: '#grid-active'});

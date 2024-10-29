@@ -54,8 +54,8 @@ class Ticket extends \yii\db\ActiveRecord
     {
         return [
             [['summary', 'requester', 'location', 'requester_email', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'status'], 'required'],
-            [['primary_tech_id', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'district_id', 'district_building_id', 'department_building_id', 'division_id', 'department_id', 'status'], 'integer'],
-            [['created', 'modified'], 'safe'],
+            [['primary_tech_id', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'district_id', 'district_building_id', 'department_building_id', 'division_id', 'department_id', 'status', 'soft_deleted_by_user_id'], 'integer'],
+            [['created', 'modified', 'soft_deletion_timestamp'], 'safe'],
             [['summary'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 500],
             [['requester'], 'string', 'max' => 100],
@@ -105,6 +105,8 @@ class Ticket extends \yii\db\ActiveRecord
             'district_building_id' => 'District Building',
             'department_building_id' => 'Department Building',
 
+            'soft_deleted_by_user_id' => 'Marked for Deletion By',
+            'soft_deletion_timestamp' => 'Soft Deletion Date',
             'status' => 'Status',
             'created' => 'Created',
             'modified' => 'Modified',
@@ -216,6 +218,13 @@ class Ticket extends \yii\db\ActiveRecord
      */
     public function getPrimaryTech() {
         return $this->hasOne(User::class, ['id' => 'primary_tech_id']);
+    }
+
+    /**
+     * Finds out who soft-deleted a ticket.
+     */
+    public function getSoftDeletedBy() {
+        return $this->hasOne(User::class, ['id' => 'soft_deleted_by_user_id']);
     }
 
     /**
