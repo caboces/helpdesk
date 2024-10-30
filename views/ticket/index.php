@@ -45,7 +45,7 @@ $this->title = 'Ticket Management';
             <button class="nav-link active" id="pills-assignments-tab" data-bs-toggle="pill" data-bs-target="#pills-assignments" type="button" role="tab" aria-controls="pills-assignments" aria-selected="true">Assignments</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all" aria-selected="false">All tickets</button>
+            <button class="nav-link" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all" aria-selected="false">Open</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="pills-resolved-closed-tab" data-bs-toggle="pill" data-bs-target="#pills-resolved-closed" type="button" role="tab" aria-controls="pills-resolved-closed" aria-selected="false">Resolved / Closed</button>
@@ -214,9 +214,9 @@ $this->title = 'Ticket Management';
         </div>
         <div class="tab-pane fade" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
             <div class="subsection-info-block">
-                <h2>All Tickets in Workflow</h2>
+                <h2>Open Tickets</h2>
                 <p>All tickets in the current workflow</p>
-                <div class="container-fluid overflow-x-scroll">
+                <div class="table-container container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-all']); ?>
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
@@ -379,7 +379,7 @@ $this->title = 'Ticket Management';
                 <!-- <div class="alert alert-info p-2" role="alert">
                     Filters haven't been made yet! Currently showing all tickets.
                 </div> -->
-                <div class="container-fluid overflow-x-scroll">
+                <div class="table-container container-fluid overflow-x-scroll">
                     <?php Pjax::begin(['id' => 'grid-resolved-closed']); ?>
                     <?= GridView::widget([
                         'dataProvider' => $ticketClosedResolvedDataProvider,
@@ -587,7 +587,7 @@ $this->title = 'Ticket Management';
                                                 'id' => $model->id,
                                             ], 
                                             [
-                                                'title' => "Return Ticket to Workflow",
+                                                'title' => "Return to Workflow",
                                                 'class' => '',
                                                 'data' => [
                                                     'method' => 'post',
