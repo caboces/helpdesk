@@ -64,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::button('Update ticket', [
                 'class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark',
                 'id' => 'update',
-                'disabled' => ($model->status == '9') ? 'disabled' : '',
+                'disabled' => ($model->status == 9 ? true : false),
         ]) ?>
         <?= ButtonDropdown::widget([
             'label' => 'More',
