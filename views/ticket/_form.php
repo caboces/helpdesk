@@ -155,6 +155,7 @@ use yii\bootstrap5\ButtonDropdown;
                                 [
                                         'label' => 'Mark for deletion',
                                         'url' => '/ticket/soft-delete?id=' . $model->id,
+                                        'visible' => (Yii::$app->controller->action->id == 'create') ? false : true,
                                         'linkOptions' => [
                                         'onclick' => 'return confirm("Are you sure you want to mark this ticket for deletion?")',
                                         'method' => 'post',
@@ -324,7 +325,7 @@ use yii\bootstrap5\ButtonDropdown;
                                 <div class="question-box">
                                         <div class="row">
                                                 <div class="col-md-6">
-                                                        <?= $form->field($model, 'requester')->textInput(['maxlength' => true]) ?>
+                                                        <?= $form->field($model, 'requester')->textInput(['maxlength' => true, 'placeholder' => "First Last"]) ?>
                                                 </div>
                                                 <div class="col-md-6">
                                                         <?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
@@ -332,16 +333,16 @@ use yii\bootstrap5\ButtonDropdown;
                                         </div>
                                         <div class="row">
                                                 <div class="col-md-6">
-                                                        <?= $form->field($model, 'requester_email')->textInput(['maxlength' => true]) ?>
+                                                        <?= $form->field($model, 'requester_email')->textInput(['maxlength' => true, 'placeholder' => "first_last@example.com"]) ?>
                                                 </div>
                                                 <div class="col-md-6">
-                                                        <?= $form->field($model, 'requester_phone')->textInput(['maxlength' => true]) ?>
+                                                        <?= $form->field($model, 'requester_phone')->textInput(['maxlength' => true, 'placeholder' => "(xxx) xxx-xxxx"]) ?>
                                                 </div>
                                         </div>
                                 </div>
                                 <div class="question-box">
-                                        <?= $form->field($model, 'summary')->textInput(['maxlength' => true]) ?>
-                                        <?= $form->field($model, 'description')->textarea(['maxlength' => true, 'rows' => 3]) ?>
+                                        <?= $form->field($model, 'summary')->textInput(['maxlength' => true, 'placeholder' => "Summary title"]) ?>
+                                        <?= $form->field($model, 'description')->textarea(['maxlength' => true, 'rows' => 3, 'placeholder' => "Description and details"]) ?>
                                 </div>
                                 <div class="question-box">
                                         <div class="row">
