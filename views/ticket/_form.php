@@ -33,11 +33,25 @@ use yii\bootstrap5\ButtonDropdown;
         Modal::end(); 
         ?>
 
+        <!-- modal window for asset entries -->
+        <?php 
+        Modal::begin([
+                'title' => 'Add Assets',
+                'id' => 'asset-modal',
+                'size' => 'modal-lg',
+        ]);
+
+        echo '<div id="asset-modal-content"></div>';
+
+        Modal::end(); 
+        ?>
+
         <?php $form = ActiveForm::begin(); ?>
 
         <!-- action buttons -->
         <div class='container-fluid p-2 | bg-dark shadow-sm'>
                 <?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
+                <!-- Add tech note -->
                 <?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
                                 <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
@@ -49,6 +63,17 @@ use yii\bootstrap5\ButtonDropdown;
                         'aria-expanded' => 'false',
                         'aria-controls' => '#tech-note',
                 ]); ?>
+                <!-- Add asset -->
+                <?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
+                        </svg> Add asset', [
+                        'value' => Url::to('/asset/create?id=' . $model->id),
+                        'id' => 'asset-modal-button',
+                        'class' => 'btn btn-primary bg-iris border-iris',
+                        // disable if creating a new ticket
+                        'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+                ]); ?>
+                <!-- Add time entry -->
                 <?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16" aria-hidden="true">
                                 <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
                                 <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
@@ -59,7 +84,6 @@ use yii\bootstrap5\ButtonDropdown;
                         // disable if creating a new ticket
                         'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
                 ]); ?>
-
                 <!-- Depending on the current status level, show the reopen button -->
                 <?php
                 // reopen the ticket. do not show this option on ticket creation screen.
@@ -80,7 +104,6 @@ use yii\bootstrap5\ButtonDropdown;
                         }
                 }
                 ?>
-
                 <!-- Depending on the current status level, show the relevant resolve/closed button -->
                 <?php
                 // resolve the ticket. do not show this option on ticket creation screen.
@@ -116,7 +139,7 @@ use yii\bootstrap5\ButtonDropdown;
                 }
                 ?>
 
-                <!-- save changes -->
+                <!-- Submit button -->
                 <?= Html::submitButton('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16" aria-hidden="true">
                                 <path d="M11 2H9v3h2z"/>
                                 <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
@@ -124,7 +147,7 @@ use yii\bootstrap5\ButtonDropdown;
                         ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark']
                 ) ?>
 
-                <!-- more options -->
+                <!-- More options -->
                 <?= ButtonDropdown::widget([
                         'label' => 'More',
                         'dropdown' => [
@@ -398,9 +421,6 @@ use yii\bootstrap5\ButtonDropdown;
                         <div class="subsection-info-block">
                                 <h2>Technicians</h2>
                                 <p>Technicians assigned to this ticket</p>
-                                <div class="alert alert-info p-2" role="alert">
-                                        Removing technicians will remove their recorded time entries
-                                </div>
                                 <div class="question-box">
                                         <!-- all tech assignments -->
                                         <?php

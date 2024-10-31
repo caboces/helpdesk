@@ -3,10 +3,11 @@
 namespace app\controllers;
 
 use app\models\Asset;
-use app\models\AssetSearch;
+use app\models\Ticket;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use app\models\AssetSearch;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 /**
  * AssetController implements the CRUD actions for Asset model.
@@ -65,20 +66,24 @@ class AssetController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
+        $ticket = Ticket::findOne($id);
         $model = new Asset();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['/ticket/update', 'id' => $ticket->id]);
             }
         } else {
             $model->loadDefaultValues();
         }
 
-        return $this->render('create', [
+        $this->layout = 'blank';
+
+        return $this->renderAjax('create', [
             'model' => $model,
+            'ticket' => $ticket
         ]);
     }
 

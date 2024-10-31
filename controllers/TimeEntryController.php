@@ -78,7 +78,6 @@ class TimeEntryController extends Controller
         $model = new TimeEntry();
 
         if ($this->request->isPost) {
-            // temp set to false so i can try to get results to save at all
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['/ticket/update', 'id' => $ticket->id]);
             }

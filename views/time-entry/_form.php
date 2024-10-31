@@ -32,7 +32,7 @@ use app\models\TechTicketAssignment;
                 ])->label(false)
             ?>
             <div class="row">
-                <div class="col iris">
+                <div class="col">
                     <?= $form->field($model, 'user_id')
                         ->dropDownList(
                             ArrayHelper::map(TechTicketAssignment::getTechNamesFromTicketId($ticket), 'user_id', 'username'),

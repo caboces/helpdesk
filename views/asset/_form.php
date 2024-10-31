@@ -10,18 +10,44 @@ use yii\widgets\ActiveForm;
 
 <div class="asset-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'id' => 'add-asset-form',
+        'enableClientValidation' => true,
+        'validateOnSubmit' => true,
+    ]); ?>
 
-    <?= $form->field($model, 'ticket_id')->textInput() ?>
+    <div class="assets-container">
+        <div class="question-box-no-trim">
+            <?= $form->field($model, 'last_modified_by_user_id', [
+                        'template' => '{input}',
+                        'options' => ['tag' => false],
+                        'inputOptions' => ['value' => Yii::$app->user->id]
+                    ])->hiddenInput([
+                        'readonly' => true, 
+                    ])->label(false)
+            ?>
+            <div class="row">
+                <div class="col">
+                    <?= $form->field($model, 'asset_tag')->textInput() ?>
+                </div>
+                <div class="col">
+                    <?= $form->field($model, 'ticket_id', ['inputOptions' => ['value' => $ticket->id]])->textInput(['readonly' => true, 'class' => 'read-only form-control']) ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <?= Html::button('Remove', ['class' => 'btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>
+                <?= Html::button('Duplicate', ['class' => 'btn btn-primary bg-iris border-iris btn-skinny']); ?>
+            </div>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'asset_tag')->textInput() ?>
-
-    <?= $form->field($model, 'created')->textInput() ?>
-
-    <?= $form->field($model, 'modified')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Confirm asset', [
+            'id' => 'confirm-asset',
+            'class' => 'mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan',
+            'form' => 'add-asset-form',
+        ]); ?>
     </div>
 
     <?php ActiveForm::end(); ?>

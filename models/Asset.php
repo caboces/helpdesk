@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property int $ticket_id
  * @property int $asset_tag
+ * @property int $last_modified_by_user_id
  * @property string|null $created
  * @property string|null $modified
  *
@@ -32,7 +33,7 @@ class Asset extends \yii\db\ActiveRecord
     {
         return [
             [['ticket_id', 'asset_tag'], 'required'],
-            [['ticket_id', 'asset_tag'], 'integer'],
+            [['ticket_id', 'asset_tag', 'last_modified_by_user_id'], 'integer'],
             [['created', 'modified'], 'safe'],
             [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],
         ];
@@ -47,6 +48,7 @@ class Asset extends \yii\db\ActiveRecord
             'id' => 'ID',
             'ticket_id' => 'Ticket ID',
             'asset_tag' => 'Asset Tag',
+            'last_modified_by_user_id' => 'Last Entry Editor',
             'created' => 'Created',
             'modified' => 'Modified',
         ];
@@ -60,6 +62,16 @@ class Asset extends \yii\db\ActiveRecord
     public function getTicket()
     {
         return $this->hasOne(Ticket::class, ['id' => 'ticket_id']);
+    }
+
+    /**
+     * Gets query for [[User]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
     /**

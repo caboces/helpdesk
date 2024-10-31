@@ -94,3 +94,26 @@ $('#confirm-time-entry').submit(function(e) {
 });
 
 });
+
+/* ===========================================================================================
+|| ASSET MODAL (TICKET FORM)
+=========================================================================================== */
+
+/**
+ * Get click of new asset button from ticket form.
+ * Opens a modal window for creating asset entries.
+ */
+$('#asset-modal-button').click(function () {
+    $('#asset-modal').modal('show')
+    .find('#asset-modal-content')
+    .load($(this).attr('value'));
+});
+
+/**
+ * Close TimeEntry modal instead of redirecting to view-view
+ */
+$('#confirm-asset').submit(function(e) {
+    // e.preventDefault();
+    $('#asset-modal').modal('hide');
+
+});
