@@ -42,7 +42,6 @@ use app\models\TechTicketAssignment;
                         ); ?>
                 </div>
                 <div class="col">
-                    <!-- ActiveForm won't take date input... -->
                     <div class="form-group field-timeentry-entry_date required">
                         <label class="control-label" for="timeentry-entry_date">Entry Date</label>
                         <input type="date" id="timeentry-entry_date" class="form-control" name="TimeEntry[entry_date]" placeholder="mm/dd/yyyy" aria-required="true">
