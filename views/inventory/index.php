@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Inventory;
+use app\models\LoanedInventory;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -85,7 +86,7 @@ $this->title = 'Inventory';
                         [
                             'class' => ActionColumn::className(),
                             'template' => '{view}',
-                            'urlCreator' => function ($action, Inventory $model, $key, $index, $column) {
+                            'urlCreator' => function ($action, LoanedInventory $model, $key, $index, $column) {
                                 return Url::toRoute([$action, 'new_prop_tag' => $model->new_prop_tag]);
                             }
                         ],
@@ -95,7 +96,9 @@ $this->title = 'Inventory';
                         ],
                         'item_description',
                         'serial_number',
-                        // do we need any extra info here
+                        'bl_code',
+                        'date_borrowed',
+                        'date_returned'
                     ],
                 ]); ?>
             </div>

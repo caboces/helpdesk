@@ -58,7 +58,7 @@ class LoanedInventory extends \yii\db\ActiveRecord {
      * @return \yii\db\ActiveQuery|InventoryQuery
      */
     public function getNewProp() {
-        return $this->hasMany(Inventory::class, ['new_prop_tag' => 'new_prop_tag']);
+        return $this->hasOne(Inventory::class, ['new_prop_tag' => 'new_prop_tag']);
     }
 
     /**
@@ -68,7 +68,7 @@ class LoanedInventory extends \yii\db\ActiveRecord {
      */
     public function getBlCode() {
         // need to create Location class (same error in Inventory class)
-        return $this->hasMany(Location::class, ['bl_code' => 'bl_code']);
+        return $this->hasOne(Location::class, ['bl_code' => 'bl_code']);
     }
 
     /**
@@ -87,5 +87,23 @@ class LoanedInventory extends \yii\db\ActiveRecord {
      */
     public function getDateReturned() {
         return $this->date_returned;
+    }
+
+    /**
+     * Returns a query that combines `loaned_inventory` and `inventory`
+     * TODO Needs a solution for creating the inner join as `loaned_inventory` and `inventory` are in
+     * different databases
+     * 
+     * @return yii\db\ActiveQuery the query
+     */
+    public static function findWithInventoryInformation() {
+        return LoanedInventory::find()
+            ->select(['loaned_inventory.id', 
+                'inventory.item_description', 
+                'inventory.serial_number', 
+                'loaned_inventory.bl_code', 
+                'loaned_inventory.date_borrowed', 
+                'loaned_inventory.date_returned'])
+            ->innerJoin('inventory', 'loaned_inventory.new_prop_tag = inventory.new_prop_tag');
     }
 }
