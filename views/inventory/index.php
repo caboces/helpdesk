@@ -9,7 +9,9 @@ use yii\widgets\Pjax;
 
 /** @var yii\web\View $this */
 /** @var app\models\InventorySearch $searchModel */
+/** @var app\models\LoanedInventorySearch $loanedInvSearchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var yii\data\ActiveDataProvider $loanedInvDataProvider */
 
 $this->title = 'Inventory';
 ?>
@@ -76,8 +78,8 @@ $this->title = 'Inventory';
                 <h2>Loaned equipment</h2>
                 <p>Every piece of equipment borrowed externally</p>
                 <?= GridView::widget([
-                    'dataProvider' => $dataProvider,
-                    'filterModel' => $searchModel,
+                    'dataProvider' => $loanedInvDataProvider,
+                    'filterModel' => $loanedInvSearchModel,
                     'tableOptions' => ['class' => 'table table-bordered'],
                     'columns' => [
                         [

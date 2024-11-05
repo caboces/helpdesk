@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Inventory;
 use app\models\InventorySearch;
+use app\models\LoanedInventorySearch;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -40,12 +41,16 @@ class InventoryController extends Controller
     public function actionIndex()
     {
         $searchModel = new InventorySearch();
+        $loanedInvSearchModel = new LoanedInventorySearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        $loanedInvDataProvider = $loanedInvSearchModel->search($this->request->queryParams);
 
         $this->layout = 'blank-container';
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'loanedInvSearchModel' => $loanedInvSearchModel,
+            'loanedInvDataProvider' => $loanedInvDataProvider
         ]);
     }
 

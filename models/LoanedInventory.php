@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "loaned_inventory".
  * 
  * @property id $id
- * @property new_prop_id $new_prop_id
+ * @property new_prop_tag $new_prop_tag
  * @property bl_code $bl_code
  * @property date_borrowed $date_borrowed
  * @property date_returned $date_returned
@@ -34,9 +34,8 @@ class LoanedInventory extends \yii\db\ActiveRecord {
     public function rules() {
         // Check and see if this is right
         return [
-            [['id'], 'integer', 'unique'],
+            [['id', 'new_prop_tag'], 'integer'],
             [['new_prop_tag', 'bl_code', 'date_borrowed'], 'required'],
-            [['new_prop_tag'], 'integer'],
             [['bl_code'], 'string', 'max' => 20],
             [['date_borrowed', 'date_returned'], 'datetime']
         ];
@@ -68,6 +67,7 @@ class LoanedInventory extends \yii\db\ActiveRecord {
      * @return \yii\db\ActiveQuery|LocationQuery
      */
     public function getBlCode() {
+        // need to create Location class (same error in Inventory class)
         return $this->hasMany(Location::class, ['bl_code' => 'bl_code']);
     }
 
