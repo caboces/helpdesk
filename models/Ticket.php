@@ -300,4 +300,19 @@ class Ticket extends \yii\db\ActiveRecord
 
         return $string;
     }
+
+    public static function getJobLabels($ticketId) {
+        return Ticket::find()
+            ->select(['job_category' => 'job_category.name',
+            'job_priority' => 'job_priority.name',
+            'job_status' => 'job_status.name',
+            'job_type' => 'job_type.name'])
+            ->where(['ticket.id' => $ticketId])
+            ->leftJoin('job_category', 'ticket.job_category_id = job_category.id')
+            ->leftJoin('job_priority', 'ticket.job_priority_id = job_priority.id')
+            ->leftJoin('job_status', 'ticket.job_status_id = job_status.id')
+            ->leftJoin('job_type', 'ticket.job_type_id = job_type.id')
+            ->asArray()
+            ->one();
+    }
 }

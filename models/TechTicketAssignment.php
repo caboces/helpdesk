@@ -84,4 +84,18 @@ class TechTicketAssignment extends \yii\db\ActiveRecord
         ->asArray()
         ->all();
     }
+
+    /**
+     * Get all the user emails and names assigned to the provided ticket id
+     * @param ticketId the ticket id
+     * @return array Array of user emails and names
+     */
+    public static function getNamesAndEmailsFromTicket($ticketId) {
+        return TechTicketAssignment::find()
+            ->select(['user.email', 'user.username'])
+            ->innerJoin('user', 'tech_ticket_assignment.user_id = user.id')
+            ->where(['tech_ticket_assignment.ticket_id' => $ticketId])
+            ->asArray()
+            ->all();
+    }
 }

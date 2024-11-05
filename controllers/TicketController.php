@@ -396,6 +396,9 @@ class TicketController extends Controller
 
             // set job status to resolved
             $model->job_status_id = 14;
+
+            // job status updated; send emails
+            $this->sendTicketStatusEmails($model);
             
             // save changes and go to the ticket view
             if ($this->request->isPost && $model->save()) {
@@ -423,6 +426,9 @@ class TicketController extends Controller
 
             // set job status to closed
             $model->job_status_id = 15;
+
+            // job status updated; send emails
+            $this->sendTicketStatusEmails($model);
 
             // save changes and go to the ticket view
             if ($this->request->isPost && $model->save()) {
@@ -454,6 +460,9 @@ class TicketController extends Controller
             } else {
                 // set job status to open
                 $model->job_status_id = 9;
+
+                // job status updated; send emails
+                $this->sendTicketStatusEmails($model);
             }
 
             // save changes and go to the ticket view
@@ -586,5 +595,77 @@ class TicketController extends Controller
             ->limit(100)
             ->asArray()
             ->all();
+    }
+
+    /**
+     * Sends an email about a ticket's status to the assigned techs of that ticket
+     *
+     * @param ticketModel The ticket
+     * @return bool whether the email was sent
+     */
+    public function sendTicketStatusEmails($ticketModel) {
+        // string of user emails
+        $recipients = TechTicketAssignment::getNamesAndEmailsFromTicket($ticketModel->id);
+        // get job labels
+        $jobLabels = Ticket::getJobLabels($ticketModel->id);
+        // get primary tech name
+        $primaryTechName = User::findOne($ticketModel->primary_tech_id)->getUsername();
+        // create Yii email object array
+        $emails = [];
+        if (!empty($recipients)) {
+            foreach ((array) $recipients as $recip) {
+                $email = $recip['email'];
+                $username = $recip['username'];
+                $emails[] = Yii::$app
+                    ->mailer
+                    ->compose(
+                        ['html' => 'ticketStatus-html', 'text' => 'ticketStatus-text'],
+                        ['ticket' => $ticketModel,
+                        'username' => $username,
+                        'jobLabels' => $jobLabels,
+                        'primary_tech' => $primaryTechName]
+                    )
+                    ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+                    ->setTo($email)
+                    ->setSubject('Ticket #' . $ticketModel->id . ' ' . strtolower(JobStatus::findOne($ticketModel->job_status_id)->name) . '. ' . Yii::$app->name);
+            }
+        }
+        // send to the requester's email
+        array_push($emails, 
+            Yii::$app
+                ->mailer
+                ->compose(
+                    ['html' => 'ticketStatus-html', 'text' => 'ticketStatus-text'],
+                    ['ticket' => $ticketModel,
+                    'username' => $ticketModel->requester,
+                    'jobLabels' => $jobLabels,
+                    'primary_tech' => $primaryTechName]
+                )
+                ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+                ->setTo($ticketModel->requester_email)
+                ->setSubject('CABOCES Ticket #' . $ticketModel->id . ' ' . strtolower(JobStatus::findOne($ticketModel->job_status_id)->name) . '. ' . Yii::$app->name)
+        );
+        // send to primary tech (they are technically applied to this ticket in tech_ticket_assignment i dont think)
+        array_push($emails, 
+            Yii::$app
+                ->mailer
+                ->compose(
+                    ['html' => 'ticketStatus-html', 'text' => 'ticketStatus-text'],
+                    ['ticket' => $ticketModel,
+                    'username' => $primaryTechName,
+                    'jobLabels' => $jobLabels,
+                    'primary_tech' => $primaryTechName]
+                )
+                ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+                ->setTo($ticketModel->requester_email)
+                ->setSubject('Ticket #' . $ticketModel->id . ' ' . strtolower(JobStatus::findOne($ticketModel->job_status_id)->name) . '. ' . Yii::$app->name)
+        );
+        if (!empty($emails)) {
+            // send multiple to save bandwidth
+            return Yii::$app->mailer->sendMultiple($emails);
+        } else {
+            // no emails to deliver
+            return false;
+        }
     }
 }
