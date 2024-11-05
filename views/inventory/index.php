@@ -33,6 +33,9 @@ $this->title = 'Inventory';
             <button class="nav-link active" id="pills-worked-tab" data-bs-toggle="pill" data-bs-target="#pills-worked" type="button" role="tab" aria-controls="pills-worked" aria-selected="true">Worked equipment</button>
         </li>
         <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-loaned-tab" data-bs-toggle="pill" data-bs-target="#pills-loaned" type="button" role="tab" aria-controls="pills-loaned" aria-selected="false">Loaned equipment</button>
+        </li>
+        <li class="nav-item" role="presentation">
             <button class="nav-link" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all" aria-selected="false">All equipment</button>
         </li>
     </ul>
@@ -64,6 +67,33 @@ $this->title = 'Inventory';
                         ],
                         'item_description',
                         'serial_number',
+                    ],
+                ]); ?>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-loaned" role="tabpanel" aria-labelledby="pills-loaned-label">
+            <div class="subsection-info-block">
+                <h2>Loaned equipment</h2>
+                <p>Every piece of equipment borrowed externally</p>
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    'tableOptions' => ['class' => 'table table-bordered'],
+                    'columns' => [
+                        [
+                            'class' => ActionColumn::className(),
+                            'template' => '{view}',
+                            'urlCreator' => function ($action, Inventory $model, $key, $index, $column) {
+                                return Url::toRoute([$action, 'new_prop_tag' => $model->new_prop_tag]);
+                            }
+                        ],
+                        'new_prop_tag' => [
+                            'attribute' => 'new_prop_tag',
+                            'label' => 'Asset Tag',
+                        ],
+                        'item_description',
+                        'serial_number',
+                        // do we need any extra info here
                     ],
                 ]); ?>
             </div>
