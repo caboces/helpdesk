@@ -317,7 +317,7 @@ $this->title = 'Ticket Management';
                                 },
                                 'format' => 'raw',
                                 'label' => 'Category',
-                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($searchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
                                 'contentOptions' => function ($model) {
                                     return ['style' => 'white-space: nowrap;'];
                                 },
@@ -331,7 +331,7 @@ $this->title = 'Ticket Management';
                                 },
                                 'format' => 'raw',
                                 'label' => 'Priority',
-                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($searchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
                                 'contentOptions' => function ($model) {
                                     return ['style' => 'white-space: nowrap;'];
                                 },
@@ -345,7 +345,7 @@ $this->title = 'Ticket Management';
                                 },
                                 'format' => 'raw',
                                 'label' => 'Status',
-                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($searchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
                                 'contentOptions' => function ($model) {
                                     return ['style' => 'white-space: nowrap;'];
                                 },
@@ -480,7 +480,7 @@ $this->title = 'Ticket Management';
                                 },
                                 'format' => 'raw',
                                 'label' => 'Category',
-                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_category_name', $categories, ['class' => 'form-control', 'prompt' => '-All-']),
                                 'contentOptions' => function ($model) {
                                     return ['style' => 'white-space: nowrap;'];
                                 },
@@ -494,7 +494,7 @@ $this->title = 'Ticket Management';
                                 },
                                 'format' => 'raw',
                                 'label' => 'Priority',
-                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_priority_name', $priorities, ['class' => 'form-control', 'prompt' => '-All-']),
                                 'contentOptions' => function ($model) {
                                     return ['style' => 'white-space: nowrap;'];
                                 },
@@ -508,7 +508,7 @@ $this->title = 'Ticket Management';
                                 },
                                 'format' => 'raw',
                                 'label' => 'Status',
-                                'filter' => Html::activeDropDownList($ticketAssignmentSearchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
+                                'filter' => Html::activeDropDownList($ticketClosedResolvedSearchModel, 'job_status_name', $statuses, ['class' => 'form-control', 'prompt' => '-All-']),
                                 'contentOptions' => function ($model) {
                                     return ['style' => 'white-space: nowrap;'];
                                 },
