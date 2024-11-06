@@ -36,10 +36,7 @@ class LoanedInventorySearch extends LoanedInventory {
      * @return ActiveDataProvider
      */
     public function search($params) {
-        // TODO need a solution to inner join `inventory` and `loaned_inventory`, or a way to get serial_number and item_description for the view
-        // keep below commented or the inventory page will blow up
-        //$query = LoanedInventory::findWithInventoryInformation();
-        $query = LoanedInventory::find(); // works kind've fine, missing a the `serial_number` and `item_description` fields though
+        $query = LoanedInventory::findWithInventoryInformation();
 
         $dataProvider = new DataActiveDataProvider([
             'query' => $query
@@ -48,7 +45,7 @@ class LoanedInventorySearch extends LoanedInventory {
         $this->load($params);
 
         if (!$this->validate()) {
-            return $dataProvider;
+            return $dataProvider; 
         }
 
         $query->andFilterWhere([

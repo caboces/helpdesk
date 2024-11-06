@@ -90,20 +90,20 @@ class LoanedInventory extends \yii\db\ActiveRecord {
     }
 
     /**
-     * Returns a query that combines `loaned_inventory` and `inventory`
-     * TODO Needs a solution for creating the inner join as `loaned_inventory` and `inventory` are in
-     * different databases
+     * Returns a query that combines information from `loaned_inventory` and `federated_inventory`.
+     * `federated_inventory` is in the inv database and is a table with the FEDERATED engine.
      * 
      * @return yii\db\ActiveQuery the query
      */
     public static function findWithInventoryInformation() {
         return LoanedInventory::find()
-            ->select(['loaned_inventory.id', 
-                'inventory.item_description', 
-                'inventory.serial_number', 
+            ->select(['loaned_inventory.id',
+                'loaned_inventory.new_prop_tag', 
+                'federated_inventory.item_description', 
+                'federated_inventory.serial_number', 
                 'loaned_inventory.bl_code', 
                 'loaned_inventory.date_borrowed', 
                 'loaned_inventory.date_returned'])
-            ->innerJoin('inventory', 'loaned_inventory.new_prop_tag = inventory.new_prop_tag');
+            ->innerJoin('federated_inventory', 'loaned_inventory.new_prop_tag = federated_inventory.new_prop_tag');
     }
 }
