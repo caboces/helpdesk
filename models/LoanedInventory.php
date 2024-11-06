@@ -57,7 +57,7 @@ class LoanedInventory extends \yii\db\ActiveRecord {
      * 
      * @return \yii\db\ActiveQuery|InventoryQuery
      */
-    public function getNewProp() {
+    public function getInventory() {
         return $this->hasOne(Inventory::class, ['new_prop_tag' => 'new_prop_tag']);
     }
 
@@ -99,8 +99,8 @@ class LoanedInventory extends \yii\db\ActiveRecord {
         return LoanedInventory::find()
             ->select(['loaned_inventory.id',
                 'loaned_inventory.new_prop_tag', 
-                'federated_inventory.item_description', 
-                'federated_inventory.serial_number', 
+                'federated_inventory.item_description as item_description', 
+                'federated_inventory.serial_number as serial_number', 
                 'loaned_inventory.bl_code', 
                 'loaned_inventory.date_borrowed', 
                 'loaned_inventory.date_returned'])

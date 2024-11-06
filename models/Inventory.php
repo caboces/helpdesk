@@ -164,11 +164,11 @@ class Inventory extends \yii\db\ActiveRecord
     }
 
     /**
-     * Get the borrowers of this item based on the many to many relationship between `loaned_inventory` and `inventory.
+     * Get the borrowers of this item based on the many to many relationship between `loaned_inventory` and `inventory`.
      * 
      * @return \yii\db\ActiveQuery
      */
-    public function getBorrowers() {
-        return $this->hasMany(Location::class, ['bl_code' => 'bl_code'])->viaTable('{{%loaned_inventory}}', ['bl_code' => 'bl_code']);
+    public function getLoanedInventory() {
+        return $this->hasMany(LoanedInventory::class, ['new_prop_tag' => 'new_propg_tag'])->viaTable('{{%loaned_inventory}}', ['new_prop_tag' => 'new_prop_tag']);
     }
 }

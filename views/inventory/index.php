@@ -7,6 +7,7 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use Symfony\Component\VarDumper\VarDumper;
 
 /** @var yii\web\View $this */
 /** @var app\models\InventorySearch $searchModel */
@@ -94,8 +95,8 @@ $this->title = 'Inventory';
                             'attribute' => 'new_prop_tag',
                             'label' => 'Asset Tag',
                         ],
-                        'item_description',
-                        'serial_number',
+                        'inventory.item_description',
+                        'inventory.serial_number',
                         'bl_code',
                         'date_borrowed',
                         'date_returned'
