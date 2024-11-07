@@ -4,17 +4,13 @@ namespace app\controllers;
 
 use app\models\Ticket;
 
-use yii\db\Expression;
 use yii\web\Controller;
 
-use yii\bootstrap5\Html;
 use app\models\TimeEntry;
-use app\models\UserSearch;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use app\models\UserActiveSearch;
 use yii\data\ActiveDataProvider;
-use app\models\UserInactiveSearch;
+use yii\data\ArrayDataProvider;
 
 /**
  * ReportsController
@@ -79,70 +75,25 @@ class ReportsController extends Controller
      */
     public function actionMasterTicketSummary()
     {
-        $query = (
-            Ticket::find()->SELECT(['ticket.id AS ticket_id',
-                'ticket.summary AS summary',
-                'ticket.requester AS requester',
-                'customer_type.name AS customer_type',
-                'district.name AS district',
-                'b1.name AS district_building',
-                'division.name AS division',
-                'department.name AS department',
-                'b2.name AS department_building',
-                // subqueries
-                'tech_time' => TimeEntry::find()
-                ->SELECT(['SUM(tech_time)'])
-                ->WHERE('time_entry.ticket_id = ticket.id'),
-                'overtime' => TimeEntry::find()
-                ->SELECT(['SUM(overtime)'])
-                ->WHERE('time_entry.ticket_id = ticket.id'),
-                'travel_time' => TimeEntry::find()
-                ->SELECT(['SUM(travel_time)'])
-                ->WHERE('time_entry.ticket_id = ticket.id'),
-                'itinerate_time' => TimeEntry::find()
-                ->SELECT(['SUM(itinerate_time)'])
-                ->WHERE('time_entry.ticket_id = ticket.id'),
-                //  previously billed column should be yes/no instead of 1/0
-                // 'previously_billed' => Ticket::find()
-                //  ->SELECT("(CASE WHEN 'ticket.billed=1' THEN 'Yes' ELSE 'No' END)")
-            ])
-            ->JOIN('LEFT JOIN', 'customer_type', 'ticket.customer_type_id = customer_type.id')
-            ->JOIN('LEFT JOIN', 'division', 'ticket.division_id = division.id')
-            ->JOIN('LEFT JOIN', 'department', 'ticket.department_id = department.id')
-            ->JOIN('LEFT JOIN', 'district', 'ticket.district_id = district.id')
-            ->JOIN('LEFT JOIN', 'department_building', 'ticket.department_building_id = department_building.id')
-            ->JOIN('LEFT JOIN', 'district_building', 'ticket.district_building_id = district_building.id')
-            ->JOIN('LEFT JOIN', 'building b1', 'district_building.building_id = b1.id')
-            ->JOIN('LEFT JOIN', 'building b2', 'department_building.building_id = b2.id;')
-        );
+        $query = Ticket::getMasterTicketSummaryQuery();
         
-            $dataProvider = new ActiveDataProvider([
-                'pagination' => false,
-                // 'pagination' => [
-                //     'pageSize' => 10,
-                // ],
-                'query' => $query,
+        // use an array data provider instead since ActiveDataProvider is causing some weird issues:
+        // we are likely missing or incorrectly implemented the 'hasOne' or 'hasMany' relationships in ticket/district/division/building/time_entry
+        // because this would take a while to find out, i opt for an ArrayDataProvider instead, which is much more simple and relies on the aliases for each
+        // field in the select query. - TW
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $query->asArray()->all()
         ]);
 
         $gridColumns = [
             ['class' => 'kartik\grid\SerialColumn'],
             [
                 'attribute' => 'ticket_id',
-                'label' => 'Ticket ID',
+                'label' => 'Ticket ID', // 'd' wont be capitalized if only 'ticket_id' is provided to the gridColumn array
             ],
             'summary',
             'requester',
-            [
-                'attribute' => 'customer type',
-                'label' => 'Customer type',
-                'value' => function($model) {
-                    if ($model->customer_type_id != NULL) {
-                        return $model->customer_type_id;
-                    } else {
-                        return NULL;
-                    }
-                }
-            ],
+            'customer_type',
             'district',
             'district_building',
             'division',
