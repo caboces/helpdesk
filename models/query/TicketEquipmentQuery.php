@@ -3,11 +3,11 @@
 namespace app\models\query;
 
 /**
- * This is the ActiveQuery class for [[\app\models\Asset]].
+ * This is the ActiveQuery class for [[\app\models\TicketEquipment]].
  *
- * @see \app\models\Asset
+ * @see \app\models\TicketEquipment
  */
-class AssetQuery extends \yii\db\ActiveQuery
+class TicketEquipmentQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {
@@ -16,7 +16,7 @@ class AssetQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\models\Asset[]|array
+     * @return \app\models\TicketEquipment[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class AssetQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\models\Asset|array|null
+     * @return \app\models\TicketEquipment|array|null
      */
     public function one($db = null)
     {

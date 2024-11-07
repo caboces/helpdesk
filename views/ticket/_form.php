@@ -33,15 +33,15 @@ use yii\bootstrap5\ButtonDropdown;
         Modal::end(); 
         ?>
 
-        <!-- modal window for asset entries -->
+        <!-- modal window for ticket_equipment entries -->
         <?php 
         Modal::begin([
-                'title' => 'Add Assets',
-                'id' => 'asset-modal',
+                'title' => 'Add Ticket Equipment',
+                'id' => 'ticket-equipment-modal',
                 'size' => 'modal-lg',
         ]);
 
-        echo '<div id="asset-modal-content"></div>';
+        echo '<div id="ticket-equipment-modal-content"></div>';
 
         Modal::end(); 
         ?>
@@ -63,12 +63,12 @@ use yii\bootstrap5\ButtonDropdown;
                         'aria-expanded' => 'false',
                         'aria-controls' => '#tech-note',
                 ]); ?>
-                <!-- Add asset -->
+                <!-- Add ticket-equipment -->
                 <?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
                                 <path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
-                        </svg> Add asset', [
-                        'value' => Url::to('/asset/create?id=' . $model->id),
-                        'id' => 'asset-modal-button',
+                        </svg> Add ticket equipment', [
+                        'value' => Url::to('/ticket_equipment/create?id=' . $model->id),
+                        'id' => 'ticket-equipment-modal-button',
                         'class' => 'btn btn-primary bg-iris border-iris',
                         // disable if creating a new ticket
                         'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
@@ -453,6 +453,7 @@ use yii\bootstrap5\ButtonDropdown;
                         <div class="subsection-info-block">
                                 <h2>Equipment</h2>
                                 <p>Equipment associated with this ticket</p>
+                                <!-- Ticket equipment entry -->
                         </div>
                 </div>
                 <div class="tab-pane fade" id="pills-time-entries" role="tabpanel" aria-labelledby="pills-time-entries-tab">

@@ -251,12 +251,12 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
-     * Junction relation to get assets attached to a ticket via asset table
+     * Junction relation to get ticket equipments attached to a ticket via ticket_equipment table
      *
      * */
-    public function getAssets()
+    public function getTicketEquipments()
     {
-        return $this->hasMany(Asset::class,['id'=>'ticket_id'])->viaTable('{{%asset}}',['ticket_id'=>'id']); 
+        return $this->hasMany(TicketEquipment::class,['id'=>'ticket_id'])->viaTable('{{%ticket_equipment}}',['ticket_id'=>'id']); 
     }
 
     /**

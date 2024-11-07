@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Asset;
+use app\models\TicketEquipment;
 
 /**
- * AssetSearch represents the model behind the search form of `app\models\Asset`.
+ * TicketEquipmentSearch represents the model behind the search form of `app\models\TicketEquipment`.
  */
-class AssetSearch extends Asset
+class TicketEquipmentSearch extends TicketEquipment
 {
     /**
      * {@inheritdoc}
@@ -17,7 +17,7 @@ class AssetSearch extends Asset
     public function rules()
     {
         return [
-            [['id', 'ticket_id', 'asset_tag'], 'integer'],
+            [['id', 'ticket_id', 'new_prop_tag'], 'integer'],
             [['created', 'modified'], 'safe'],
         ];
     }
@@ -40,7 +40,7 @@ class AssetSearch extends Asset
      */
     public function search($params)
     {
-        $query = Asset::find();
+        $query = TicketEquipment::find();
 
         // add conditions that should always apply here
 
@@ -60,7 +60,7 @@ class AssetSearch extends Asset
         $query->andFilterWhere([
             'id' => $this->id,
             'ticket_id' => $this->ticket_id,
-            'asset_tag' => $this->asset_tag,
+            'asset_tag' => $this->new_prop_tag,
             'created' => $this->created,
             'modified' => $this->modified,
         ]);

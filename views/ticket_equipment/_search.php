@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var app\models\AssetSearch $model */
+/** @var app\models\TicketEquipmentSearch $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<div class="asset-search">
+<div class="ticket-equipment-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'ticket_id') ?>
 
-    <?= $form->field($model, 'asset_tag') ?>
+    <?= $form->field($model, 'new_prop_tag') ?>
 
     <?= $form->field($model, 'created') ?>
 

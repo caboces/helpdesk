@@ -4,19 +4,19 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var app\models\Asset $model */
+/** @var app\models\TicketEquipment $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<div class="asset-form">
+<div class="ticket-equipment-form">
 
     <?php $form = ActiveForm::begin([
-        'id' => 'add-asset-form',
+        'id' => 'add-ticket-equipment-form',
         'enableClientValidation' => true,
         'validateOnSubmit' => true,
     ]); ?>
 
-    <div class="assets-container">
+    <div class="ticket-equipment-container">
         <div class="question-box-no-trim">
             <?= $form->field($model, 'last_modified_by_user_id', [
                         'template' => '{input}',
@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
             ?>
             <div class="row">
                 <div class="col">
-                    <?= $form->field($model, 'asset_tag')->textInput() ?>
+                    <?= $form->field($model, 'new_prop_tag')->textInput() ?>
                 </div>
                 <div class="col">
                     <?= $form->field($model, 'ticket_id', ['inputOptions' => ['value' => $ticket->id]])->textInput(['readonly' => true, 'class' => 'read-only form-control']) ?>
@@ -43,10 +43,10 @@ use yii\widgets\ActiveForm;
 
 
     <div class="form-group">
-        <?= Html::submitButton('Confirm asset', [
-            'id' => 'confirm-asset',
+        <?= Html::submitButton('Confirm ticket equipment', [
+            'id' => 'confirm-ticket-equipment',
             'class' => 'mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan',
-            'form' => 'add-asset-form',
+            'form' => 'add-ticket-equipment-form',
         ]); ?>
     </div>
 
