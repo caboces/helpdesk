@@ -1,24 +1,24 @@
 <?php
 
-use app\models\Asset;
+use app\models\TicketEquipment;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 /** @var yii\web\View $this */
-/** @var app\models\AssetSearch $searchModel */
+/** @var app\models\TicketEquipmentSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Assets';
+$this->title = 'Ticket Equipment';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="asset-index">
+<div class="ticket-equipment-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Asset', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Ticket Equipment', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -32,12 +32,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'ticket_id',
-            'asset_tag',
+            'new_prop_tag',
             'created',
             'modified',
             [
                 'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Asset $model, $key, $index, $column) {
+                'urlCreator' => function ($action, TicketEquipment $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }
             ],

@@ -100,10 +100,10 @@ $('#confirm-time-entry').submit(function(e) {
 =========================================================================================== */
 
 /**
- * Get click of new asset button from ticket form.
- * Opens a modal window for creating asset entries.
+ * Get click of new ticket equipment button from ticket form.
+ * Opens a modal window for creating ticket equipment entries.
  */
-$('#asset-modal-button').click(function () {
+$('#ticket-equipment-modal-button').click(function () {
     $('#asset-modal').modal('show')
     .find('#asset-modal-content')
     .load($(this).attr('value'));
@@ -112,8 +112,8 @@ $('#asset-modal-button').click(function () {
 /**
  * Close TimeEntry modal instead of redirecting to view-view
  */
-$('#confirm-asset').submit(function(e) {
+$('#confirm-ticket-equipment').submit(function(e) {
     // e.preventDefault();
-    $('#asset-modal').modal('hide');
+    $('#ticket-equipment-modal').modal('hide');
 
 });
