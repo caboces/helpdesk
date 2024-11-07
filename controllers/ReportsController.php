@@ -77,7 +77,10 @@ class ReportsController extends Controller
     {
         $query = Ticket::getMasterTicketSummaryQuery();
         
-
+        // use an array data provider instead since ActiveDataProvider is causing some weird issues:
+        // we are likely missing or incorrectly implemented the 'hasOne' or 'hasMany' relationships in ticket/district/division/building/time_entry
+        // because this would take a while to find out, i opt for an ArrayDataProvider instead, which is much more simple and relies on the aliases for each
+        // field in the select query. - TW
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->asArray()->all()
         ]);
@@ -86,14 +89,11 @@ class ReportsController extends Controller
             ['class' => 'kartik\grid\SerialColumn'],
             [
                 'attribute' => 'ticket_id',
-                'label' => 'Ticket ID',
+                'label' => 'Ticket ID', // 'd' wont be capitalized if only 'ticket_id' is provided to the gridColumn array
             ],
             'summary',
             'requester',
-            [
-                'attribute' => 'customer_type',
-                'label' => 'Customer Type',
-            ],
+            'customer_type',
             'district',
             'district_building',
             'division',

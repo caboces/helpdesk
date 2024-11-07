@@ -277,6 +277,11 @@ class Ticket extends \yii\db\ActiveRecord
         return new \app\models\query\TicketQuery(get_called_class());
     }
 
+    /**
+     * Get the master ticket summary query
+     * 
+     * @return yii\db\ActiveQuery
+     */
     public static function getMasterTicketSummaryQuery() {
         return Ticket::find()->select(['ticket.id as ticket_id',
             'ticket.summary as summary',
