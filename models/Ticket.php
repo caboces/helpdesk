@@ -277,6 +277,41 @@ class Ticket extends \yii\db\ActiveRecord
         return new \app\models\query\TicketQuery(get_called_class());
     }
 
+    public static function getMasterTicketSummaryQuery() {
+        return Ticket::find()->select(['ticket.id as ticket_id',
+            'ticket.summary as summary',
+            'ticket.requester as requester',
+            'customer_type.name as customer_type',
+            'district.name as district',
+            'b1.name as district_building',
+            'division.name as division',
+            'department.name as department',
+            'b2.name as department_building',
+            'times.tech_time',
+            'times.overtime',
+            'times.travel_time',
+            'times.itinerate_time'])
+            ->leftJoin(
+                // 'times' is the aggregate subquery
+                ['times' => TimeEntry::find()->select(['time_entry.ticket_id as ticket_id', // must select ticket_id to make 'on' clause
+                    'SUM(time_entry.tech_time) as tech_time',
+                    'SUM(overtime) as overtime',
+                    'SUM(travel_time) as travel_time',
+                    'SUM(itinerate_time) as itinerate_time'])
+                    ->groupBy('time_entry.ticket_id')], // must use 'groupBy' so the aggregate functions work since ticket_id is ambiguous in an aggregate context
+                // on clause
+                'times.ticket_id = ticket.id',
+            )
+            ->leftJoin('customer_type', 'ticket.customer_type_id = customer_type.id')
+            ->leftJoin('division', 'ticket.division_id = division.id')
+            ->leftJoin('department', 'ticket.department_id = department.id')
+            ->leftJoin('district', 'ticket.district_id = district.id')
+            ->leftJoin('department_building', 'ticket.department_building_id = department_building.id')
+            ->leftJoin('district_building', 'ticket.district_building_id = district_building.id')
+            ->leftJoin('building b1', 'district_building.building_id = b1.id')
+            ->leftJoin('building b2', 'department_building.building_id = b2.id');
+    }
+
     /**
      * Trims string to length (150) and appends something (ellipsis).
      * Made to trim descriptions in tickets.
