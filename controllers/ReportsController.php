@@ -6,10 +6,8 @@ use app\models\Ticket;
 
 use yii\web\Controller;
 
-use app\models\TimeEntry;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 
 /**

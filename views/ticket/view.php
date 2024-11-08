@@ -61,9 +61,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'id' => 'time-entry-modal-button',
                         'class' => 'btn btn-primary bg-iris border-iris',
         ]); ?>
-        <?= Html::button('Update ticket', [
+        <?= Html::a('Update ticket', ['update', 'id' => $model->id], [
                 'class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark',
-                'id' => 'update',
+                // this option doesn't seem to be working client-side
                 'disabled' => ($model->status == 9 ? true : false),
         ]) ?>
         <?= ButtonDropdown::widget([
