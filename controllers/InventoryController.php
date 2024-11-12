@@ -54,6 +54,10 @@ class InventoryController extends Controller
         ]);
     }
 
+    public function actionCreateLoanedInventory() {
+        return $this->render('createLoanedInventory');
+    }
+
     /**
      * Displays a single Inventory model.
      * @param int $new_prop_tag New Prop Tag
