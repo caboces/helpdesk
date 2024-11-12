@@ -9,9 +9,13 @@ use Yii;
  * 
  * @property id $id
  * @property new_prop_tag $new_prop_tag
- * @property bl_code $bl_code
  * @property date_borrowed $date_borrowed
  * @property date_returned $date_returned
+ * @property borrower_name $borrower_name
+ * @property borrower_email $borrower_email
+ * @property borrower_phone $borrower_phone
+ * @property borrower_loc $borrower_loc
+ * @property borrower_reason $borrower_reason
  */
 class LoanedInventory extends \yii\db\ActiveRecord {
     /**
@@ -35,9 +39,10 @@ class LoanedInventory extends \yii\db\ActiveRecord {
         // Check and see if this is right
         return [
             [['id', 'new_prop_tag'], 'integer'],
-            [['new_prop_tag', 'bl_code', 'date_borrowed'], 'required'],
-            [['bl_code'], 'string', 'max' => 20],
-            [['date_borrowed', 'date_returned'], 'datetime']
+            [['borrower_name', 'borrower_email', 'borrower_phone', 'borrower_loc', 'borrower_reason'], 'string', 'max' => 45],
+            [['borrower_email'], 'email'],
+            [['new_prop_tag', 'date_borrowed', 'borrower_name', 'borrower_phone', 'borrower_loc', 'borrower_reason'], 'required'],
+            [['date_borrowed', 'date_returned'], 'date']
         ];
     }
 
@@ -46,9 +51,13 @@ class LoanedInventory extends \yii\db\ActiveRecord {
         return [
             'id' => 'ID',
             'new_prop_tag' => 'New Prop Tag',
-            'bl_code' => 'Bl Code',
             'date_borrowed' => 'Date Borrowed',
-            'date_returned' => 'Date Returned'
+            'date_returned' => 'Date Returned',
+            'borrower_name' => 'Borrower Name',
+            'borrower_email' => 'Borrower Email',
+            'borrower_phone' => 'Borrower Phone',
+            'borrower_loc' => 'Borrower Location',
+            'borrower_reason' => 'Borrower Reason'
         ];
     }
 
@@ -59,16 +68,6 @@ class LoanedInventory extends \yii\db\ActiveRecord {
      */
     public function getInventory() {
         return $this->hasOne(Inventory::class, ['new_prop_tag' => 'new_prop_tag']);
-    }
-
-    /**
-     * Gets query for [[BlCode]].
-     *
-     * @return \yii\db\ActiveQuery|LocationQuery
-     */
-    public function getBlCode() {
-        // need to create Location class (same error in Inventory class)
-        return $this->hasOne(Location::class, ['bl_code' => 'bl_code']);
     }
 
     /**
@@ -90,6 +89,51 @@ class LoanedInventory extends \yii\db\ActiveRecord {
     }
 
     /**
+     * Gets the borrower's full name.
+     * 
+     * @return 
+     */
+    public function getBorrowerName() {
+        return $this->borrower_name;
+    }
+
+    /**
+     * Gets the borrower's email.
+     * 
+     * @return 
+     */
+    public function getBorrowerEmail() {
+        return $this->borrower_email;
+    }
+
+    /**
+     * Gets the borrower's phone number.
+     * 
+     * @return 
+     */
+    public function getBorrowerPhone() {
+        return $this->borrower_phone;
+    }
+
+    /**
+     * Gets the borrower's location.
+     * 
+     * @return 
+     */
+    public function getBorrowerLocation() {
+        return $this->borrower_loc;
+    }
+
+    /**
+     * Gets the borrower's reason for the loan.
+     * 
+     * @return 
+     */
+    public function getBorrowerReason() {
+        return $this->borrower_reason;
+    }
+
+    /**
      * Returns a query that combines information from `loaned_inventory` and `federated_inventory`.
      * `federated_inventory` is in the inv database and is a table with the FEDERATED engine.
      * 
@@ -101,9 +145,13 @@ class LoanedInventory extends \yii\db\ActiveRecord {
                 'loaned_inventory.new_prop_tag', 
                 'federated_inventory.item_description as item_description', 
                 'federated_inventory.serial_number as serial_number', 
-                'loaned_inventory.bl_code', 
                 'loaned_inventory.date_borrowed', 
-                'loaned_inventory.date_returned'])
+                'loaned_inventory.date_returned',
+                'loaned_inventory.borrower_name',
+                'loaned_inventory.borrower_email',
+                'loaned_inventory.borrower_phone',
+                'loaned_inventory.borrower_loc',
+                'loaned_inventory.borrower_reason'])
             ->innerJoin('federated_inventory', 'loaned_inventory.new_prop_tag = federated_inventory.new_prop_tag');
     }
 }

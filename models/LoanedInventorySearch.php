@@ -14,8 +14,8 @@ class LoanedInventorySearch extends LoanedInventory {
     public function ruless() {
         return [
             [['id', 'new_prop_tag'], 'integer'],
-            [['bl_code'], 'string'],
-            [['date_borrowed', 'date_returned'], 'datetime']
+            [['borrower_name', 'borrower_email', 'borrower_phone', 'borrower_loc', 'borrower_reason'], 'string', 'max' => 45],
+            [['date_borrowed', 'date_returned'], 'date']
         ];
     }
 
@@ -50,15 +50,23 @@ class LoanedInventorySearch extends LoanedInventory {
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'new_prop_tag' => $this->new_prop_tag, 
-            'bl_code' => $this->bl_code,
+            'new_prop_tag' => $this->new_prop_tag,
             'date_borrowed' => $this->date_borrowed,
-            'date_returned' => $this->date_returned
+            'date_returned' => $this->date_returned,
+            'borrower_name' => $this->borrower_name,
+            'borrower_email' => $this->borrower_email,
+            'borrower_phone' => $this->borrower_phone,
+            'borrower_loc' => $this->borrower_loc,
+            'borrower_reason' => $this->borrower_reason
         ]);
 
-        $query->andFilterWhere(['like', 'bl_code', $this->bl_code])
-            ->andFilterWhere(['like', 'date_borrowed', $this->date_borrowed])
-            ->andFilterWhere(['like', 'date_returned', $this->date_returned]);
+        $query->andFilterWhere(['like', 'date_borrowed', $this->date_borrowed])
+            ->andFilterWhere(['like', 'date_returned', $this->date_returned])
+            ->andFilterWhere(['like', 'borrower_name', $this->borrower_name])
+            ->andFilterWhere(['like', 'borrower_email', $this->borrower_email])
+            ->andFilterWhere(['like', 'borrower_phone', $this->borrower_phone])
+            ->andFilterWhere(['like', 'borrower_loc', $this->borrower_loc])
+            ->andFilterWhere(['like', 'borrower_reason', $this->borrower_reason]);
         
         return $dataProvider;
     }

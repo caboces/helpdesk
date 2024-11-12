@@ -97,7 +97,11 @@ $this->title = 'Inventory';
                         ],
                         'inventory.item_description',
                         'inventory.serial_number',
-                        'bl_code',
+                        'borrower_name',
+                        'borrower_email',
+                        'borrower_phone',
+                        'borrower_loc',
+                        'borrower_reason',
                         'date_borrowed',
                         'date_returned'
                     ],
