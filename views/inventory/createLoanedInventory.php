@@ -9,10 +9,10 @@ $this->title = 'Loan Inventory';
     <?php $form = ActiveForm::begin(); ?>
     
     <?= $form->field($model, 'new_prop_tag')->dropDownList($newPropTags); ?>
-    <?= $form->field($model, 'borrower_name')->textInput(['maxlength' => true, 'max' => 50]); ?>
-    <?= $form->field($model, 'borrower_email')->input('email', ['email', 'maxlength' => true, 'max' => 50]); ?>
-    <?= $form->field($model, 'borrower_phone')->input('phone', ['phone', 'maxlength' => true]); ?>
-    <?= $form->field($model, 'borrower_loc')->textarea(['maxlength' => true, 'max' => 50]); ?>
+    <?= $form->field($model, 'borrower_name')->textInput(['maxlength' => true, 'max' => 45]); ?>
+    <?= $form->field($model, 'borrower_email')->input('email', ['email', 'maxlength' => true, 'max' => 45]); ?>
+    <?= $form->field($model, 'borrower_phone')->input('phone', ['phone', 'maxlength' => true, 'max' => 45]); ?>
+    <?= $form->field($model, 'borrower_loc')->input(['maxlength' => true, 'max' => 45]); ?>
     <?= $form->field($model, 'borrower_reason')->textarea(['maxlength' => true, 'max' => 200]); ?>
     <?= $form->field($model, 'date_borrowed')->input('date', ['date', 'value' => date('Y-m-d')]); ?>
     <div class="form-group">
