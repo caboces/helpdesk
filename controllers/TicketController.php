@@ -168,9 +168,9 @@ class TicketController extends Controller
         // users
         $assignedTechData = TechTicketAssignment::getTechNamesFromTicketId($model);
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
-
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+            // if validation fails, this will not work
+            if ($model->load($this->request->post()) && $model->save(false)) {
 
                 if (!empty($_POST['Ticket']['users'])) {
                     foreach ($_POST['Ticket']['users'] as $user_id) {
@@ -182,13 +182,16 @@ class TicketController extends Controller
                 }
 
                 return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                // make a better ticket creation failure?
+                dd('I couldnt save the ticket.... its over.....');
             }
         } else {
             $model->loadDefaultValues();
         }
 
         $this->layout = 'blank-container';
-
+        
         return $this->render('create', [
             'model' => $model,
             // search time entries

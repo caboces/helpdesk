@@ -22,28 +22,28 @@ use yii\bootstrap5\ButtonDropdown;
 <div class="ticket-form">
         <!-- modal window for time entries -->
         <?php 
-        Modal::begin([
-                'title' => 'Add Times',
-                'id' => 'time-entry-modal',
-                'size' => 'modal-lg',
-        ]);
+        // Modal::begin([
+        //         'title' => 'Add Times',
+        //         'id' => 'time-entry-modal',
+        //         'size' => 'modal-lg',
+        // ]);
 
-        echo '<div id="time-entry-modal-content"></div>';
+        // echo '<div id="time-entry-modal-content"></div>';
 
-        Modal::end(); 
+        // Modal::end(); 
         ?>
 
         <!-- modal window for ticket_equipment entries -->
         <?php 
-        Modal::begin([
-                'title' => 'Add Ticket Equipment',
-                'id' => 'ticket-equipment-modal',
-                'size' => 'modal-lg',
-        ]);
+        // Modal::begin([
+        //         'title' => 'Add Ticket Equipment',
+        //         'id' => 'ticket-equipment-modal',
+        //         'size' => 'modal-lg',
+        // ]);
 
-        echo '<div id="ticket-equipment-modal-content"></div>';
+        // echo '<div id="ticket-equipment-modal-content"></div>';
 
-        Modal::end(); 
+        // Modal::end(); 
         ?>
 
         <?php $form = ActiveForm::begin(); ?>
@@ -431,20 +431,28 @@ use yii\bootstrap5\ButtonDropdown;
                                                 'pluginOptions' => [
                                                         'allowClear' => true,
                                                         'multiple' => true
-                                                ],
-                                                'pluginEvents' => [
-                                                        'change' => 'function(data) {
-                                                                       var data_id = $(this).val();
-                                                                       $("input#target").val($(this).val());
-                                                        }',
                                                 ]
                                         ]);?>
                                         <!-- primary tech assignment -->
                                         <?= $form->field($model, 'primary_tech_id')
                                         ->dropDownList(ArrayHelper::map($assignedTechData, 'user_id', 'username'),
-                                                [
-                                                        'prompt' => 'Select Primary Tech'
-                                                ]
+                                                // this has to be an inline javascript function for 'onclick' since theres no option like with kartik to add plug jquery events
+                                                ['onclick' => '// populate based on whats selected in the assigned techs box. array
+                                                        var $dropdown = $(this)
+                                                        // clear dropdown of selection
+                                                        const $selected = $dropdown.find(":selected")
+                                                        $dropdown.children().not($selected).remove()
+                                                        var ids = $(`#ticket-users`).val()
+                                                        ids.forEach((elem) => {
+                                                                // dont add the same element twice
+                                                                if (elem == $selected.val()) {
+                                                                        return;
+                                                                }
+                                                                $dropdown.append($("<option>", {
+                                                                        text: $(`#ticket-users`).find(`option[value="${elem}"]`).text(),
+                                                                        value: elem 
+                                                                }))
+                                                        })']
                                         );?>
                                 </div>
                         </div>
