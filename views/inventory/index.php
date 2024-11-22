@@ -29,8 +29,8 @@ $this->title = 'Inventory';
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Reset filters', ['index'], ['class' => 'btn btn-secondary']); ?>
-        <?= Html::a('New loaned inventory', ['createLoanedInventory'], ['class' => 'btn btn-primary bg-purple border-purple text-white']) ?>
-        <?= Html::a('Return loaned inventory', ['returnLoanedInventory'], ['class' => 'btn btn-primary bg-purple border-purple text-white']) ?>
+        <?= Html::a('New loaned inventory', ['/inventory/create-loaned-inventory'], ['class' => 'btn btn-primary bg-purple border-purple text-white']) ?>
+        <?= Html::a('Return loaned inventory', ['/inventory/return-loaned-inventory'], ['class' => 'btn btn-primary bg-purple border-purple text-white']) ?>
     </div>
 
     <!-- pill nav -->

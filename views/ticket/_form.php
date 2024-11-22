@@ -22,28 +22,28 @@ use yii\bootstrap5\ButtonDropdown;
 <div class="ticket-form">
         <!-- modal window for time entries -->
         <?php 
-        // Modal::begin([
-        //         'title' => 'Add Times',
-        //         'id' => 'time-entry-modal',
-        //         'size' => 'modal-lg',
-        // ]);
+        Modal::begin([
+                'title' => 'Add Times',
+                'id' => 'time-entry-modal',
+                'size' => 'modal-lg',
+        ]);
 
-        // echo '<div id="time-entry-modal-content"></div>';
+        echo '<div id="time-entry-modal-content"></div>';
 
-        // Modal::end(); 
+        Modal::end(); 
         ?>
 
         <!-- modal window for ticket_equipment entries -->
         <?php 
-        // Modal::begin([
-        //         'title' => 'Add Ticket Equipment',
-        //         'id' => 'ticket-equipment-modal',
-        //         'size' => 'modal-lg',
-        // ]);
+        Modal::begin([
+                'title' => 'Add Ticket Equipment',
+                'id' => 'ticket-equipment-modal',
+                'size' => 'modal-lg',
+        ]);
 
-        // echo '<div id="ticket-equipment-modal-content"></div>';
+        echo '<div id="ticket-equipment-modal-content"></div>';
 
-        // Modal::end(); 
+        Modal::end(); 
         ?>
 
         <?php $form = ActiveForm::begin(); ?>

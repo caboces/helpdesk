@@ -39,10 +39,11 @@ class LoanedInventory extends \yii\db\ActiveRecord {
         // Check and see if this is right
         return [
             [['id', 'new_prop_tag'], 'integer'],
-            [['borrower_name', 'borrower_email', 'borrower_phone', 'borrower_loc', 'borrower_reason'], 'string', 'max' => 45],
+            [['borrower_name', 'borrower_email', 'borrower_phone', 'borrower_loc'], 'string', 'max' => 45],
+            [['borrower_reason'], 'string', 'max' => 200],
             [['borrower_email'], 'email'],
             [['new_prop_tag', 'date_borrowed', 'borrower_name', 'borrower_phone', 'borrower_loc', 'borrower_reason'], 'required'],
-            [['date_borrowed', 'date_returned'], 'date']
+            [['date_borrowed', 'date_returned'], 'date', 'format' => 'php:Y-m-d']
         ];
     }
 
