@@ -2,13 +2,17 @@
 
 namespace app\controllers;
 
+use app\models\HourlyRate;
 use app\models\Ticket;
-
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\data\ArrayDataProvider;
+use yii\grid\ActionColumn;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * ReportsController
@@ -59,10 +63,99 @@ class ReportsController extends Controller
      */
     public function actionBillingDetailReport()
     {
-        // $dataProvider = 
+        // $ticketQuery = Ticket::find()->getBillingDetailReportQuery();
+        $ticketQuery = Ticket::find()->with('timeEntries');
+        
+        $dataProvider = new ActiveDataProvider([
+            'query' => $ticketQuery
+        ]);
+
+        // $dataProvider = new ArrayDataProvider([
+        //     'allModels' => $ticketQuery->asArray()->all()
+        // ]);
+
+        // dd($dataProvider->getModels());
+
+        $gridColumns = [
+            [
+                'class' => ActionColumn::class,
+                'template' => '{view}',
+                'urlCreator' => function ($action, $model, $key, $index, $column) {
+                    return Url::toRoute(['/ticket/view', 'id' => $model->id]);
+                }
+            ],
+            [
+                'attribute' => 'ticket_id',
+                'label' => 'Ticket ID',
+            ],
+            [
+                'attribute' => 'billed',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return $model->billed?
+                            // checkmark (doesnt work)
+                        Html::decode('<svg width="16" height="16" class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>')
+                            :
+                            // cross/x/cancel (works)
+                        Html::decode('<svg fill="#000000" width="16px" height="16px" viewBox="0 0 24 24" data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color"><line id="primary" x1="19" y1="19" x2="5" y2="5" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></line><line id="primary-2" data-name="primary" x1="19" y1="5" x2="5" y2="19" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></line></svg>');
+                },
+                'label' => 'Billed'
+            ],
+            'summary',
+            'requester',
+            [
+                'attribute' => 'customer_type',
+                'value' => function($model) {
+                    return $model->customerType? $model->customerType->name : '';
+                }
+            ],
+            'tech_time',
+            'overtime',
+            'travel_time',
+            'itinerate_time',
+        ];
+
+        $laborRatesDataProvider = new ActiveDataProvider([
+            'query' => HourlyRate::find()->with('jobType')
+                ->where('\'' . date('Y-m-d') . '\' between first_day_effective and last_day_effective'),
+            'sort' => [
+                'defaultOrder' => [
+                    'last_day_effective' => SORT_ASC
+                ]
+            ]
+        ]);
+
+        $laborRatesColumns = [
+            [
+                'attribute' => 'job_type_name',
+                'value' => function($model) {
+                    return $model->jobType->name;
+                },
+                'label' => 'Job Type'
+            ],
+            [
+                'attribute' => 'rate',
+                'value' => function($model) {
+                    return $model->rate? '$' . $model->rate : ''; 
+                }
+            ],
+            [
+                'attribute' => 'summer_rate',
+                'value' => function($model) {
+                    return $model->summer_rate? '$' . $model->summer_rate : '';
+                }
+            ],
+            'first_day_effective', 
+            'last_day_effective'
+        ];
 
         $this->layout = 'blank';
-        return $this->render('billing-detail-report');
+        return $this->render('billing-detail-report', [
+            'dataProvider' => $dataProvider,
+            'gridColumns' => $gridColumns,
+            'laborRatesDataProvider' => $laborRatesDataProvider,
+            'laborRatesColumns' => $laborRatesColumns,
+        ]);
     }
 
     /**
@@ -84,7 +177,13 @@ class ReportsController extends Controller
         ]);
 
         $gridColumns = [
-            ['class' => 'kartik\grid\SerialColumn'],
+            [
+                'class' => ActionColumn::class,
+                'template' => '{view}',
+                'urlCreator' => function ($action, $model, $key, $index, $column) {
+                    return Url::toRoute(['/ticket/view', 'id' => $model['ticket_id']]);
+                }
+            ],
             [
                 'attribute' => 'ticket_id',
                 'label' => 'Ticket ID', // 'd' wont be capitalized if only 'ticket_id' is provided to the gridColumn array

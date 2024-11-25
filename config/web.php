@@ -69,6 +69,10 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
         ],
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'nullDisplay' => '', // Set nullDisplay to an empty string
+        ],
     ],
     'modules' => [
         'gridview' =>  [

@@ -247,7 +247,7 @@ class Ticket extends \yii\db\ActiveRecord
      * Relation to get time entries attached to ticket via TimeEntry table
      */
     public function getTimeEntries() {
-        return $this->hasMany(TimeEntry::class, ['id'=>'ticket_id'])->viaTable('{{%time_entry}}', ['ticket_id'=>'id']);
+        return $this->hasMany(TimeEntry::class, ['ticket_id'=>'id']);
     }
 
     /**
@@ -354,5 +354,48 @@ class Ticket extends \yii\db\ActiveRecord
             ->leftJoin('job_type', 'ticket.job_type_id = job_type.id')
             ->asArray()
             ->one();
+    }
+
+    /**
+     * Get the billing detail report query by month or year
+     * 
+     * @return yii\db\ActiveQuery
+     */
+    public static function getBillingDetailReportQuery($years = null, $months = null) {
+        $queryObject = Ticket::find()->select([
+            'ticket.id as ticket_id',
+            'ticket.billed as billed',
+            'ticket.summary as summary',
+            'ticket.requester as requester',
+            'customer_type.name as customer_type',
+            'times.tech_time',
+            'times.overtime',
+            'times.travel_time',
+            'times.itinerate_time'
+        ])
+        ->leftJoin(
+            // 'times' is the aggregate subquery
+            ['times' => TimeEntry::find()->select([
+                'time_entry.ticket_id as ticket_id', // must select ticket_id to make 'on' clause
+                'SUM(time_entry.tech_time) as tech_time',
+                'SUM(overtime) as overtime',
+                'SUM(travel_time) as travel_time',
+                'SUM(itinerate_time) as itinerate_time'
+            ])->groupBy('time_entry.ticket_id')], // must use 'groupBy' so the aggregate functions work since ticket_id is ambiguous in an aggregate context
+            // on clause
+            'times.ticket_id = ticket.id',
+        )
+        ->leftJoin('customer_type', 'ticket.customer_type_id = customer_type.id');
+        $whereClause = ['and'];
+        if (isset($months)) {
+            $whereClause[] = ['month(ticket.created)' => $months];
+        }
+        if (isset($years)) {
+            $whereClause[] = ['year(ticket.created)' => $years];
+        }
+        if (count($whereClause) > 1) {
+            $queryObject->where($whereClause);
+        }
+        return $queryObject;
     }
 }
