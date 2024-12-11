@@ -30,6 +30,7 @@ $this->title = 'Technician Monthly Report';
                     $availableYears[$currentYear - $i] = $currentYear - $i;
                 }
                 $months = [
+                    '00' => 'All Months',
                     '01' => 'January', 
                     '02' => 'February', 
                     '03' => 'March', 

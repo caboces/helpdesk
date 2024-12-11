@@ -358,7 +358,10 @@ class Ticket extends \yii\db\ActiveRecord
     public static function getBillingDetailReportQueryDivisionDepartment($month, $year) {
         $startDay = $year . '-' . $month . '-01'; // start day
         $endDay = date('Y-m-t', strtotime($startDay));
-        
+        if ($month == '00') { // All months
+            $startDay = $year.'-01-01';
+            $endDay = $year.'-12-31';
+        }
         return Ticket::find()->select([
             'customer_type.code AS code',
             'division.name AS division_name',
@@ -402,6 +405,10 @@ class Ticket extends \yii\db\ActiveRecord
     public static function getSupportAndRepairLaborBillingReport($month, $year, $jobType) {
         $startDay = $year . '-' . $month . '-01'; // start day
         $endDay = date('Y-m-t', strtotime($startDay));
+        if ($month == '00') { // All months
+            $startDay = $year.'-01-01';
+            $endDay = $year.'-12-31';
+        }
         return Yii::$app->getDb()->createCommand("
             SELECT `customer_type`.`code` AS code,
             `division`.`name` AS `division_name`,
@@ -443,13 +450,19 @@ class Ticket extends \yii\db\ActiveRecord
     public static function getPartBillingSummary($month, $year) {
         $startDay = $year . '-' . $month . '-01'; // start day
         $endDay = date('Y-m-t', strtotime($startDay));
+        if ($month == '00') { // All months
+            $startDay = $year.'-01-01';
+            $endDay = $year.'-12-31';
+        }
         return Ticket::find()->select([
+            'customer_type.code',
             'division.name as division_name',
             'department.name as department_name',
             'district.name as district_name',
             'building.name as building_name',
             'parts.totals as parts_totals'
-        ])->leftJoin('division', 'ticket.division_id = division.id')
+        ])->leftJoin('customer_type', 'ticket.customer_type_id = customer_type.id')
+        ->leftJoin('division', 'ticket.division_id = division.id')
         ->leftJoin('department', 'ticket.department_id = department.id')
         ->leftJoin('district', 'ticket.district_id = district.id')
         ->leftJoin('district_building', 'ticket.district_building_id = district_building.id')

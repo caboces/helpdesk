@@ -340,36 +340,25 @@ class ReportsController extends Controller
         ]);
         $gridColumns = [
             [
-                'attribute' => 'fname',
-                'label' => 'Full Name',
-                'value' => function($model) {
-                    return $model['fname'] . ' ' . $model['lname'];
-                }
+                'attribute' => 'code'
             ],
             [
-                'attribute' => 'email',
-                'label' => 'Email',
+                'label' => 'Division > Department / District > Building',
                 'format' => 'raw',
                 'value' => function($model) {
-                    return Html::a($model['email'], 'mailto:' . $model['email']);
+                    if ($model['code'] == 'BOCES') {
+                        return Html::decode($model['division_name'].'&nbsp;>&nbsp;'.$model['department_name']);
+                    } else if ($model['code'] == 'DISTRICT') {
+                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
+                    } else if ($model['code'] == 'EXTERNAL') {
+                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
+                    }
                 }
             ],
             [
-                'attribute' => 'tech_time',
-                'label' => 'Tech Time'
+                'attribute' => 'parts_totals',
+                'label' => 'Parts Totals'
             ],
-            [
-                'attribute' => 'overtime',
-                'label' => 'Overtime'
-            ],
-            [
-                'attribute' => 'travel_time',
-                'label' => 'Travel Time'
-            ],
-            [
-                'attribute' => 'itinerate_time',
-                'label' => 'Itinerate Time'
-            ]
         ];
 
         $this->layout = 'blank';

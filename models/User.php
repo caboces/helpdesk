@@ -277,6 +277,10 @@ class User extends ActiveRecord implements IdentityInterface
     public static function getTechnicianMonthlyReport($month, $year) {
         $startDay = $year . '-' . $month . '-01'; // start day
         $endDay = date('Y-m-t', strtotime($startDay));
+        if ($month == '00') { // All months
+            $startDay = $year.'-01-01';
+            $endDay = $year.'-12-31';
+        }
         return User::find()->select([
             'user.fname',
             'user.lname',
