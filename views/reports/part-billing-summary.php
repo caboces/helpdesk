@@ -3,15 +3,13 @@
 use yii\helpers\Html;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 
-$this->title = 'Support and Repair Labor Billing Report';
+$this->title = 'Part Billing Summary';
 ?>
-<div class="support-and-repair-labor-billing">
-
+<div class="reports-billing-detail-report">
     <div class="title-icon d-flex align-items-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16" aria-hidden="true">
             <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"/>
@@ -52,10 +50,6 @@ $this->title = 'Support and Repair Labor Billing Report';
             <?= Html::dropDownList('month', $month, $months, [
                 'text' => 'Select a month', 'class' => 'form-control'
             ]); ?>
-            <?= Html::label('Job Type', 'jobType', ['class' => 'form-label']); ?>
-            <?= Html::dropDownList('jobType', $jobType, $jobTypes, [
-                'text' => 'Select a job type', 'class' => 'form-control'
-            ]); ?>
             <?= Html::submitButton('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16" aria-hidden="true">
                         <path d="M11 2H9v3h2z"/>
                         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
@@ -64,26 +58,27 @@ $this->title = 'Support and Repair Labor Billing Report';
             ); ?>
             <?= Html::endForm(); ?>
         </div>
-        <p>This report returns the reported tech times for either tech labor or visual production by division, district, department, and building.</p>
+        <p>This report returns the total costs of parts each district or divison used in the specified month and year.</p>
         <p><?php
             if (!array_key_exists($month, $months)) {
                 echo 'You are viewing an invalid report.';
-            } else if (!array_key_exists($jobType, $jobTypes)) {
-                dd($jobTypes);
-                echo 'You are viewing an invalid report.';
             } else {
-                echo Html::tag('span', 'You are viewing the ' . Html::tag('strong', Html::encode($months[$month] . ' ' . $year)) . ' report for ' . Html::tag('strong', Html::encode($jobTypes[$jobType])) . ' work.'); 
+                echo Html::tag('span', 'You are viewing the ' . Html::tag('strong', Html::encode($months[$month] . ' ' . $year)) . ' report.'); 
             } 
         ?></p>
         <?php
             echo ExportMenu::widget([
                 'dataProvider' => $dataProvider,
                 'columns' => $gridColumns,
+                'dropdownOptions' => [
+                    'label' => 'Export All',
+                    'class' => 'btn btn-outline-secondary btn-default'
+                ]
             ]) . "<hr>\n" .
             GridView::widget([
                 'dataProvider' => $dataProvider,
                 'columns' => $gridColumns,
-            ]);
+            ]); 
         ?>
     </div>
 </div>

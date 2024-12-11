@@ -3,7 +3,13 @@
 namespace app\controllers;
 
 use app\models\HourlyRate;
+use app\models\JobType;
+use app\models\Part;
 use app\models\Ticket;
+use app\models\User;
+use kartik\grid\ExpandRowColumn;
+use kartik\grid\GridView as GridGridView;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 
@@ -11,6 +17,8 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\data\ArrayDataProvider;
 use yii\grid\ActionColumn;
+use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -63,58 +71,6 @@ class ReportsController extends Controller
      */
     public function actionBillingDetailReport()
     {
-        // $ticketQuery = Ticket::find()->getBillingDetailReportQuery();
-        $ticketQuery = Ticket::find()->with('timeEntries');
-        
-        $dataProvider = new ActiveDataProvider([
-            'query' => $ticketQuery
-        ]);
-
-        // $dataProvider = new ArrayDataProvider([
-        //     'allModels' => $ticketQuery->asArray()->all()
-        // ]);
-
-        // dd($dataProvider->getModels());
-
-        $gridColumns = [
-            [
-                'class' => ActionColumn::class,
-                'template' => '{view}',
-                'urlCreator' => function ($action, $model, $key, $index, $column) {
-                    return Url::toRoute(['/ticket/view', 'id' => $model->id]);
-                }
-            ],
-            [
-                'attribute' => 'ticket_id',
-                'label' => 'Ticket ID',
-            ],
-            [
-                'attribute' => 'billed',
-                'format' => 'raw',
-                'value' => function($model) {
-                    return $model->billed?
-                            // checkmark (doesnt work)
-                        Html::decode('<svg width="16" height="16" class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>')
-                            :
-                            // cross/x/cancel (works)
-                        Html::decode('<svg fill="#000000" width="16px" height="16px" viewBox="0 0 24 24" data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color"><line id="primary" x1="19" y1="19" x2="5" y2="5" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></line><line id="primary-2" data-name="primary" x1="19" y1="5" x2="5" y2="19" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></line></svg>');
-                },
-                'label' => 'Billed'
-            ],
-            'summary',
-            'requester',
-            [
-                'attribute' => 'customer_type',
-                'value' => function($model) {
-                    return $model->customerType? $model->customerType->name : '';
-                }
-            ],
-            'tech_time',
-            'overtime',
-            'travel_time',
-            'itinerate_time',
-        ];
-
         $laborRatesDataProvider = new ActiveDataProvider([
             'query' => HourlyRate::find()->with('jobType')
                 ->where('\'' . date('Y-m-d') . '\' between first_day_effective and last_day_effective'),
@@ -149,8 +105,65 @@ class ReportsController extends Controller
             'last_day_effective'
         ];
 
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getBillingDetailReportQueryDivisionDepartment($month, $year)->asArray()->all()
+        ]);
+        $gridColumns = [
+            [
+                'attribute' => 'code',
+                'label' => 'Code'
+            ],
+            [
+                'label' => 'Division > Department / District > Building',
+                'format' => 'raw',
+                'value' => function($model) {
+                    if ($model['code'] == 'BOCES') {
+                        return Html::decode($model['division_name'].'&nbsp;>&nbsp;'.$model['department_name']);
+                    } else if ($model['code'] == 'DISTRICT') {
+                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
+                    } else if ($model['code'] == 'EXTERNAL') {
+                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
+                    }
+                }
+            ],
+            [
+                'attribute' => 'id',
+                'label' => 'Ticket ID'
+            ],
+            [
+                'attribute' => 'summary',
+                'label' => 'Summary'
+            ],
+            [
+                'attribute' => 'requester',
+                'label' => 'Requester'
+            ],
+            [
+                'attribute' => 'total_hours',
+                'label' => 'Total Hours'
+            ],
+            [
+                'attribute' => 'parts_cost',
+                'value' => function($model) {
+                    return Yii::$app->formatter->asCurrency($model['parts_cost'], '$');
+                },
+                'label' => 'Parts Cost'
+            ],
+            [
+                'attribute' => 'total_cost',
+                'value' => function($model) {
+                    return Yii::$app->formatter->asCurrency($model['total_cost'], '$');
+                },
+                'label' => 'Total Cost'
+            ]
+        ];
+
         $this->layout = 'blank';
         return $this->render('billing-detail-report', [
+            'year' => $year,
+            'month' => $month,
             'dataProvider' => $dataProvider,
             'gridColumns' => $gridColumns,
             'laborRatesDataProvider' => $laborRatesDataProvider,
@@ -159,19 +172,17 @@ class ReportsController extends Controller
     }
 
     /**
-     * Displays the Support and Repair Labor Billing
+     * displays the master ticket summary 
      * This probably won't be useful, I am using it to test the exporting feature.
      *
      * @return mixed
      */
     public function actionMasterTicketSummary()
     {
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
         $query = Ticket::getMasterTicketSummaryQuery();
         
-        // use an array data provider instead since ActiveDataProvider is causing some weird issues:
-        // we are likely missing or incorrectly implemented the 'hasOne' or 'hasMany' relationships in ticket/district/division/building/time_entry
-        // because this would take a while to find out, i opt for an ArrayDataProvider instead, which is much more simple and relies on the aliases for each
-        // field in the select query. - TW
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->asArray()->all()
         ]);
@@ -204,6 +215,8 @@ class ReportsController extends Controller
 
         $this->layout = 'blank';
         return $this->render('master-ticket-summary', [
+            'month' => $month,
+            'year' => $year,
             'dataProvider' => $dataProvider,
             'gridColumns' => $gridColumns
         ]);
@@ -216,9 +229,155 @@ class ReportsController extends Controller
      */
     public function actionSupportAndRepairLaborBilling()
     {
-        // $dataProvider = 
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $jobType = Yii::$app->getRequest()->getQueryParam('jobType', 5); // 'Troubleshoot' in job_type table
+        $jobTypes = ArrayHelper::map(JobType::find()->where(['id' => [5, 7]])->asArray()->all(), 'id', 'name'); // 5 and 7 are 'Troubleshoot' and 'Audio Visual Production'
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getSupportAndRepairLaborBillingReport($month, $year, $jobType)
+        ]);
+
+        $gridColumns = [
+            [
+                'attribute' => 'code'
+            ],
+            [
+                'label' => 'Division > Department / District > Building',
+                'format' => 'raw',
+                'value' => function($model) {
+                    if ($model['code'] == 'BOCES') {
+                        return Html::decode($model['division_name'].'&nbsp;>&nbsp;'.$model['department_name']);
+                    } else if ($model['code'] == 'DISTRICT') {
+                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
+                    } else if ($model['code'] == 'EXTERNAL') {
+                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
+                    }
+                }
+            ],
+            [
+                'attribute' => 'Tech Time',
+                'label' => 'Tech Time'
+            ],
+            [
+                'attribute' => 'Overtime',
+                'label' => 'Overtime'
+            ],
+            [
+                'attribute' => 'Travel Time',
+                'label' => 'Travel Time'
+            ],
+            [
+                'attribute' => 'Itinerate Time',
+                'label' => 'Itinerate Time'
+            ]
+        ];
 
         $this->layout = 'blank';
-        return $this->render('support-and-repair-labor-billing');
+        return $this->render('support-and-repair-labor-billing', [
+            'month' => $month,
+            'year' => $year,
+            'jobType' => $jobType,
+            'jobTypes' => $jobTypes,
+            'dataProvider' => $dataProvider,
+            'gridColumns' => $gridColumns
+        ]);
+    }
+
+    public function actionTechnicianMonthlyReport() {
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => User::getTechnicianMonthlyReport($month, $year)->asArray()->all()
+        ]);
+        $gridColumns = [
+            [
+                'attribute' => 'fname',
+                'label' => 'Full Name',
+                'value' => function($model) {
+                    return $model['fname'] . ' ' . $model['lname'];
+                }
+            ],
+            [
+                'attribute' => 'email',
+                'label' => 'Email',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return Html::a($model['email'], 'mailto:' . $model['email']);
+                }
+            ],
+            [
+                'attribute' => 'tech_time',
+                'label' => 'Tech Time'
+            ],
+            [
+                'attribute' => 'overtime',
+                'label' => 'Overtime'
+            ],
+            [
+                'attribute' => 'travel_time',
+                'label' => 'Travel Time'
+            ],
+            [
+                'attribute' => 'itinerate_time',
+                'label' => 'Itinerate Time'
+            ]
+        ];
+
+        $this->layout = 'blank';
+        return $this->render('technician-monthly-report',[
+            'month' => $month,
+            'year' => $year,
+            'dataProvider' => $dataProvider,
+            'gridColumns' => $gridColumns
+        ]);
+    }
+
+    public function actionPartBillingSummary() {
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getPartBillingSummary($month, $year)->asArray()->all()
+        ]);
+        $gridColumns = [
+            [
+                'attribute' => 'fname',
+                'label' => 'Full Name',
+                'value' => function($model) {
+                    return $model['fname'] . ' ' . $model['lname'];
+                }
+            ],
+            [
+                'attribute' => 'email',
+                'label' => 'Email',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return Html::a($model['email'], 'mailto:' . $model['email']);
+                }
+            ],
+            [
+                'attribute' => 'tech_time',
+                'label' => 'Tech Time'
+            ],
+            [
+                'attribute' => 'overtime',
+                'label' => 'Overtime'
+            ],
+            [
+                'attribute' => 'travel_time',
+                'label' => 'Travel Time'
+            ],
+            [
+                'attribute' => 'itinerate_time',
+                'label' => 'Itinerate Time'
+            ]
+        ];
+
+        $this->layout = 'blank';
+        return $this->render('part-billing-summary',[
+            'month' => $month,
+            'year' => $year,
+            'dataProvider' => $dataProvider,
+            'gridColumns' => $gridColumns
+        ]);
     }
 }

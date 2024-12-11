@@ -355,47 +355,110 @@ class Ticket extends \yii\db\ActiveRecord
             ->asArray()
             ->one();
     }
+    public static function getBillingDetailReportQueryDivisionDepartment($month, $year) {
+        $startDay = $year . '-' . $month . '-01'; // start day
+        $endDay = date('Y-m-t', strtotime($startDay));
+        
+        return Ticket::find()->select([
+            'customer_type.code AS code',
+            'division.name AS division_name',
+            'department.name AS department_name',
+            'district.name AS district_name',
+            'building.name AS building_name',
+            'ticket.id',
+            'ticket.summary',
+            'ticket.requester',
+            'times.total_hours',
+            'part.parts_cost',
+            'SUM(hourly_rate.rate * times.total_hours) + IFNULL(part.parts_cost, 0) AS total_cost',
+        ])->innerJoin('customer_type', 'ticket.customer_type_id = customer_type.id')
+        ->leftJoin('division', 'ticket.division_id = division.id')
+        ->leftJoin('department', 'ticket.department_id = department.id')
+        ->leftJoin('district', 'ticket.district_id = district.id')
+        ->leftJoin('district_building', 'ticket.district_building_id = district_building.id')
+        ->leftJoin('building', 'building.id = district_building.building_id')
+        ->innerJoin([
+            'times' => TimeEntry::find()->select([
+                'time_entry.ticket_id',
+                'total_hours' => 'IFNULL(SUM(`time_entry`.tech_time)
+                    + SUM(`time_entry`.overtime)
+                    + SUM(`time_entry`.travel_time)
+                    + SUM(`time_entry`.itinerate_time), 0)'
+            ])->where('time_entry.created BETWEEN \'' . $startDay . '\' AND \'' . $endDay . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
+            'times.ticket_id = ticket.id'
+        )->leftJoin([
+            'part' => Part::find()->select([
+                'part.ticket_id',
+                'parts_cost' => 'IFNULL(SUM(`part`.unit_price * `part`.quantity), 0)'
+            ])->groupBy('part.ticket_id')], 
+            'ticket.id = part.ticket_id'
+            // Use the hourly rate that was effective on the first of that month. How would you make it so time_entries split between two hourly_rates would work...?
+        )->innerJoin('hourly_rate', 'ticket.job_type_id = hourly_rate.job_type_id AND :startDay BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective', ['startDay' => $startDay])
+        ->where('division.status = 10 OR district.status = 10')
+        ->groupBy('ticket.id')
+        ->having('total_cost > 0')
+        ->orderBy('division.name ASC, department.name ASC');
+    }
+    public static function getSupportAndRepairLaborBillingReport($month, $year, $jobType) {
+        $startDay = $year . '-' . $month . '-01'; // start day
+        $endDay = date('Y-m-t', strtotime($startDay));
+        return Yii::$app->getDb()->createCommand("
+            SELECT `customer_type`.`code` AS code,
+            `division`.`name` AS `division_name`,
+            `department`.`name` AS `department_name`,
+            `district`.`name` AS `district_name`,
+            `building`.`name` AS `building_name`,
+            `times`.tech_time AS `Tech Time`,
+            `times`.overtime AS `Overtime`,
+            `times`.travel_time AS `Travel Time`,
+            `times`.itinerate_time AS `Itinerate Time`
+            FROM `ticket`
+            INNER JOIN `customer_type`
+                ON `customer_type`.`id` = `ticket`.`customer_type_id`
+            LEFT JOIN `division`
+                ON `ticket`.division_id = `division`.id
+            LEFT JOIN `department`
+                ON `ticket`.department_id = `department`.id
+            LEFT JOIN `district`
+                ON `ticket`.district_id = `district`.id
+            LEFT JOIN `district_building`
+                ON `district`.id = `district_building`.district_id
+            LEFT JOIN `building`
+                ON `district_building`.building_id = `building`.id
+            INNER JOIN (
+                SELECT `time_entry`.ticket_id,
+                    SUM(`time_entry`.tech_time) AS `tech_time`,
+                    SUM(`time_entry`.overtime) AS `overtime`,
+                    SUM(`time_entry`.travel_time) AS `travel_time`,
+                    SUM(`time_entry`.itinerate_time) AS `itinerate_time`
+                FROM `time_entry`
+                WHERE `time_entry`.created BETWEEN :startDay AND :endDay
+                GROUP BY `time_entry`.ticket_id
+            ) `times` ON `times`.ticket_id = `ticket`.id
+            WHERE `ticket`.job_type_id = :jobType
+            ORDER BY `customer_type`.name ASC, `division`.name, `department`.name, `district`.name, `department`.name
+            ;", [':startDay' => $startDay, ':endDay' => $endDay, ':jobType' => $jobType])->queryAll();
+    }
 
-    /**
-     * Get the billing detail report query by month or year
-     * 
-     * @return yii\db\ActiveQuery
-     */
-    public static function getBillingDetailReportQuery($years = null, $months = null) {
-        $queryObject = Ticket::find()->select([
-            'ticket.id as ticket_id',
-            'ticket.billed as billed',
-            'ticket.summary as summary',
-            'ticket.requester as requester',
-            'customer_type.name as customer_type',
-            'times.tech_time',
-            'times.overtime',
-            'times.travel_time',
-            'times.itinerate_time'
-        ])
-        ->leftJoin(
-            // 'times' is the aggregate subquery
-            ['times' => TimeEntry::find()->select([
-                'time_entry.ticket_id as ticket_id', // must select ticket_id to make 'on' clause
-                'SUM(time_entry.tech_time) as tech_time',
-                'SUM(overtime) as overtime',
-                'SUM(travel_time) as travel_time',
-                'SUM(itinerate_time) as itinerate_time'
-            ])->groupBy('time_entry.ticket_id')], // must use 'groupBy' so the aggregate functions work since ticket_id is ambiguous in an aggregate context
-            // on clause
-            'times.ticket_id = ticket.id',
-        )
-        ->leftJoin('customer_type', 'ticket.customer_type_id = customer_type.id');
-        $whereClause = ['and'];
-        if (isset($months)) {
-            $whereClause[] = ['month(ticket.created)' => $months];
-        }
-        if (isset($years)) {
-            $whereClause[] = ['year(ticket.created)' => $years];
-        }
-        if (count($whereClause) > 1) {
-            $queryObject->where($whereClause);
-        }
-        return $queryObject;
+    public static function getPartBillingSummary($month, $year) {
+        $startDay = $year . '-' . $month . '-01'; // start day
+        $endDay = date('Y-m-t', strtotime($startDay));
+        return Ticket::find()->select([
+            'division.name as division_name',
+            'department.name as department_name',
+            'district.name as district_name',
+            'building.name as building_name',
+            'parts.totals as parts_totals'
+        ])->leftJoin('division', 'ticket.division_id = division.id')
+        ->leftJoin('department', 'ticket.department_id = department.id')
+        ->leftJoin('district', 'ticket.district_id = district.id')
+        ->leftJoin('district_building', 'ticket.district_building_id = district_building.id')
+        ->leftJoin('building', 'building.id = district_building.building_id')->innerJoin([
+            'parts' => Part::find()->select([
+                'part.ticket_id',
+                'totals' => 'IFNULL(SUM(part.unit_price * part.quantity), 0)'
+            ])->where('part.created BETWEEN \'' . $startDay . '\' AND \'' . $endDay . '\'')->groupBy('part.ticket_id')->having('totals > 0')],
+            'parts.ticket_id = ticket.id'
+        )->orderBy('division.name, department.name, district.name, department.name');
     }
 }

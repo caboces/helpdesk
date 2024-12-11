@@ -271,4 +271,36 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+    /**
+     * Get the technician monthly report -> tech times for each user
+     */
+    public static function getTechnicianMonthlyReport($month, $year) {
+        $startDay = $year . '-' . $month . '-01'; // start day
+        $endDay = date('Y-m-t', strtotime($startDay));
+        return User::find()->select([
+            'user.fname',
+            'user.lname',
+            'user.email',
+            'SUM(times.tech_time) as tech_time',
+            'SUM(times.overtime) as overtime',
+            'SUM(times.travel_time) as travel_time',
+            'SUM(times.itinerate_time) as itinerate_time'
+        ])->innerJoin('tech_ticket_assignment', 'user.id = tech_ticket_assignment.user_id')
+        ->innerJoin(
+            // 'times' is the aggregate subquery
+            ['times' => TimeEntry::find()->select([
+                'time_entry.ticket_id as ticket_id', // must select ticket_id to make 'on' clause
+                'time_entry.user_id as user_id',
+                'SUM(time_entry.tech_time) as tech_time',
+                'SUM(overtime) as overtime',
+                'SUM(travel_time) as travel_time',
+                'SUM(itinerate_time) as itinerate_time'
+            ])->groupBy(['time_entry.ticket_id','time_entry.user_id'])
+                ->having('tech_time > 0 OR overtime > 0 OR travel_time > 0 OR itinerate_time > 0')
+                ->where('time_entry.created BETWEEN \'' . $startDay . '\' AND \'' . $endDay . '\'')], // must use 'groupBy' so the aggregate functions work since ticket_id is ambiguous in an aggregate context
+            // on clause
+            'times.ticket_id = tech_ticket_assignment.ticket_id AND times.user_id = tech_ticket_assignment.user_id',
+        )->groupBy('user.id') // group by user name
+        ->orderBy('user.lname asc, user.fname asc');
+    }
 }
