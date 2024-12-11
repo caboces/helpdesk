@@ -474,4 +474,53 @@ class Ticket extends \yii\db\ActiveRecord
             'parts.ticket_id = ticket.id'
         )->orderBy('division.name, department.name, district.name, department.name');
     }
+
+    public static function getCurrentTicketAssignmentsByUserId($id) {
+        return Ticket::find()->select([
+            'ticket.id as ticket_id',
+            'division.name as division_name',
+            'department.name as department_name',
+            'district.name as district_name',
+            'building.name as building_name',
+            'ticket.summary',
+            'ticket.description',
+            'ticket.requester',
+            'ticket.location'
+        ])->leftJoin('customer_type', 'ticket.customer_type_id = customer_type.id')
+        ->leftJoin('division', 'ticket.division_id = division.id')
+        ->leftJoin('department', 'ticket.department_id = department.id')
+        ->leftJoin('district', 'ticket.district_id = district.id')
+        ->leftJoin('district_building', 'ticket.district_building_id = district_building.id')
+        ->leftJoin('building', 'building.id = district_building.building_id')
+        ->innerJoin('tech_ticket_assignment', 'ticket.id = tech_ticket_assignment.ticket_id')
+        ->where('tech_ticket_assignment.user_id = ' . $id)
+        ->where('ticket.status IN (9,11,12,13,16)') // ticket is open, waiting for parts, waiting on external third party, paused, waiting for response from requestor.
+        ->groupBy('tech_ticket_assignment.ticket_id, tech_ticket_assignment.user_id')
+        ->orderBy('division.name, department.name, district.name, department.name');
+    }
+
+    public static function getPastTicketAssignmentsByUserId($id) {
+        return Ticket::find()->select([
+            'ticket.id as ticket_id',
+            'customer_type.code',
+            'division.name as division_name',
+            'department.name as department_name',
+            'district.name as district_name',
+            'building.name as building_name',
+            'ticket.summary',
+            'ticket.description',
+            'ticket.requester',
+            'ticket.location'
+        ])->leftJoin('customer_type', 'ticket.customer_type_id = customer_type.id')
+        ->leftJoin('division', 'ticket.division_id = division.id')
+        ->leftJoin('department', 'ticket.department_id = department.id')
+        ->leftJoin('district', 'ticket.district_id = district.id')
+        ->leftJoin('district_building', 'ticket.district_building_id = district_building.id')
+        ->leftJoin('building', 'building.id = district_building.building_id')
+        ->innerJoin('tech_ticket_assignment', 'ticket.id = tech_ticket_assignment.ticket_id')
+        ->where('tech_ticket_assignment.user_id = ' . $id)
+        ->where('ticket.status NOT IN (9,11,12,13,16)') // ticket is submitted, resolved, closed, or resolved and billed
+        ->groupBy('ticket_id')
+        ->orderBy('division.name, department.name, district.name, department.name');
+    }
 }

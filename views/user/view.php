@@ -1,5 +1,7 @@
 <?php
 
+use kartik\export\ExportMenu;
+use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -90,12 +92,30 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="detail-view-container">
         <h3>Current Assignments</h3>
         <div class="table-container">
+            <?php
+            echo ExportMenu::widget([
+                'dataProvider' => $currentUserAssignmentsProvider,
+                'columns' => $ticketColumns,
+            ]) . "<hr>\n" .
+            GridView::widget([
+                'dataProvider' => $currentUserAssignmentsProvider,
+                'columns' => $ticketColumns,
+            ]); ?>
         </div>
     </div>
 
     <div class="detail-view-container">
         <h3>Past Assignments</h3>
         <div class="table-container">
+            <?php
+            echo ExportMenu::widget([
+                'dataProvider' => $pastUserAssignmentsProvider,
+                'columns' => $ticketColumns,
+            ]) . "<hr>\n" .
+            GridView::widget([
+                'dataProvider' => $pastUserAssignmentsProvider,
+                'columns' => $ticketColumns,
+            ]); ?>
         </div>
     </div>
 </div>

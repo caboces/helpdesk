@@ -9,6 +9,7 @@ use app\models\AuthAssignment;
 use yii\web\Controller;
 
 use app\models\AuthItem;
+use app\models\Ticket;
 use app\models\UserSearch;
 
 use yii\filters\VerbFilter;
@@ -16,6 +17,10 @@ use yii\helpers\ArrayHelper;
 
 use app\models\UserActiveSearch;
 use app\models\UserInactiveSearch;
+use kartik\grid\ActionColumn;
+use yii\data\ArrayDataProvider;
+use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 
@@ -81,9 +86,49 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+        $currentUserAssignmentsProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getCurrentTicketAssignmentsByUserId($id)->asArray()->all()
+        ]);
+        $pastUserAssignmentsProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getPastTicketAssignmentsByUserId($id)->asArray()->all()
+        ]);
+        $ticketColumns = [
+            [
+                'class' => ActionColumn::class,
+                'template' => '{view}',
+                'urlCreator' => function ($action, $model, $key, $index, $column) {
+                    return Url::toRoute(['/ticket/view', 'id' => $model['ticket_id']]);
+                },
+                'header' => 'View'
+            ],
+            [
+                'attribute' => 'ticket_id',
+                'label' => 'Ticket ID', // 'd' wont be capitalized if only 'ticket_id' is provided to the gridColumn array
+            ],
+            [
+                'header' => 'Division > Department<br>District > Building',
+                'format' => 'raw',
+                'value' => function($model) {
+                    if ($model['code'] == 'BOCES') {
+                        return Html::decode($model['division_name'].'&nbsp;>&nbsp;'.$model['department_name']);
+                    } else if ($model['code'] == 'DISTRICT') {
+                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
+                    } else if ($model['code'] == 'EXTERNAL') {
+                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
+                    }
+                }
+            ],
+            'summary',
+            'description',
+            'requester',
+            'location'
+        ];
         $this->layout = 'blank-container';
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'currentUserAssignmentsProvider' => $currentUserAssignmentsProvider,
+            'pastUserAssignmentsProvider' => $pastUserAssignmentsProvider,
+            'ticketColumns' => $ticketColumns
         ]);
     }
 
