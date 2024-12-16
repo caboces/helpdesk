@@ -408,4 +408,116 @@ class ReportsController extends Controller
             'gridColumns' => $gridColumns
         ]);
     }
+
+    public function actionWnyricIpadPartsSummary() {
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getWnyricIpadPartsSummary($month, $year)->asArray()->all()
+        ]);
+        $gridColumns = [
+            [
+                'label' => 'Ticket ID'
+            ],
+            [
+                'label' => 'District'
+            ],
+            [
+                'label' => 'Job Description'
+            ],
+            [
+                'label' => 'RIC Queue Ticket'
+            ],
+            [
+                'label' => 'Parts Cost'
+            ]
+        ];
+
+        $this->layout = 'blank';
+        return $this->render('wnyric-ipad-parts-summary',[
+            'month' => $month,
+            'year' => $year,
+            'dataProvider' => $dataProvider,
+            'gridColumns' => $gridColumns
+        ]);
+    }
+    
+
+    public function actionWnyricIpadRepairBillingReport() {
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getWnyricIpadRepairBillingReport($month, $year)->asArray()->all()
+        ]);
+        $gridColumns = [
+            [
+                'label' => 'Ticket ID'
+            ],
+            [
+                'label' => 'District'
+            ],
+            [
+                'label' => 'Job Description'
+            ],
+            [
+                'label' => 'RIC Queue Ticket'
+            ],
+            [
+                'label' => 'Tech Time'
+            ],
+            [
+                'label' => 'Labor Cost'
+            ],
+            [
+                'label' => 'Who'
+            ]
+        ];
+
+        $this->layout = 'blank';
+        return $this->render('wnyric-ipad-repair-billing-report',[
+            'month' => $month,
+            'year' => $year,
+            'dataProvider' => $dataProvider,
+            'gridColumns' => $gridColumns
+        ]);
+    }
+
+    public function actionNonWnyricIpadRepairLaborReport() {
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getNonWnyricIpadRepairLaborReport($month, $year)->asArray()->all()
+        ]);
+        $gridColumns = [
+            [
+                'label' => 'Ticket ID'
+            ],
+            [
+                'label' => 'District'
+            ],
+            [
+                'label' => 'Job Description'
+            ],
+            [
+                'label' => 'RIC Queue Ticket'
+            ],
+            [
+                'label' => 'Tech Time'
+            ],
+            [
+                'label' => 'Labor Cost'
+            ],
+            [
+                'label' => 'Who'
+            ]
+        ];
+
+        $this->layout = 'blank';
+        return $this->render('non-wnyric-ipad-repair-labor-report',[
+            'month' => $month,
+            'year' => $year,
+            'dataProvider' => $dataProvider,
+            'gridColumns' => $gridColumns
+        ]);
+    }
 }

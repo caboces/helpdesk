@@ -554,4 +554,39 @@ class Ticket extends \yii\db\ActiveRecord
         ->groupBy('ticket.id')
         ->orderBy('district.name');
     }
+
+    public static function getWnyricIpadPartsSummary($month, $year) {
+        $startDay = $year . '-' . $month . '-01'; // start day
+        $endDay = date('Y-m-t', strtotime($startDay));
+        if ($month == '00') { // All months
+            $startDay = $year.'-01-01';
+            $endDay = $year.'-12-31';
+        }
+        return Ticket::find()->select([
+            'ticket.id',
+            'district.name',
+            'ticket.description',
+            'ticket.summary',
+            'part.parts_cost',
+        ])->innerJoin('district', 'district.id = ticket.district_id')
+        ->innerJoin([
+            'part' => Part::find()->select([
+                'part.ticket_id',
+                'parts_cost' => 'IFNULL(SUM(`part`.unit_price * `part`.quantity), 0)'
+            ])->where('part.created BETWEEN \'' . $startDay . '\' AND \'' . $endDay . '\'')->groupBy('part.ticket_id')->having('parts_cost > 0')], 
+            'ticket.id = part.ticket_id'
+            // Use the hourly rate that was effective on the first of that month. How would you make it so time_entries split between two hourly_rates would work...?
+        )->innerJoin('hourly_rate', 'ticket.job_type_id = hourly_rate.job_type_id AND :startDay BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective', ['startDay' => $startDay])
+        ->where(['ticket.customer_type_id' => 2, 'ticket.job_category_id' => 25])
+        ->groupBy('ticket.id')
+        ->orderBy('district.name');
+    }
+
+    public static function getWnyricIpadRepairBillingReport($month, $year) {
+
+    }
+
+    public static function getNonWnyricIpadRepairLaborReport($month, $year) {
+        
+    }
 }
