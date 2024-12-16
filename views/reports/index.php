@@ -93,10 +93,10 @@ $this->title = 'Reports';
                     </div>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item p-2"><?= Html::a('WNYRIC iPad repair labor report', ['reports/wnyric-ipad-repair-labor-report'], ['class' => 'wip-link']) ?></li>
-                    <li class="list-group-item p-2"><?= Html::a('WNYRIC iPad parts summary', ['reports/wnyric-ipad-parts-summary'], ['class' => 'wip-link']) ?></li>
-                    <li class="list-group-item p-2"><?= Html::a('WNYRIC iPad repair billing report', ['reports/wnyric-ipad-repair-billing-report'], ['class' => 'wip-link']) ?></li>
-                    <li class="list-group-item p-2"><?= Html::a('NON-WNYRIC iPad repair labor report', ['reports/non-wnyric-ipad-repair-labor-report'], ['class' => 'wip-link']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('WNYRIC iPad repair labor report', ['reports/wnyric-ipad-repair-labor-report']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('WNYRIC iPad parts summary', ['reports/wnyric-ipad-parts-summary']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('WNYRIC iPad repair billing report', ['reports/wnyric-ipad-repair-billing-report']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('NON-WNYRIC iPad repair labor report', ['reports/non-wnyric-ipad-repair-labor-report']) ?></li>
                 </ul>
             </div>
         </div>

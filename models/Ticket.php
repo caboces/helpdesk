@@ -523,4 +523,35 @@ class Ticket extends \yii\db\ActiveRecord
         ->groupBy('ticket_id')
         ->orderBy('division.name, department.name, district.name, department.name');
     }
+
+    public static function getWnyricIpadRepairLaborReport($month, $year) {
+        $startDay = $year . '-' . $month . '-01'; // start day
+        $endDay = date('Y-m-t', strtotime($startDay));
+        if ($month == '00') { // All months
+            $startDay = $year.'-01-01';
+            $endDay = $year.'-12-31';
+        }
+        return Ticket::find()->select([
+            'ticket.id',
+            'district.name',
+            'ticket.description',
+            'ticket.summary',
+            'times.total_hours',
+            'SUM(hourly_rate.rate * times.total_hours) AS total_cost',
+            'ticket.requester',
+        ])->innerJoin('district', 'district.id = ticket.district_id')
+        ->innerJoin([
+            'times' => TimeEntry::find()->select([
+                'time_entry.ticket_id',
+                'total_hours' => 'IFNULL(SUM(`time_entry`.tech_time)
+                    + SUM(`time_entry`.overtime)
+                    + SUM(`time_entry`.travel_time)
+                    + SUM(`time_entry`.itinerate_time), 0)'
+            ])->where('time_entry.created BETWEEN \'' . $startDay . '\' AND \'' . $endDay . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
+            'times.ticket_id = ticket.id'
+        )->innerJoin('hourly_rate', 'ticket.job_type_id = hourly_rate.job_type_id AND :startDay BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective', ['startDay' => $startDay])
+        ->where(['ticket.customer_type_id' => 2, 'ticket.job_category_id' => 25])
+        ->groupBy('ticket.id')
+        ->orderBy('district.name');
+    }
 }
