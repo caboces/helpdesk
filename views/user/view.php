@@ -37,14 +37,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ])
                 : Html::a('Deactivate user', ['toggle-status', 'id' => $model->id], [
-                    'class' => 'btn btn-warning disabled',
+                    'class' => 'btn btn-warning',
                     'data' => [
                         'method' => 'post',
                         'confirm' => 'Danger! Are you sure? This user will be deactivated.',
                     ],
                 ]) ?>
             <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-                'class' => 'btn btn-danger disabled',
+                'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => 'Are you sure you want to delete this item?',
                     'method' => 'post',
