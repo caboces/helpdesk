@@ -43,7 +43,13 @@ $this->title = 'View Time Entry: ' . $model->id;
             'user_id',
             'ticket_id',
             'created',
-            'modified',
+            [
+                'attribute' => 'last_modified_by',
+                'value' => function($model) {
+                        return '<a href="/user/view?id=' . ($model->last_modified_by_user_id != null ? $model->last_modified_by_user_id : '') . '">' . ($model->last_modified_by_user_id != null ? $model->lastModifiedBy->username : '') . '</a>';
+                },
+                'format' => 'raw',
+            ],
         ],
     ]) ?>
 
