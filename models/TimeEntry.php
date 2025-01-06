@@ -47,7 +47,7 @@ class TimeEntry extends \yii\db\ActiveRecord
             // TODO: entry_date not validating because I didn't use Yii helpers
             // ALSO TODO: last_modified_by_user_id not working and failing validation checks with a redirect to an unstyled form...
             [['entry_date'], 'required', 'skipOnEmpty' => false, 'skipOnError' => false, 'message' => 'Please select the date of the hours worked.'],
-            [['entry_date'], 'date', 'format' => 'yyyy-mm-dd', 'message' => 'The date must be in the format mm/dd/yyyy.'],
+            [['entry_date'], 'date', 'min' => strtotime('2000/01/01'), 'max' => strtotime(date('Y-m-d')), 'format' => 'yyyy-mm-dd', 'message' => 'The date must be in the format mm/dd/yyyy.', 'tooSmall' => 'The time entry date must be later than January 1st, 2000.', 'tooBig' => 'The time entry date must be today or before.'],
             [['user_id'], 'required', 'message' => 'User ID is required. Please make sure the relevant tech is assigned to the ticket.'],
             [['last_modified_by_user_id'], 'required', 'message' => 'Entry editor id is required.'],
             [['entry_date', 'created', 'modified'], 'safe'],
