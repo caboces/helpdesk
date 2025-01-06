@@ -44,7 +44,7 @@ use app\models\TechTicketAssignment;
                 <div class="col">
                     <div class="form-group field-timeentry-entry_date required">
                         <label class="control-label" for="timeentry-entry_date">Entry Date</label>
-                        <input type="date" id="timeentry-entry_date" class="form-control" name="TimeEntry[entry_date]" placeholder="mm/dd/yyyy" aria-required="true">
+                        <input type="date" id="timeentry-entry_date" class="form-control" name="TimeEntry[entry_date]" placeholder="mm/dd/yyyy" aria-required="true" value="<?= date('Y-m-d'); ?>">
                     </div>
                 </div>
                 <!-- do not allow the techs to change this value, but still submit the ticket id as if it's new input -->

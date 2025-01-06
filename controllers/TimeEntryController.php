@@ -2,12 +2,15 @@
 
 namespace app\controllers;
 
+use app\models\TechTicketAssignment;
 use app\models\Ticket;
 use yii\web\Controller;
 use app\models\TimeEntry;
 use yii\filters\VerbFilter;
 use app\models\TimeEntrySearch;
+use Yii;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * TimeEntryController implements the CRUD actions for TimeEntry model.
@@ -175,5 +178,17 @@ class TimeEntryController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Finds the time entries for the specified tech.
+     */
+    public function actionCheckEntries() {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $tech_id = Yii::$app->request->get('tech_id');
+        $ticket_id = Yii::$app->request->get('ticket_id');
+        $entriesExist = TimeEntry::find()->where("user_id = {$tech_id} AND ticket_id = {$ticket_id}")->exists();
+
+        return ['exists' => $entriesExist];
     }
 }

@@ -63,6 +63,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'time-entry/check-entries' => 'time-entry/check-entries'
             ],
         ],
         'user' => [

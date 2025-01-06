@@ -117,3 +117,51 @@ $('#confirm-ticket-equipment').submit(function(e) {
     $('#ticket-equipment-modal').modal('hide');
 
 });
+
+/* ===========================================================================================
+|| TECHNICIANS (TICKET FORM)
+=========================================================================================== */
+$('#ticket-users').on('select2:unselecting', function(e) {
+    const tech_id = e.params.args.data.id
+    const tech_name = e.params.args.data.text
+    // see if the removed user was the primary tech
+    if ($('#ticket-primary_tech_id').val() && tech_id === $('#ticket-primary_tech_id').val()) {
+        // if it is, alert it and block
+        alert('You cannot delete a tech that is assigned as the primary tech.')
+        e.preventDefault()
+    }
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+    
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+    
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+        return false;
+    };
+    // see if the removed user has a current time entry
+    $.ajax({
+        url: '/time-entry/check-entries',
+        method: 'GET',
+        data: { tech_id: tech_id, ticket_id: getUrlParameter('id') },
+        success: function(res) {
+            if (res.exists) {
+                alert('You cannot remove technicians who have had time entries logged for this ticket.')
+                e.preventDefault()
+            }
+        },
+        error: function() {
+            alert('An error occured while trying to fetch the time entires for the deleted technician.')
+            e.preventDefault()
+        }
+    })
+    // if they do, alert it and block
+
+    // if all is good, continue
+})
