@@ -122,13 +122,14 @@ $('#confirm-ticket-equipment').submit(function(e) {
 || TECHNICIANS (TICKET FORM)
 =========================================================================================== */
 $('#ticket-users').on('select2:unselecting', function(e) {
+    e.preventDefault()
+    var passed = true
     const tech_id = e.params.args.data.id
-    const tech_name = e.params.args.data.text
     // see if the removed user was the primary tech
     if ($('#ticket-primary_tech_id').val() && tech_id === $('#ticket-primary_tech_id').val()) {
         // if it is, alert it and block
         alert('You cannot delete a tech that is assigned as the primary tech.')
-        e.preventDefault()
+        passed = false
     }
     var getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = window.location.search.substring(1),
@@ -150,18 +151,22 @@ $('#ticket-users').on('select2:unselecting', function(e) {
         url: '/time-entry/check-entries',
         method: 'GET',
         data: { tech_id: tech_id, ticket_id: getUrlParameter('id') },
-        success: function(res) {
+        success: (res) => {
             if (res.exists) {
+                // if they do, alert it and block
                 alert('You cannot remove technicians who have had time entries logged for this ticket.')
-                e.preventDefault()
+                passed = false
             }
         },
-        error: function() {
+        error: () => {
             alert('An error occured while trying to fetch the time entires for the deleted technician.')
-            e.preventDefault()
+        }
+    }).then(() => {
+        // if it pass, then remove!
+        if (passed) {
+            const index = $('#ticket-users').val().indexOf(tech_id)
+            $('#ticket-users').val($('#ticket-users').val().filter(function(e){ return e != tech_id}) )
+            $('#ticket-users').trigger('change')
         }
     })
-    // if they do, alert it and block
-
-    // if all is good, continue
 })
