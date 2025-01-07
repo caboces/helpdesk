@@ -46,6 +46,8 @@ $this->title = 'Create Ticket';
             'assignedTechData' => $assignedTechData,
             'ticketEquipmentProvider' => $ticketEquipmentProvider,
             'ticketEquipmentColumns' => $ticketEquipmentColumns,
+            'partsProvider' => $partsProvider,
+            'partsColumns' => $partsColumns,
         ]
     ) ?>
 

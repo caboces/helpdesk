@@ -191,6 +191,8 @@ $('#ticket-users').on('select2:unselecting', function(e) {
     // see if the removed user has a current time entry
     $.ajax({
         // SEE: TimeEntryController.php/actionCheckEntries
+
+        // TODO: maybe instead of 'alert(...)' we use a modal popup, red text appear/disppear, or something else, since the alerts can be disabled. we can do this later or until important
         url: '/time-entry/check-entries',
         method: 'GET',
         data: { tech_id: tech_id, ticket_id: getUrlParameter('id') },

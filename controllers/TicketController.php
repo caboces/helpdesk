@@ -26,6 +26,7 @@ use app\models\JobTypeCategory;
 use app\models\TimeEntrySearch;
 use app\models\DistrictBuilding;
 use app\models\DepartmentBuilding;
+use app\models\Part;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use app\models\TechTicketAssignment;
@@ -195,6 +196,7 @@ class TicketController extends Controller
         } 
 
         $ticketEquipmentGridProps = $this->getTicketEquipmentGridProperties($model);
+        $partsGridProps = $this->getTicketPartsGridProperties($model);
 
         $this->layout = 'blank-container';
         
@@ -222,7 +224,9 @@ class TicketController extends Controller
             'users' => $users,
             'assignedTechData' => $assignedTechData,
             'ticketEquipmentProvider' => $ticketEquipmentGridProps['provider'],
-            'ticketEquipmentColumns' => $ticketEquipmentGridProps['columns']
+            'ticketEquipmentColumns' => $ticketEquipmentGridProps['columns'],
+            'partsProvider' => $partsGridProps['provider'],
+            'partsColumns' => $partsGridProps['columns'],
         ]);
     }
 
@@ -292,6 +296,7 @@ class TicketController extends Controller
                 } 
 
                 $ticketEquipmentGridProps = $this->getTicketEquipmentGridProperties($model);
+                $partsGridProps = $this->getTicketPartsGridProperties($model);
 
                 return $this->render('update', [
                     'model' => $model,
@@ -318,7 +323,9 @@ class TicketController extends Controller
                     'assignedTechData' => $assignedTechData,
                     'users' => $users,
                     'ticketEquipmentProvider' => $ticketEquipmentGridProps['provider'],
-                    'ticketEquipmentColumns' => $ticketEquipmentGridProps['columns']
+                    'ticketEquipmentColumns' => $ticketEquipmentGridProps['columns'],
+                    'partsProvider' => $partsGridProps['provider'],
+                    'partsColumns' => $partsGridProps['columns'],
                 ]);
             } else {
                 // ticket isn't active!
@@ -697,10 +704,11 @@ class TicketController extends Controller
                 ]
             ]
         ]);
-        // dd($ticketEquipmentProvider->getModels());
         $ticketEquipmentColumns = [
             'new_prop_tag' => [
-                'attribute' => 'new_prop_tag',
+                'attribute' => 'new_prop_tag'
+            ],
+            [
                 'value' => function(TicketEquipment $model) {
                     $item = $model->inventory;
                     return '<a href="/inventory/view?new_prop_tag=' . ($model->new_prop_tag != null ? $model->new_prop_tag : '') . '">' . ($item->item_description != null ? $item->item_description : '') . '</a>';
@@ -714,7 +722,53 @@ class TicketController extends Controller
                 },
                 'format' => 'raw',
             ],
+            'created' => [
+                'attribute' => 'created'
+            ],
+            'modified' => [
+                'attribute' => 'modified'
+            ]
         ];
         return ['provider' => $ticketEquipmentProvider, 'columns' => $ticketEquipmentColumns];
+    }
+
+    private function getTicketPartsGridProperties($model) {
+        // get ticket provider and columns
+        $partsProvider = new ActiveDataProvider([
+            'query' => Part::find()->where(['ticket_id' => $model->id]),
+            'sort' => [
+                'defaultOrder' => [
+                    'created' => SORT_ASC
+                ]
+            ]
+        ]);
+        $partsColumns = [
+            'part_name' => [
+                'attribute' => 'part_name'
+            ],
+            'quantity' => [
+                'attribute' => 'quantity'
+            ],
+            'unit_price' => [
+                'attribute' => 'unit_price',
+            ],
+            'pending_delivery' => [
+                'attribute' => 'pending_delivery'
+            ],
+            'note' => [
+                'attribute' => 'note',
+            ],
+            'part_number' => [
+                'attribute' => 'part_number',
+            ],
+            [
+                'attribute' => 'last_modified_by',
+                'value' => function(Part $model) {
+                    return '<a href="/user/view?id=' . ($model->last_modified_by_user_id != null ? $model->last_modified_by_user_id : '') . '">' . ($model->last_modified_by_user_id != null ? $model->lastModifiedByUser->username : '') . '</a>';
+                },
+                'format' => 'raw',
+            ],
+        ];
+        return ['provider' => $partsProvider, 'columns' => $partsColumns];
     }
 }

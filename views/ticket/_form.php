@@ -460,24 +460,48 @@ use yii\bootstrap5\ButtonDropdown;
 		</div>
 		<div class="tab-pane fade" id="pills-equipment" role="tabpanel" aria-labelledby="pills-equipment-tab">
 			<div class="subsection-info-block">
-				<h2>Equipment</h2>
-				<p>Equipment associated with this ticket</p>
-				<div id="ticket-equipment-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
-					<div class="table-container container-fluid overflow-x-scroll">
-						<?php
-							echo ExportMenu::widget([
-								'dataProvider' => $ticketEquipmentProvider,
-								'columns' => $ticketEquipmentColumns,
-								'dropdownOptions' => [
-									'label' => 'Export All',
-									'class' => 'btn btn-outline-secondary btn-default'
-								]
-							]) . "<hr>\n" .
-							GridView::widget([
-								'dataProvider' => $ticketEquipmentProvider,
-								'columns' => $ticketEquipmentColumns,
-							]); 
-						?>
+				<div>
+					<h2>Assets</h2>
+					<p>Assets associated with this ticket</p>
+					<div id="ticket-equipment-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
+						<div class="table-container container-fluid overflow-x-scroll">
+							<?php
+								echo ExportMenu::widget([
+									'dataProvider' => $ticketEquipmentProvider,
+									'columns' => $ticketEquipmentColumns,
+									'dropdownOptions' => [
+										'label' => 'Export All',
+										'class' => 'btn btn-outline-secondary btn-default'
+									]
+								]) . "<hr>\n" .
+								GridView::widget([
+									'dataProvider' => $ticketEquipmentProvider,
+									'columns' => $ticketEquipmentColumns,
+								]); 
+							?>
+						</div>
+					</div>
+				</div>
+				<div>
+					<h2>Parts</h2>
+					<p>Parts associated with this ticket</p>
+					<div id="parts-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
+						<div class="table-container container-fluid overflow-x-scroll">
+							<?php
+								echo ExportMenu::widget([
+									'dataProvider' => $partsProvider,
+									'columns' => $partsColumns,
+									'dropdownOptions' => [
+										'label' => 'Export All',
+										'class' => 'btn btn-outline-secondary btn-default'
+									]
+								]) . "<hr>\n" .
+								GridView::widget([
+									'dataProvider' => $partsProvider,
+									'columns' => $partsColumns,
+								]); 
+							?>
+						</div>
 					</div>
 				</div>
 			</div>
