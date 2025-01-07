@@ -9,6 +9,7 @@ use app\models\TimeEntry;
 use yii\bootstrap5\Modal;
 use yii\grid\ActionColumn;
 use app\models\JobCategory;
+use kartik\export\ExportMenu;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap5\ActiveForm;
@@ -461,10 +462,23 @@ use yii\bootstrap5\ButtonDropdown;
 			<div class="subsection-info-block">
 				<h2>Equipment</h2>
 				<p>Equipment associated with this ticket</p>
-				<div id="ticket-equipment" class="d-flex flex-wrap justify-content-evenly | mb-2">
-					<?php
-						
-					?>
+				<div id="ticket-equipment-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
+					<div class="table-container container-fluid overflow-x-scroll">
+						<?php
+							echo ExportMenu::widget([
+								'dataProvider' => $ticketEquipmentProvider,
+								'columns' => $ticketEquipmentColumns,
+								'dropdownOptions' => [
+									'label' => 'Export All',
+									'class' => 'btn btn-outline-secondary btn-default'
+								]
+							]) . "<hr>\n" .
+							GridView::widget([
+								'dataProvider' => $ticketEquipmentProvider,
+								'columns' => $ticketEquipmentColumns,
+							]); 
+						?>
+					</div>
 				</div>
 			</div>
 		</div>

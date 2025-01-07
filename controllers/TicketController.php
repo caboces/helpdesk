@@ -31,7 +31,11 @@ use yii\web\ForbiddenHttpException;
 use app\models\TechTicketAssignment;
 use app\models\TicketAssignmentSearch;
 use app\models\TicketClosedResolvedSearch;
+use app\models\TicketEquipment;
 use app\models\TicketRecentlyDeletedSearch;
+use kartik\grid\ActionColumn;
+use yii\data\ActiveDataProvider;
+use yii\web\ServerErrorHttpException;
 
 /**
  * TicketController implements the CRUD actions for Ticket model.
@@ -184,11 +188,13 @@ class TicketController extends Controller
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
                 // make a better ticket creation failure?
-                dd('I couldnt save the ticket.... its over.....');
+                throw new ServerErrorHttpException('A problem occured while trying to create the ticket.');
             }
         } else {
             $model->loadDefaultValues();
-        }
+        } 
+
+        $ticketEquipmentGridProps = $this->getTicketEquipmentGridProperties($model);
 
         $this->layout = 'blank-container';
         
@@ -215,6 +221,8 @@ class TicketController extends Controller
             //users
             'users' => $users,
             'assignedTechData' => $assignedTechData,
+            'ticketEquipmentProvider' => $ticketEquipmentGridProps['provider'],
+            'ticketEquipmentColumns' => $ticketEquipmentGridProps['columns']
         ]);
     }
 
@@ -281,7 +289,9 @@ class TicketController extends Controller
                     // $model->link('activities', Yii::$app->user->identity);
 
                     return $this->redirect(['view', 'id' => $model->id]);
-                }
+                } 
+
+                $ticketEquipmentGridProps = $this->getTicketEquipmentGridProperties($model);
 
                 return $this->render('update', [
                     'model' => $model,
@@ -307,6 +317,8 @@ class TicketController extends Controller
                     // users
                     'assignedTechData' => $assignedTechData,
                     'users' => $users,
+                    'ticketEquipmentProvider' => $ticketEquipmentGridProps['provider'],
+                    'ticketEquipmentColumns' => $ticketEquipmentGridProps['columns']
                 ]);
             } else {
                 // ticket isn't active!
@@ -670,5 +682,39 @@ class TicketController extends Controller
             // no emails to deliver
             return false;
         }
+    }
+
+    /**
+     * Get the ticket equipment columns and data provider for the /create and /update pages
+     */
+    private function getTicketEquipmentGridProperties($model) {
+        // get ticket provider and columns
+        $ticketEquipmentProvider = new ActiveDataProvider([
+            'query' => TicketEquipment::find()->where(['ticket_id' => $model->id]),
+            'sort' => [
+                'defaultOrder' => [
+                    'created' => SORT_ASC
+                ]
+            ]
+        ]);
+        // dd($ticketEquipmentProvider->getModels());
+        $ticketEquipmentColumns = [
+            'new_prop_tag' => [
+                'attribute' => 'new_prop_tag',
+                'value' => function(TicketEquipment $model) {
+                    $item = $model->inventory;
+                    return '<a href="/inventory/view?new_prop_tag=' . ($model->new_prop_tag != null ? $model->new_prop_tag : '') . '">' . ($item->item_description != null ? $item->item_description : '') . '</a>';
+                },
+                'format' => 'raw',
+            ],
+            [
+                'attribute' => 'last_modified_by',
+                'value' => function(TicketEquipment $model) {
+                    return '<a href="/user/view?id=' . ($model->last_modified_by_user_id != null ? $model->last_modified_by_user_id : '') . '">' . ($model->last_modified_by_user_id != null ? $model->lastModifiedByUser->username : '') . '</a>';
+                },
+                'format' => 'raw',
+            ],
+        ];
+        return ['provider' => $ticketEquipmentProvider, 'columns' => $ticketEquipmentColumns];
     }
 }

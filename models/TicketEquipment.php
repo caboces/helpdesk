@@ -75,6 +75,27 @@ class TicketEquipment extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Inventory]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\Inventory
+     */
+    public function getInventory()
+    {
+        return $this->hasOne(Inventory::class, ['new_prop_tag' => 'new_prop_tag']);
+    }
+    
+
+    /**
+     * Gets query for [[LastModifiedByUser]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     */
+    public function getLastModifiedByUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'last_modified_by_user_id']);
+    }
+
+    /**
      * {@inheritdoc}
      * @return \app\models\query\TicketEquipmentQuery the active query used by this AR class.
      */
