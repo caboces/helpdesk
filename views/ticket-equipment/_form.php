@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
         'validateOnSubmit' => true,
     ]); ?>
 
-    <div class="ticket-equipment-container">
+    <div id="ticket-equipment-box" class="ticket-equipment-container">
         <div class="question-box-no-trim">
             <?= $form->field($model, 'last_modified_by_user_id', [
                         'template' => '{input}',
@@ -35,8 +35,8 @@ use yii\widgets\ActiveForm;
                 </div>
             </div>
             <div class="form-group">
-                <?= Html::button('Remove', ['class' => 'btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>
-                <?= Html::button('Duplicate', ['class' => 'btn btn-primary bg-iris border-iris btn-skinny']); ?>
+                <?= Html::button('Remove', ['class' => 'ticket-equip-modal-button-remove btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>
+                <?= Html::button('Duplicate', ['class' => 'ticket-equip-modal-button-duplicate btn btn-primary bg-iris border-iris btn-skinny']); ?>
             </div>
         </div>
     </div>

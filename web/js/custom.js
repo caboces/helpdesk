@@ -96,7 +96,7 @@ $('#confirm-time-entry').submit(function(e) {
 });
 
 /* ===========================================================================================
-|| ASSET MODAL (TICKET FORM)
+|| TICKET EQUIPMENT MODAL (TICKET FORM)
 =========================================================================================== */
 
 /**
@@ -104,8 +104,8 @@ $('#confirm-time-entry').submit(function(e) {
  * Opens a modal window for creating ticket equipment entries.
  */
 $('#ticket-equipment-modal-button').click(function () {
-    $('#asset-modal').modal('show')
-    .find('#asset-modal-content')
+    $('#ticket-equipment-modal').modal('show')
+    .find('#ticket-equipment-modal-content')
     .load($(this).attr('value'));
 });
 
@@ -115,13 +115,55 @@ $('#ticket-equipment-modal-button').click(function () {
 $('#confirm-ticket-equipment').submit(function(e) {
     // e.preventDefault();
     $('#ticket-equipment-modal').modal('hide');
-
 });
+
+/**
+ * Remove the parent element/entry
+ * TODO: dont work right now
+ */
+$('.ticket-equip-modal-button-remove').on('click', function(e) {
+    const $parent = $(this).closest('.question-box-no-trim')
+    if ($('.question-box-no-trim').length > 1) {
+        $parent.remove()
+    } else {
+        alert('Cannot remove the last entry!')
+    }
+})
+
+/**
+ * Disable removing the entry if there is only one
+ * TODO: dont work right now
+ */
+function updateRmvBtnState() {
+    if ($('question-box-no-trim').length <= 1) {
+        // disable remove button if there is only 1 element
+        $('.ticket-equip-modal-button-remove').prop('disabled', true)
+    } else {
+        // otherwise, keep enabled
+        $('.ticket-equip-modal-button-remove').prop('disabled', false)
+    }
+}
+
+/**
+ * Duplicate the parent element and put it below
+ * TODO: dont work right now
+ */
+$('.ticket-equip-modal-button-duplicate').on('click', function(e) {
+    const $parent = $(this).closest('.question-box-no-trim')
+    const $clone = $parent.clone()
+    $clone.find('input').each(function() {
+        $(this).val('') // clear input
+    })
+    // append the clone
+    $('#ticket-equipment-box').append($clone)
+    updateRmvBtnState()
+})
 
 /* ===========================================================================================
 || TECHNICIANS (TICKET FORM)
 =========================================================================================== */
 $('#ticket-users').on('select2:unselecting', function(e) {
+    // disable the unselect element for now as we validate
     e.preventDefault()
     var passed = true
     const tech_id = e.params.args.data.id
@@ -148,6 +190,7 @@ $('#ticket-users').on('select2:unselecting', function(e) {
     };
     // see if the removed user has a current time entry
     $.ajax({
+        // SEE: TimeEntryController.php/actionCheckEntries
         url: '/time-entry/check-entries',
         method: 'GET',
         data: { tech_id: tech_id, ticket_id: getUrlParameter('id') },
@@ -164,7 +207,7 @@ $('#ticket-users').on('select2:unselecting', function(e) {
     }).then(() => {
         // if it pass, then remove!
         if (passed) {
-            const index = $('#ticket-users').val().indexOf(tech_id)
+            // filter by removing the one that was meant to be selected
             $('#ticket-users').val($('#ticket-users').val().filter(function(e){ return e != tech_id}) )
             $('#ticket-users').trigger('change')
         }
