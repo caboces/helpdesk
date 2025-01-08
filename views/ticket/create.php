@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Part;
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
@@ -44,8 +45,8 @@ $this->title = 'Create Ticket';
             // users
             'users' => $users,
             'assignedTechData' => $assignedTechData,
-            'ticketEquipmentProvider' => $ticketEquipmentProvider,
-            'ticketEquipmentColumns' => $ticketEquipmentColumns,
+            'assetProvider' => $assetProvider,
+            'assetColumns' => $assetColumns,
             'partsProvider' => $partsProvider,
             'partsColumns' => $partsColumns,
         ]

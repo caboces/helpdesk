@@ -2,17 +2,17 @@
 
 namespace app\controllers;
 
-use app\models\TicketEquipment;
+use app\models\Asset;
 use app\models\Ticket;
 use yii\web\Controller;
-use app\models\TicketEquipmentSearch;
+use app\models\AssetSearch;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 /**
- * TicketEquipmentController implements the CRUD actions for TicketEquipment model.
+ * AssetController implements the CRUD actions for Asset model.
  */
-class TicketEquipmentController extends Controller
+class AssetController extends Controller
 {
     /**
      * @inheritDoc
@@ -33,13 +33,13 @@ class TicketEquipmentController extends Controller
     }
 
     /**
-     * Lists all TicketEquipment models.
+     * Lists all Asset models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new TicketEquipmentSearch();
+        $searchModel = new AssetSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -49,7 +49,7 @@ class TicketEquipmentController extends Controller
     }
 
     /**
-     * Displays a single TicketEquipment model.
+     * Displays a single Asset model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -62,18 +62,18 @@ class TicketEquipmentController extends Controller
     }
 
     /**
-     * Creates a new TicketEquipment model.
+     * Creates a new Asset model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate($id)
+    public function actionCreate()
     {
-        $ticket = Ticket::findOne($id);
-        $model = new TicketEquipment();
+        $model = new Asset();
+        $ticket_id = $this->request->get('ticket_id');
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['/ticket/update', 'id' => $ticket->id]);
+                return $this->redirect(['/ticket/update', 'id' => $model->ticket_id]);
             }
         } else {
             $model->loadDefaultValues();
@@ -83,12 +83,12 @@ class TicketEquipmentController extends Controller
 
         return $this->renderAjax('create', [
             'model' => $model,
-            'ticket' => $ticket
+            'ticket_id' => $ticket_id,
         ]);
     }
 
     /**
-     * Updates an existing TicketEquipment model.
+     * Updates an existing Asset model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -108,7 +108,7 @@ class TicketEquipmentController extends Controller
     }
 
     /**
-     * Deletes an existing TicketEquipment model.
+     * Deletes an existing Asset model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -122,15 +122,15 @@ class TicketEquipmentController extends Controller
     }
 
     /**
-     * Finds the TicketEquipment model based on its primary key value.
+     * Finds the Asset model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return TicketEquipment the loaded model
+     * @return Asset the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = TicketEquipment::findOne(['id' => $id])) !== null) {
+        if (($model = Asset::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

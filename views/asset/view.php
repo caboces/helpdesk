@@ -4,14 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var app\models\TicketEquipment $model */
+/** @var app\models\Asset $model */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Ticket Equipment', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Asset', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="ticket-equipment-view">
+<div class="asset-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

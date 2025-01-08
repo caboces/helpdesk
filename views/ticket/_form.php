@@ -34,17 +34,28 @@ use yii\bootstrap5\ButtonDropdown;
 	Modal::end(); 
 	?>
 
-	<!-- modal window for ticket_equipment entries -->
+	<!-- modal window for asset entries -->
 	<?php 
 	Modal::begin([
-		'title' => 'Add Ticket Equipment',
-		'id' => 'ticket-equipment-modal',
+		'title' => 'Add Asset',
+		'id' => 'asset-modal',
 		'size' => 'modal-lg',
 	]);
 
-	echo '<div id="ticket-equipment-modal-content"></div>';
+	echo '<div id="asset-modal-content"></div>';
 
 	Modal::end(); 
+	?>
+
+	<!-- Parts creation modal -->
+	<?php 
+		Modal::begin([
+			'title' => 'Add Parts',
+			'id' => 'part-modal',
+			'size' => 'modal-lg',
+		]);
+		echo '<div id="part-modal-content"></div>';
+		Modal::end(); 
 	?>
 
 	<?php $form = ActiveForm::begin(); ?>
@@ -64,13 +75,21 @@ use yii\bootstrap5\ButtonDropdown;
 			'aria-expanded' => 'false',
 			'aria-controls' => '#tech-note',
 		]); ?>
-		<!-- Add ticket-equipment -->
+		<!-- Add asset -->
 		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
 				<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
-			</svg> Add ticket equipment', [
-			'value' => Url::to('/ticket-equipment/create?id=' . $model->id),
-			'id' => 'ticket-equipment-modal-button',
-			'class' => 'btn btn-primary bg-iris border-iris',
+			</svg> Add assets', [
+			'value' => Url::to('/asset/create?ticket_id=' . $model->id),
+			'class' => 'asset-modal-button btn btn-primary bg-iris border-iris',
+			// disable if creating a new ticket
+			'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+		]); ?>
+		<!-- Add part -->
+		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
+				<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
+			</svg> Add parts', [
+			'value' => Url::to('/part/create?ticket_id='.$model->id),
+			'class' => 'part-modal-button btn btn-primary bg-iris border-iris',
 			// disable if creating a new ticket
 			'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
 		]); ?>
@@ -176,7 +195,10 @@ use yii\bootstrap5\ButtonDropdown;
 			<button class="nav-link" id="pills-technicians-tab" data-bs-toggle="pill" data-bs-target="#pills-technicians" type="button" role="tab" aria-controls="pills-technicians" aria-selected="false">Technicians</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-equipment-tab" data-bs-toggle="pill" data-bs-target="#pills-equipment" type="button" role="tab" aria-controls="pills-equipment" aria-selected="false">Equipment</button>
+			<button class="nav-link" id="pills-assets-tab" data-bs-toggle="pill" data-bs-target="#pills-assets" type="button" role="tab" aria-controls="pills-assets" aria-selected="false">Assets</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="pills-parts-tab" data-bs-toggle="pill" data-bs-target="#pills-parts" type="button" role="tab" aria-controls="pills-parts" aria-selected="false">Parts</button>
 		</li>
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="pills-time-entries-tab" data-bs-toggle="pill" data-bs-target="#pills-time-entries" type="button" role="tab" aria-controls="pills-time-entries" aria-selected="false">Time entries</button>
@@ -458,33 +480,67 @@ use yii\bootstrap5\ButtonDropdown;
 				</div>
 			</div>
 		</div>
-		<div class="tab-pane fade" id="pills-equipment" role="tabpanel" aria-labelledby="pills-equipment-tab">
+		<div class="tab-pane fade" id="pills-assets" role="tabpanel" aria-labelledby="pills-assets-tab">
 			<div class="subsection-info-block">
 				<div>
 					<h2>Assets</h2>
-					<p>Assets associated with this ticket</p>
-					<div id="ticket-equipment-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
+					<p>Assets associated with this ticket.</p>
+					<p>Assets are inventory items related to the ticket.</p>
+					<!-- Asset creation modal -->
+					<?php 
+						Modal::begin([
+							'title' => 'Add Assets',
+							'id' => 'asset-modal',
+							'size' => 'modal-lg',
+						]);
+						echo '<div id="asset-modal-content"></div>';
+						Modal::end(); 
+					?>
+					<!-- Add asset -->
+					<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
+							<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
+						</svg> Add assets', [
+						'value' => Url::to('/asset/create?ticket_id=' . $model->id),
+						'class' => 'asset-modal-button btn btn-primary bg-iris border-iris',
+						// disable if creating a new ticket
+						'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+					]); ?>
+					<div id="assets-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
 						<div class="table-container container-fluid overflow-x-scroll">
 							<?php
 								echo ExportMenu::widget([
-									'dataProvider' => $ticketEquipmentProvider,
-									'columns' => $ticketEquipmentColumns,
+									'dataProvider' => $assetProvider,
+									'columns' => $assetColumns,
 									'dropdownOptions' => [
 										'label' => 'Export All',
 										'class' => 'btn btn-outline-secondary btn-default'
 									]
 								]) . "<hr>\n" .
 								GridView::widget([
-									'dataProvider' => $ticketEquipmentProvider,
-									'columns' => $ticketEquipmentColumns,
+									'dataProvider' => $assetProvider,
+									'columns' => $assetColumns,
 								]); 
 							?>
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="pills-parts" role="tabpanel" aria-labelledby="pills-assets-parts">
+			<div class="subsection-info-block">
 				<div>
 					<h2>Parts</h2>
-					<p>Parts associated with this ticket</p>
+					<p>Parts associated with this ticket.</p>
+					<p>Parts are items purchased to help resolve the ticket.</p>
+					<!-- Add part -->
+					<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
+							<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
+						</svg> Add parts', [
+						'value' => Url::to('/part/create?ticket_id=' . $model->id),
+						'class' => 'part-modal-button btn btn-primary bg-iris border-iris',
+						// disable if creating a new ticket
+						'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+					]); ?>
 					<div id="parts-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
 						<div class="table-container container-fluid overflow-x-scroll">
 							<?php

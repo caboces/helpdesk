@@ -45,8 +45,8 @@ $this->title = 'Update Ticket: ' . $model->id;
             'users' => $users,
             'assignedTechData' => $assignedTechData,
             // 'activities' => $activities,
-            'ticketEquipmentProvider' => $ticketEquipmentProvider,
-            'ticketEquipmentColumns' => $ticketEquipmentColumns,
+            'assetProvider' => $assetProvider,
+            'assetColumns' => $assetColumns,
             'partsProvider' => $partsProvider,
             'partsColumns' => $partsColumns,
         ]

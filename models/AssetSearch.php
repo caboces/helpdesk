@@ -4,12 +4,13 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\TicketEquipment;
+use app\models\Asset;
+use yii\rbac\Assignment;
 
 /**
- * TicketEquipmentSearch represents the model behind the search form of `app\models\TicketEquipment`.
+ * AssetSearch represents the model behind the search form of `app\models\Asset`.
  */
-class TicketEquipmentSearch extends TicketEquipment
+class AssetSearch extends Asset
 {
     /**
      * {@inheritdoc}
@@ -40,7 +41,7 @@ class TicketEquipmentSearch extends TicketEquipment
      */
     public function search($params)
     {
-        $query = TicketEquipment::find();
+        $query = Asset::find();
 
         // add conditions that should always apply here
 

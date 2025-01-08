@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "ticket_equipment".
+ * This is the model class for table "asset".
  *
  * @property int $id
  * @property int $ticket_id
@@ -16,14 +16,14 @@ use Yii;
  *
  * @property Ticket $ticket
  */
-class TicketEquipment extends \yii\db\ActiveRecord
+class Asset extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'ticket_equipment';
+        return 'asset';
     }
 
     /**
@@ -97,10 +97,10 @@ class TicketEquipment extends \yii\db\ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return \app\models\query\TicketEquipmentQuery the active query used by this AR class.
+     * @return \app\models\query\AssetQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \app\models\query\TicketEquipmentQuery(get_called_class());
+        return new \app\models\query\AssetQuery(get_called_class());
     }
 }

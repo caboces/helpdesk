@@ -32,7 +32,7 @@ use yii\web\ForbiddenHttpException;
 use app\models\TechTicketAssignment;
 use app\models\TicketAssignmentSearch;
 use app\models\TicketClosedResolvedSearch;
-use app\models\TicketEquipment;
+use app\models\Asset;
 use app\models\TicketRecentlyDeletedSearch;
 use kartik\grid\ActionColumn;
 use yii\data\ActiveDataProvider;
@@ -195,13 +195,13 @@ class TicketController extends Controller
             $model->loadDefaultValues();
         } 
 
-        $ticketEquipmentGridProps = $this->getTicketEquipmentGridProperties($model);
+        $assetGridProps = $this->getTicketAssetGridProperties($model);
         $partsGridProps = $this->getTicketPartsGridProperties($model);
 
         $this->layout = 'blank-container';
-        
         return $this->render('create', [
             'model' => $model,
+            'partModel' => new Part(),
             // search time entries
             'techTimeEntrySearch' => $techTimeEntrySearch,
             'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
@@ -223,8 +223,8 @@ class TicketController extends Controller
             //users
             'users' => $users,
             'assignedTechData' => $assignedTechData,
-            'ticketEquipmentProvider' => $ticketEquipmentGridProps['provider'],
-            'ticketEquipmentColumns' => $ticketEquipmentGridProps['columns'],
+            'assetProvider' => $assetGridProps['provider'],
+            'assetColumns' => $assetGridProps['columns'],
             'partsProvider' => $partsGridProps['provider'],
             'partsColumns' => $partsGridProps['columns'],
         ]);
@@ -295,11 +295,12 @@ class TicketController extends Controller
                     return $this->redirect(['view', 'id' => $model->id]);
                 } 
 
-                $ticketEquipmentGridProps = $this->getTicketEquipmentGridProperties($model);
+                $assetGridProps = $this->getTicketAssetGridProperties($model);
                 $partsGridProps = $this->getTicketPartsGridProperties($model);
 
                 return $this->render('update', [
                     'model' => $model,
+                    'partModel' => new Part(),
                     // search time entries
                     'techTimeEntrySearch' => $techTimeEntrySearch,
                     'techTimeEntryDataProvider' => $techTimeEntryDataProvider,
@@ -322,8 +323,8 @@ class TicketController extends Controller
                     // users
                     'assignedTechData' => $assignedTechData,
                     'users' => $users,
-                    'ticketEquipmentProvider' => $ticketEquipmentGridProps['provider'],
-                    'ticketEquipmentColumns' => $ticketEquipmentGridProps['columns'],
+                    'assetProvider' => $assetGridProps['provider'],
+                    'assetColumns' => $assetGridProps['columns'],
                     'partsProvider' => $partsGridProps['provider'],
                     'partsColumns' => $partsGridProps['columns'],
                 ]);
@@ -692,44 +693,40 @@ class TicketController extends Controller
     }
 
     /**
-     * Get the ticket equipment columns and data provider for the /create and /update pages
+     * Get the assets columns and data provider for the /create and /update pages
      */
-    private function getTicketEquipmentGridProperties($model) {
-        // get ticket provider and columns
-        $ticketEquipmentProvider = new ActiveDataProvider([
-            'query' => TicketEquipment::find()->where(['ticket_id' => $model->id]),
+    private function getTicketAssetGridProperties($model) {
+        // get asset provider and columns
+        $assetProvider = new ActiveDataProvider([
+            'query' => Asset::find()->where(['ticket_id' => $model->id]),
             'sort' => [
                 'defaultOrder' => [
                     'created' => SORT_ASC
                 ]
             ]
         ]);
-        $ticketEquipmentColumns = [
+        $assetColumns = [
             'new_prop_tag' => [
-                'attribute' => 'new_prop_tag'
+                'attribute' => 'new_prop_tag',
+                'label' => 'Asset Tag',
             ],
             [
-                'value' => function(TicketEquipment $model) {
+                'value' => function(Asset $model) {
                     $item = $model->inventory;
                     return '<a href="/inventory/view?new_prop_tag=' . ($model->new_prop_tag != null ? $model->new_prop_tag : '') . '">' . ($item->item_description != null ? $item->item_description : '') . '</a>';
                 },
+                'label' => 'Asset Description',
                 'format' => 'raw',
             ],
             [
                 'attribute' => 'last_modified_by',
-                'value' => function(TicketEquipment $model) {
+                'value' => function(Asset $model) {
                     return '<a href="/user/view?id=' . ($model->last_modified_by_user_id != null ? $model->last_modified_by_user_id : '') . '">' . ($model->last_modified_by_user_id != null ? $model->lastModifiedByUser->username : '') . '</a>';
                 },
                 'format' => 'raw',
-            ],
-            'created' => [
-                'attribute' => 'created'
-            ],
-            'modified' => [
-                'attribute' => 'modified'
             ]
         ];
-        return ['provider' => $ticketEquipmentProvider, 'columns' => $ticketEquipmentColumns];
+        return ['provider' => $assetProvider, 'columns' => $assetColumns];
     }
 
     private function getTicketPartsGridProperties($model) {
@@ -743,6 +740,9 @@ class TicketController extends Controller
             ]
         ]);
         $partsColumns = [
+            'part_number' => [
+                'attribute' => 'part_number',
+            ],
             'part_name' => [
                 'attribute' => 'part_name'
             ],
@@ -757,9 +757,6 @@ class TicketController extends Controller
             ],
             'note' => [
                 'attribute' => 'note',
-            ],
-            'part_number' => [
-                'attribute' => 'part_number',
             ],
             [
                 'attribute' => 'last_modified_by',

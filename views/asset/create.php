@@ -3,13 +3,13 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var app\models\TicketEquipment $model */
+/** @var app\models\Asset $model */
 
-$this->title = 'Add Ticket Equipment';
-$this->params['breadcrumbs'][] = ['label' => 'Ticket Equipment', 'url' => ['index']];
+$this->title = 'Add Asset';
+$this->params['breadcrumbs'][] = ['label' => 'Asset', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="ticket-equipment-create">
+<div class="asset-create">
 
     <div class="title-icon d-flex align-items-center">
         <svg aria-label="hidden" xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" class="bi bi-display-fill" viewBox="0 0 16 16">
@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'ticket' => $ticket
+        'ticket_id' => $ticket_id
     ]) ?>
 
 </div>

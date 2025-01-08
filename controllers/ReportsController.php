@@ -105,7 +105,7 @@ class ReportsController extends Controller
             'last_day_effective'
         ];
 
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
         $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
         $dataProvider = new ArrayDataProvider([
             'allModels' => Ticket::getBillingDetailReportQueryDivisionDepartment($month, $year)->asArray()->all()
@@ -179,7 +179,7 @@ class ReportsController extends Controller
      */
     public function actionMasterTicketSummary()
     {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
         $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
         $query = Ticket::getMasterTicketSummaryQuery();
         
@@ -229,7 +229,7 @@ class ReportsController extends Controller
      */
     public function actionSupportAndRepairLaborBilling()
     {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
         $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
         $jobType = Yii::$app->getRequest()->getQueryParam('jobType', 5); // 'Troubleshoot' in job_type table
         $jobTypes = ArrayHelper::map(JobType::find()->where(['id' => [5, 7]])->asArray()->all(), 'id', 'name'); // 5 and 7 are 'Troubleshoot' and 'Audio Visual Production'
@@ -284,7 +284,7 @@ class ReportsController extends Controller
     }
 
     public function actionTechnicianMonthlyReport() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
         $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
         $dataProvider = new ArrayDataProvider([
             'allModels' => User::getTechnicianMonthlyReport($month, $year)->asArray()->all()
@@ -333,7 +333,7 @@ class ReportsController extends Controller
     }
 
     public function actionPartBillingSummary() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
         $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
         $dataProvider = new ArrayDataProvider([
             'allModels' => Ticket::getPartBillingSummary($month, $year)->asArray()->all()
@@ -371,7 +371,7 @@ class ReportsController extends Controller
     }
 
     public function actionWnyricIpadRepairLaborReport() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
         $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
         $dataProvider = new ArrayDataProvider([
             'allModels' => Ticket::getWnyricIpadRepairLaborReport($month, $year)->asArray()->all()
@@ -410,7 +410,7 @@ class ReportsController extends Controller
     }
 
     public function actionWnyricIpadPartsSummary() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
         $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
         $dataProvider = new ArrayDataProvider([
             'allModels' => Ticket::getWnyricIpadPartsSummary($month, $year)->asArray()->all()
@@ -444,7 +444,7 @@ class ReportsController extends Controller
     
 
     public function actionWnyricIpadRepairBillingReport() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
         $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
         $dataProvider = new ArrayDataProvider([
             'allModels' => Ticket::getWnyricIpadRepairBillingReport($month, $year)->asArray()->all()
@@ -483,7 +483,7 @@ class ReportsController extends Controller
     }
 
     public function actionNonWnyricIpadRepairLaborReport() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('n'));
+        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
         $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
         $dataProvider = new ArrayDataProvider([
             'allModels' => Ticket::getNonWnyricIpadRepairLaborReport($month, $year)->asArray()->all()

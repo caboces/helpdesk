@@ -82,7 +82,12 @@ $('#ticket-customer_type_id').on('change', function() {
 $('#time-entry-modal-button').click(function () {
     $('#time-entry-modal').modal('show')
     .find('#time-entry-modal-content')
-    .load($(this).attr('value'));
+    .load($(this).attr('value'), function() {
+        // we need to do it here because even after jquery has loaded the page, the asset modal contents have not been loaded yet until we click on the modal button.
+        for (const $elem of $('.expanding-input-section').toArray()) {
+            updateRmvBtnState($elem)
+        }
+    })
 });
 
 /**
@@ -96,68 +101,124 @@ $('#confirm-time-entry').submit(function(e) {
 });
 
 /* ===========================================================================================
-|| TICKET EQUIPMENT MODAL (TICKET FORM)
+|| ASSET MODAL (TICKET FORM)
 =========================================================================================== */
 
 /**
- * Get click of new ticket equipment button from ticket form.
- * Opens a modal window for creating ticket equipment entries.
+ * Get click of new asset button from ticket form.
+ * Opens a modal window for creating asset entries.
  */
-$('#ticket-equipment-modal-button').click(function () {
-    $('#ticket-equipment-modal').modal('show')
-    .find('#ticket-equipment-modal-content')
-    .load($(this).attr('value'));
+$('.asset-modal-button').click(function () {
+    $('#asset-modal').modal('show')
+    .find('#asset-modal-content')
+    .load($(this).attr('value'), function() {
+        // we need to do it here because even after jquery has loaded the page, the asset modal contents have not been loaded yet until we click on the modal button.
+        for (const $elem of $('.expanding-input-section').toArray()) {
+            updateRmvBtnState($elem)
+        }
+    })
+});
+
+/**
+ * Close asset modal instead of redirecting to view-view
+ */
+$('#confirm-asset').submit(function(e) {
+    // e.preventDefault();
+    $('#asset-modal').modal('hide');
+});
+
+/* ===========================================================================================
+|| EXPANDABLE INPUT FORMS (TIME ENTRY, ASSETS, PARTS)
+=========================================================================================== */
+
+// Expects the following format:
+
+{/* 
+    // ... indicates anything you want
+<div id="..." class="expanding-input-section ...">
+    <div class="duplicate-input-group ...">
+        ... // your inputs
+
+        // these are the add/remove buttons, they can be in their own div if required
+        <?= Html::button('Remove', ['class' => 'modal-button-remove btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>
+        <?= Html::button('Add', ['class' => 'modal-button-add btn btn-primary bg-iris border-iris btn-skinny']); ?>
+    </div>
+</div> 
+*/}
+
+/**
+ * Add the parent element and put it below
+ */
+$(document).on('click', '.modal-button-add',  function(e) {
+    const $parent = $(this).closest('.duplicate-input-group')
+    const $clone = $parent.clone()
+    // append the clone
+    $section = $parent.closest('.expanding-input-section')
+    $section.append($clone)
+    updateRmvBtnState($section)
+})
+
+/**
+ * Remove the parent element/entry
+ */
+$(document).on('click', '.modal-button-remove', function(e) {
+    const $parent = $(this).closest('.duplicate-input-group')
+    $section = $parent.closest('.expanding-input-section')
+    if ($section.find('.duplicate-input-group').length > 1) {
+        $parent.remove()
+    } else {
+        alert('Cannot remove the last entry!')
+    }
+    updateRmvBtnState($section)
+})
+
+/**
+ * Disable removing the entry if there is only one
+ */
+function updateRmvBtnState(section) {
+    if ($(section).find('.duplicate-input-group').length <= 1) {
+        // disable remove button if there is only 1 element
+        $(section).find('.modal-button-remove').prop('disabled', true)
+    } else {
+        // otherwise, keep enabled
+        $(section).find('.modal-button-remove').prop('disabled', false)
+    }
+}
+
+// update the remove buttons at page load to be disabled
+// $(document).ready(function () {
+//     for (const $elem of $('.expanding-input-section').toArray()) {
+//         updateRmvBtnState($elem)
+//     }
+// })
+
+
+/* ===========================================================================================
+|| PART MODAL (TICKET FORM)
+=========================================================================================== */
+
+/**
+ * Get click of new asset button from ticket form.
+ * Opens a modal window for creating asset entries.
+ */
+$('.part-modal-button').click(function () {
+    $('#part-modal').modal('show')
+    .find('#part-modal-content')
+    .load($(this).attr('value'), function() {
+        // we need to do it here because even after jquery has loaded the page, the part modal contents have not been loaded yet until we click on the modal button.
+        for (const $elem of $('.expanding-input-section').toArray()) {
+            updateRmvBtnState($elem)
+        }
+    });
 });
 
 /**
  * Close TimeEntry modal instead of redirecting to view-view
  */
-$('#confirm-ticket-equipment').submit(function(e) {
+$('#confirm-part').submit(function(e) {
     // e.preventDefault();
-    $('#ticket-equipment-modal').modal('hide');
+    $('#asset-part').modal('hide');
 });
-
-/**
- * Remove the parent element/entry
- * TODO: dont work right now
- */
-$('.ticket-equip-modal-button-remove').on('click', function(e) {
-    const $parent = $(this).closest('.question-box-no-trim')
-    if ($('.question-box-no-trim').length > 1) {
-        $parent.remove()
-    } else {
-        alert('Cannot remove the last entry!')
-    }
-})
-
-/**
- * Disable removing the entry if there is only one
- * TODO: dont work right now
- */
-function updateRmvBtnState() {
-    if ($('question-box-no-trim').length <= 1) {
-        // disable remove button if there is only 1 element
-        $('.ticket-equip-modal-button-remove').prop('disabled', true)
-    } else {
-        // otherwise, keep enabled
-        $('.ticket-equip-modal-button-remove').prop('disabled', false)
-    }
-}
-
-/**
- * Duplicate the parent element and put it below
- * TODO: dont work right now
- */
-$('.ticket-equip-modal-button-duplicate').on('click', function(e) {
-    const $parent = $(this).closest('.question-box-no-trim')
-    const $clone = $parent.clone()
-    $clone.find('input').each(function() {
-        $(this).val('') // clear input
-    })
-    // append the clone
-    $('#ticket-equipment-box').append($clone)
-    updateRmvBtnState()
-})
 
 /* ===========================================================================================
 || TECHNICIANS (TICKET FORM)
