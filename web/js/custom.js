@@ -140,8 +140,8 @@ $('#confirm-asset').submit(function(e) {
         ... // your inputs
 
         // these are the add/remove buttons, they can be in their own div if required
-        <?= Html::button('Remove', ['class' => 'modal-button-remove btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>
-        <?= Html::button('Add', ['class' => 'modal-button-add btn btn-primary bg-iris border-iris btn-skinny']); ?>
+        <?= Html::button('Remove', ['class' => 'modal-button-remove ...']); ?>
+        <?= Html::button('Add', ['class' => 'modal-button-add ...']); ?>
     </div>
 </div> 
 */}
@@ -155,6 +155,16 @@ $(document).on('click', '.modal-button-add',  function(e) {
     // append the clone
     $section = $parent.closest('.expanding-input-section')
     $section.append($clone)
+    // update input numbers
+    $clone.find('input').each(function() {
+        const name = $(this).attr('name')
+        // match a string like "[123]", where 123 is any number
+        const match = name.match(/\[(\d+)\]/)
+        if (match) {
+            const newIndex = parseInt(match[1], 10) + 1;
+            $(this).attr('name', name.replace(/\[\d+\]/, `[${newIndex}]`))
+        }
+    })
     updateRmvBtnState($section)
 })
 

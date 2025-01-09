@@ -18,8 +18,11 @@ use yii\widgets\ActiveForm;
 
     <div id="asset-box" class="expanding-input-section asset-container">
         <h3>Add Asset</h3>
+        
+        <?php foreach ($models as $index => $model): ?>
+
         <div class="duplicate-input-group question-box-no-trim">
-            <?= $form->field($model, 'last_modified_by_user_id', [
+            <?= $form->field($model, "[$index]last_modified_by_user_id", [
                         'template' => '{input}',
                         'options' => ['tag' => false],
                         'inputOptions' => ['value' => Yii::$app->user->id]
@@ -29,10 +32,16 @@ use yii\widgets\ActiveForm;
             ?>
             <div class="row">
                 <div class="col">
-                    <?= $form->field($model, 'new_prop_tag')->textInput() ?>
+                    <?= $form->field($model, "[$index]new_prop_tag")->textInput() ?>
                 </div>
                 <div class="col">
-                    <?= $form->field($model, 'ticket_id', ['inputOptions' => ['value' => $ticket_id]])->textInput(['readonly' => true, 'class' => 'read-only form-control']) ?>
+                    <?php
+                        if ($ticket_id) {
+                            echo $form->field($model, "[$index]ticket_id", ['inputOptions' => ['value' => $ticket_id]])->textInput(['readonly' => true, 'class' => 'read-only form-control']);
+                        } else {
+                            echo $form->field($model, "[$index]ticket_id")->textInput();
+                        }
+                    ?>
                 </div>
             </div>
             <div class="form-group">
@@ -40,6 +49,16 @@ use yii\widgets\ActiveForm;
                 <?= Html::button('Add', ['class' => 'modal-button-add btn btn-primary bg-iris border-iris btn-skinny']); ?>
             </div>
         </div>
+
+        <?php endforeach; ?>
+
+    </div>
+    <div class="form-group">
+        <?= Html::submitButton('Create assets', [
+            'id' => 'create-assets',
+            'class' => 'mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan',
+            'form' => 'add-asset-form',
+        ]); ?>
     </div>
 
     <?php ActiveForm::end(); ?>

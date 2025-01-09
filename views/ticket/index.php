@@ -73,7 +73,7 @@ $this->title = 'Ticket Management';
                              * interferes with the "confirm" messages used by the Delete/Soft-Delete action buttons. When the confirm message
                              * pops up, the user is quickly taken back to the model's view and the delete action is not carried out.
                              */
-                            /*
+                            
                             // Make entire grid rows clickable, route to that ticket's view page
                             $url = StringHelper::basename(get_class($model));
                             $url = Url::toRoute(['/' . strtolower($url) . '/view']);
@@ -85,14 +85,14 @@ $this->title = 'Ticket Management';
                                 return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'high'];
                             }
                             return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);',];
-                            */
+                            
 
                             // (CURRENTLY REPLACING ABOVE CODE)Add critical/high class to rows with those priorities
-                            if ($model->jobPriority->name == 'Critical') {
-                                return ['id' => $model['id'], 'class' => 'critical'];
-                            } else if ($model->jobPriority->name == 'High') {
-                                return ['id' => $model['id'], 'class' => 'high'];
-                            }
+                            // if ($model->jobPriority->name == 'Critical') {
+                            //     return ['id' => $model['id'], 'class' => 'critical'];
+                            // } else if ($model->jobPriority->name == 'High') {
+                            //     return ['id' => $model['id'], 'class' => 'high'];
+                            // }
                         },
                         'columns' => [
                             [

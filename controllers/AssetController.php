@@ -6,6 +6,8 @@ use app\models\Asset;
 use app\models\Ticket;
 use yii\web\Controller;
 use app\models\AssetSearch;
+use Yii;
+use yii\base\Model;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
@@ -68,21 +70,32 @@ class AssetController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Asset();
+        $models = [new Asset()];
         $ticket_id = $this->request->get('ticket_id');
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['/ticket/update', 'id' => $model->ticket_id]);
+            $count = count($this->request->post('Asset'));
+            for ($i = 0; $i < $count; $i++) {
+                $models[$i] = new Asset();
+            }
+            // validate and load
+            if (Asset::loadMultiple($models, $this->request->post()) && Asset::validateMultiple($models)) {
+                foreach ($models as $model) {
+                    // do not run validation since we already did
+                    $model->save(false);
+                }
+                // redirect to ticket update since we usually add assets from the update ticket page
+                return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
             }
         } else {
-            $model->loadDefaultValues();
+            foreach ($models as $model) {
+                $model->loadDefaultValues();
+            }
         }
 
         $this->layout = 'blank';
-
         return $this->renderAjax('create', [
-            'model' => $model,
+            'models' => $models,
             'ticket_id' => $ticket_id,
         ]);
     }
