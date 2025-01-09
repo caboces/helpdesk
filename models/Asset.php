@@ -36,6 +36,7 @@ class Asset extends \yii\db\ActiveRecord
             [['ticket_id', 'new_prop_tag', 'last_modified_by_user_id'], 'integer'],
             [['created', 'modified'], 'safe'],
             [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],
+            [['new_prop_tag'], 'exist', 'skipOnError' => true, 'targetClass' => Asset::class, 'targetAttribute' => ['new_prop_tag' => 'new_prop_tag']]
         ];
     }
 

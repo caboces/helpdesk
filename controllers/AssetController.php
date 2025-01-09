@@ -86,6 +86,16 @@ class AssetController extends Controller
                 }
                 // redirect to ticket update since we usually add assets from the update ticket page
                 return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
+            } else {
+                // form errors
+                $errors = [];
+                foreach ($models as $model) {
+                    if ($model->hasErrors()) {
+                        $errors[$model->new_prop_tag] = $model->getErrors();
+                    }
+                }
+                Yii::$app->session->setFlash('assetErrors', $errors);
+                return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
             }
         } else {
             foreach ($models as $model) {

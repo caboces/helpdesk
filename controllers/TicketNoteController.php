@@ -2,17 +2,16 @@
 
 namespace app\controllers;
 
-use app\models\Part;
-use app\models\PartSearch;
-use Yii;
+use app\models\TicketNote;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * PartController implements the CRUD actions for Part model.
+ * TicketNoteController implements the CRUD actions for TicketNote model.
  */
-class PartController extends Controller
+class TicketNoteController extends Controller
 {
     /**
      * @inheritDoc
@@ -33,23 +32,33 @@ class PartController extends Controller
     }
 
     /**
-     * Lists all Part models.
+     * Lists all TicketNote models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new PartSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider = new ActiveDataProvider([
+            'query' => TicketNote::find(),
+            /*
+            'pagination' => [
+                'pageSize' => 50
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ]
+            ],
+            */
+        ]);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Part model.
+     * Displays a single TicketNote model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -62,54 +71,29 @@ class PartController extends Controller
     }
 
     /**
-     * Creates a new Part model.
+     * Creates a new TicketNote model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $models = [new Part()];
-        $ticket_id = $this->request->get('ticket_id');
+        $model = new TicketNote();
 
         if ($this->request->isPost) {
-            $count = count($this->request->post('Part'));
-            for ($i = 0; $i < $count; $i++) {
-                $models[$i] = new Part();
-            }
-            // validate and load
-            if (Part::loadMultiple($models, $this->request->post()) && Part::validateMultiple($models)) {
-                foreach ($models as $model) {
-                    // do not run validation since we already did
-                    $model->save(false);
-                }
-                // redirect to ticket update since we usually add assets from the update ticket page
-                return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
-            } else {
-                // form errors
-                $errors = [];
-                foreach ($models as $model) {
-                    if ($model->hasErrors()) {
-                        $errors[$model->part_name] = $model->getErrors();
-                    }
-                }
-                Yii::$app->session->setFlash('partErrors', $errors);
-                return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
-            foreach ($models as $model) {
-                $model->loadDefaultValues();
-            }
+            $model->loadDefaultValues();
         }
 
-        $this->layout = 'blank';
-        return $this->renderAjax('create', [
-            'models' => $models,
-            'ticket_id' => $ticket_id,
+        return $this->render('create', [
+            'model' => $model,
         ]);
     }
 
     /**
-     * Updates an existing Part model.
+     * Updates an existing TicketNote model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -129,7 +113,7 @@ class PartController extends Controller
     }
 
     /**
-     * Deletes an existing Part model.
+     * Deletes an existing TicketNote model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -143,15 +127,15 @@ class PartController extends Controller
     }
 
     /**
-     * Finds the Part model based on its primary key value.
+     * Finds the TicketNote model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Part the loaded model
+     * @return TicketNote the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Part::findOne(['id' => $id])) !== null) {
+        if (($model = TicketNote::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

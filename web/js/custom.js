@@ -155,7 +155,8 @@ $(document).on('click', '.modal-button-add',  function(e) {
     // append the clone
     $section = $parent.closest('.expanding-input-section')
     $section.append($clone)
-    // update input numbers
+    // update input numbers.
+    // copying the <select> elements wont select the same <option>s, but this is okay especially for the TimeEntry form.
     $clone.find('input, select, textarea').each(function() {
         const name = $(this).attr('name')
         // match a string like "[123]", where 123 is any number
