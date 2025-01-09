@@ -112,6 +112,8 @@ $this->title = 'Create Ticket';
             'assetColumns' => $assetColumns,
             'partsProvider' => $partsProvider,
             'partsColumns' => $partsColumns,
+            'ticketNotesProvider' => $ticketNotesProvider,
+            'ticketNotesColumns' => $ticketNotesColumns,
         ]
     ) ?>
 

@@ -10,6 +10,9 @@ use Yii;
  * @property int $id
  * @property int $ticket_id
  * @property string|null $note
+ * @property int $last_modified_by_user_id
+ * @property string|null $created
+ * @property string|null $modified
  *
  * @property Ticket $ticket
  */
@@ -29,10 +32,8 @@ class TicketNote extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'ticket_id'], 'required'],
-            [['id', 'ticket_id'], 'integer'],
             [['note'], 'string', 'max' => 500],
-            [['id'], 'unique'],
+            [['last_modified_by_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['last_modified_by_user_id' => 'id']],
             [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],
         ];
     }
@@ -46,6 +47,9 @@ class TicketNote extends \yii\db\ActiveRecord
             'id' => 'ID',
             'ticket_id' => 'Ticket ID',
             'note' => 'Note',
+            'last_modified_by_user_id' => 'Last Note Editor',
+            'created' => 'Created',
+            'modified' => 'Modified',
         ];
     }
 
@@ -57,6 +61,16 @@ class TicketNote extends \yii\db\ActiveRecord
     public function getTicket()
     {
         return $this->hasOne(Ticket::class, ['id' => 'ticket_id']);
+    }
+    
+    /**
+     * Gets query for [[LastModifiedByUser]].
+     *
+     * @return \yii\db\ActiveQuery|\app\models\query\UserQuery
+     */
+    public function getLastModifiedByUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'last_modified_by_user_id']);
     }
 
     /**

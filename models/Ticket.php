@@ -21,6 +21,7 @@ use Yii;
  * @property int|null $job_status_id
  * @property int|null $job_type_id
  * @property int $status
+ * @property int $created_by
  * @property string $created
  * @property string $modified
  *
@@ -35,6 +36,7 @@ use Yii;
  * @property DepartmentBuilding $departmentBuilding
  * @property Division $division
  * @property Department $department
+ * @property User $createdBy
  * 
  */
 class Ticket extends \yii\db\ActiveRecord
@@ -54,7 +56,7 @@ class Ticket extends \yii\db\ActiveRecord
     {
         return [
             [['summary', 'requester', 'location', 'requester_email', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'status'], 'required'],
-            [['primary_tech_id', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'district_id', 'district_building_id', 'department_building_id', 'division_id', 'department_id', 'status', 'soft_deleted_by_user_id'], 'integer'],
+            [['primary_tech_id', 'job_category_id', 'job_priority_id', 'job_status_id', 'job_type_id', 'customer_type_id', 'district_id', 'district_building_id', 'department_building_id', 'division_id', 'department_id', 'status', 'soft_deleted_by_user_id', 'created_by'], 'integer'],
             [['created', 'modified', 'soft_deletion_timestamp'], 'safe'],
             [['summary'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 500],
@@ -108,6 +110,7 @@ class Ticket extends \yii\db\ActiveRecord
             'soft_deleted_by_user_id' => 'Marked for Deletion By',
             'soft_deletion_timestamp' => 'Soft Deletion Date',
             'status' => 'Status',
+            'created_by' => 'Created By',
             'created' => 'Created',
             'modified' => 'Modified',
         ];
@@ -266,6 +269,15 @@ class Ticket extends \yii\db\ActiveRecord
     public function getParts()
     {
         return $this->hasMany(Part::class,['id'=>'ticket_id'])->viaTable('{{%part}}',['ticket_id'=>'id']); 
+    }
+
+    /**
+     * Junction relation to get the user who created the ticket
+     *
+     * */
+    public function getCreatedBy()
+    {
+        return $this->HasOne(User::class,['id'=>'created_by']); 
     }
 
     /**

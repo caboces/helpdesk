@@ -112,6 +112,8 @@ $this->title = 'Update Ticket: ' . $model->id;
             'assetColumns' => $assetColumns,
             'partsProvider' => $partsProvider,
             'partsColumns' => $partsColumns,
+            'ticketNotesProvider' => $ticketNotesProvider,
+            'ticketNotesColumns' => $ticketNotesColumns,
         ]
     ) ?>
 

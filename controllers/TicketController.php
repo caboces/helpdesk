@@ -33,6 +33,7 @@ use app\models\TechTicketAssignment;
 use app\models\TicketAssignmentSearch;
 use app\models\TicketClosedResolvedSearch;
 use app\models\Asset;
+use app\models\TicketNote;
 use app\models\TicketRecentlyDeletedSearch;
 use kartik\grid\ActionColumn;
 use yii\data\ActiveDataProvider;
@@ -149,6 +150,7 @@ class TicketController extends Controller
     public function actionCreate()
     {
         $model = new Ticket();
+        $model->created_by = Yii::$app->user->id;
 
         // search tech time entries for ticket
         $techTimeEntrySearch = new TimeEntrySearch();
@@ -176,7 +178,8 @@ class TicketController extends Controller
         if ($this->request->isPost) {
             // if validation fails, this will not work
             if ($model->load($this->request->post()) && $model->save(false)) {
-
+                // manually set the created_by to the user's id.
+                $model->created_by = Yii::$app->user->id;
                 if (!empty($_POST['Ticket']['users'])) {
                     foreach ($_POST['Ticket']['users'] as $user_id) {
                         // Find user objects by user ids sent in POST
@@ -204,6 +207,7 @@ class TicketController extends Controller
 
         $assetGridProps = $this->getTicketAssetGridProperties($model);
         $partsGridProps = $this->getTicketPartsGridProperties($model);
+        $ticketNoteGridProps = $this->getTicketNotesGridProperties($model);
 
         $this->layout = 'blank-container';
         return $this->render('create', [
@@ -234,6 +238,8 @@ class TicketController extends Controller
             'assetColumns' => $assetGridProps['columns'],
             'partsProvider' => $partsGridProps['provider'],
             'partsColumns' => $partsGridProps['columns'],
+            'ticketNotesProvider' => $ticketNoteGridProps['provider'],
+            'ticketNotesColumns' => $ticketNoteGridProps['columns'],
         ]);
     }
 
@@ -304,6 +310,7 @@ class TicketController extends Controller
 
                 $assetGridProps = $this->getTicketAssetGridProperties($model);
                 $partsGridProps = $this->getTicketPartsGridProperties($model);
+                $ticketNoteGridProps = $this->getTicketNotesGridProperties($model);
 
                 return $this->render('update', [
                     'model' => $model,
@@ -334,6 +341,8 @@ class TicketController extends Controller
                     'assetColumns' => $assetGridProps['columns'],
                     'partsProvider' => $partsGridProps['provider'],
                     'partsColumns' => $partsGridProps['columns'],
+                    'ticketNotesProvider' => $ticketNoteGridProps['provider'],
+                    'ticketNotesColumns' => $ticketNoteGridProps['columns'],
                 ]);
             } else {
                 // ticket isn't active!
@@ -700,7 +709,7 @@ class TicketController extends Controller
     }
 
     /**
-     * Get the assets columns and data provider for the /create and /update pages
+     * Get the assets columns and data provider for the /create and /update ticket pages
      */
     private function getTicketAssetGridProperties($model) {
         // get asset provider and columns
@@ -712,6 +721,7 @@ class TicketController extends Controller
                 ]
             ]
         ]);
+        // asset columns
         $assetColumns = [
             'new_prop_tag' => [
                 'attribute' => 'new_prop_tag',
@@ -736,8 +746,11 @@ class TicketController extends Controller
         return ['provider' => $assetProvider, 'columns' => $assetColumns];
     }
 
+    /**
+     * Get the parts columns and data provider for the /create and /update ticket pages
+     */
     private function getTicketPartsGridProperties($model) {
-        // get ticket provider and columns
+        // get parts provider and columns
         $partsProvider = new ActiveDataProvider([
             'query' => Part::find()->where(['ticket_id' => $model->id]),
             'sort' => [
@@ -746,6 +759,7 @@ class TicketController extends Controller
                 ]
             ]
         ]);
+        // parts columns
         $partsColumns = [
             'part_number' => [
                 'attribute' => 'part_number',
@@ -774,5 +788,40 @@ class TicketController extends Controller
             ],
         ];
         return ['provider' => $partsProvider, 'columns' => $partsColumns];
+    }
+
+    /**
+     * Get the ticket note columns and data provider for the /create and /update ticket pages
+     */
+    private function getTicketNotesGridProperties($model) {
+        // get ticket note provider and columns
+        $ticketNotesProvider = new ActiveDataProvider([
+            'query' => TicketNote::find()->where(['ticket_id' => $model->id]),
+            'sort' => [
+                'defaultOrder' => [
+                    'created' => SORT_ASC
+                ]
+            ]
+        ]);
+        // parts columns
+        $ticketNotesColumns = [
+            'note' => [
+                'attribute' => 'note',
+            ],
+            [
+                'attribute' => 'last_modified_by',
+                'value' => function(TicketNote $model) {
+                    return '<a href="/user/view?id=' . ($model->last_modified_by_user_id != null ? $model->last_modified_by_user_id : '') . '">' . ($model->last_modified_by_user_id != null ? $model->lastModifiedByUser->username : '') . '</a>';
+                },
+                'format' => 'raw',
+            ],
+            'created' => [
+                'attribute' => 'created',
+                'value' => function (TicketNote $model) {
+                    return Yii::$app->formatter->asDate($model->created, 'php:F jS, Y');
+                }
+            ]
+        ];
+        return ['provider' => $ticketNotesProvider, 'columns' => $ticketNotesColumns];
     }
 }

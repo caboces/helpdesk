@@ -58,6 +58,17 @@ use yii\bootstrap5\ButtonDropdown;
 		Modal::end(); 
 	?>
 
+	<!-- Ticket note creation modal -->
+	<?php 
+		Modal::begin([
+			'title' => 'Add Ticket Note',
+			'id' => 'ticket-note-modal',
+			'size' => 'modal-lg',
+		]);
+		echo '<div id="ticket-note-modal-content"></div>';
+		Modal::end(); 
+	?>
+
 	<?php $form = ActiveForm::begin(); ?>
 
 	<!-- action buttons -->
@@ -69,11 +80,10 @@ use yii\bootstrap5\ButtonDropdown;
 				<path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
 				<path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
 			</svg> New tech note', [
-			'class' => 'btn btn-primary bg-iris border-iris',
-			'data-bs-toggle' => 'collapse',
-			'data-bs-target' => '#tech-note',
-			'aria-expanded' => 'false',
-			'aria-controls' => '#tech-note',
+				'value' => Url::to("/ticket-note/create?ticket_id={$model->id}&redirect=/ticket/".Yii::$app->controller->action->id),
+				'class' => 'ticket-note-modal-button btn btn-primary bg-iris border-iris',
+				// disable if creating a new ticket
+				'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
 		]); ?>
 		<!-- Add asset -->
 		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
@@ -201,21 +211,12 @@ use yii\bootstrap5\ButtonDropdown;
 			<button class="nav-link" id="pills-parts-tab" data-bs-toggle="pill" data-bs-target="#pills-parts" type="button" role="tab" aria-controls="pills-parts" aria-selected="false">Parts</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-time-entries-tab" data-bs-toggle="pill" data-bs-target="#pills-time-entries" type="button" role="tab" aria-controls="pills-time-entries" aria-selected="false">Time entries</button>
+			<button class="nav-link" id="pills-time-entries-tab" data-bs-toggle="pill" data-bs-target="#pills-time-entries" type="button" role="tab" aria-controls="pills-time-entries" aria-selected="false">Time Entries</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="pills-ticket-notes-tab" data-bs-toggle="pill" data-bs-target="#pills-ticket-notes" type="button" role="tab" aria-controls="pills-ticket-notes" aria-selected="false">Ticket Notes</button>
 		</li>
 	</ul>
-
-	<!-- tech note -->
-	<div class="row">
-		<div class="col">
-			<div class="collapse multi-collapse" id="tech-note">
-				<div class="card card-body">
-					There will be a text box here soon!
-					<!-- $form->field($model, 'tech_note')->textarea(['maxlength' => true, 'rows' => 3]) -->
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<!-- pill content -->
 	<div class="tab-content" id="pills-tabContent">
@@ -223,6 +224,39 @@ use yii\bootstrap5\ButtonDropdown;
 			<div class="subsection-info-block">
 				<h2>General</h2>
 				<p>Details pertaining to the request</p>
+
+				<!-- /ticket/update specific fields -->
+				<?php if (Yii::$app->controller->action->id == 'update'): ?>
+					<div class="question-box">
+						<div class="row">
+							<div class="col-md-3">
+								<?= $form->field($model, 'created_by')->textInput([
+									'readonly' => true, 
+									'disabled' => true,
+									'class' => 'read-only form-control',
+									'value' => $model->createdBy->username
+								]) ?>
+							</div>
+							<div class="col-md-3">
+								<?= $form->field($model, 'created')->textInput([
+									'readonly' => true, 
+									'disabled' => true,
+									'class' => 'read-only form-control',
+									'value' => Yii::$app->formatter->asDate($model->created, 'php:F jS, Y H:i A')
+								]) ?>
+							</div>
+							<div class="col-md-3">
+								<?= $form->field($model, 'modified')->textInput([
+									'readonly' => true, 
+									'disabled' => true,
+									'class' => 'read-only form-control',
+									'value' => Yii::$app->formatter->asDate($model->modified, 'php:F jS, Y H:i A')
+								]) ?>
+							</div>
+						</div>
+					</div>
+				<?php endif; ?>
+
 				<!-- this is where the dependent dropdowns are going to be, i think all three can fit in one row-->
 				<div class="question-box">
 					<div class="row">
@@ -665,6 +699,45 @@ use yii\bootstrap5\ButtonDropdown;
 						],
 					]); ?>
 				<?php Pjax::end(); ?>
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane fade" id="pills-ticket-notes" role="tabpanel" aria-labelledby="pills-ticket-notes">
+			<div class="subsection-info-block">
+				<div>
+					<h2>Tech Notes</h2>
+					<p>These are the notes left by other techs about the ticket.</p>
+					<!-- Add tech note 
+					 I called it ticket_note internally, but we'll say "tech note" in the frontend i guess 
+					 -->
+					<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16" aria-hidden="true">
+							<path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
+							<path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+							<path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+						</svg> New tech note', [
+							'value' => Url::to("/ticket-note/create?ticket_id={$model->id}&redirect=/ticket/".Yii::$app->controller->action->id),
+							'class' => 'ticket-note-modal-button btn btn-primary bg-iris border-iris',
+							// disable if creating a new ticket
+							'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+					]); ?>
+					<div id="ticket-notes-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
+						<div class="table-container container-fluid overflow-x-scroll">
+							<?php
+								echo ExportMenu::widget([
+									'dataProvider' => $ticketNotesProvider,
+									'columns' => $ticketNotesColumns,
+									'dropdownOptions' => [
+										'label' => 'Export All',
+										'class' => 'btn btn-outline-secondary btn-default'
+									]
+								]) . "<hr>\n" .
+								GridView::widget([
+									'dataProvider' => $ticketNotesProvider,
+									'columns' => $ticketNotesColumns,
+								]); 
+							?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

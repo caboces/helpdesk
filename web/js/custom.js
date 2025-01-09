@@ -231,9 +231,38 @@ $('#confirm-part').submit(function(e) {
     $('#asset-part').modal('hide');
 });
 
+
+/* ===========================================================================================
+|| TICKET NOTE MODAL (TICKET FORM)
+=========================================================================================== */
+
+/**
+ * Get click of new ticket note button from ticket form.
+ * Opens a modal window for creating ticket note entries.
+ */
+$('.ticket-note-modal-button').click(function () {
+    $('#ticket-note-modal').modal('show')
+    .find('#ticket-note-modal-content')
+    .load($(this).attr('value'), function() {
+        // we need to do it here because even after jquery has loaded the page, the asset modal contents have not been loaded yet until we click on the modal button.
+        for (const $elem of $('.expanding-input-section').toArray()) {
+            updateRmvBtnState($elem)
+        }
+    })
+});
+
+/**
+ * Close ticket note modal instead of redirecting to view-view
+ */
+$('#confirm-ticket-note').submit(function(e) {
+    // e.preventDefault();
+    $('#ticket-note-modal').modal('hide');
+});
+
 /* ===========================================================================================
 || TECHNICIANS (TICKET FORM)
 =========================================================================================== */
+
 $('#ticket-users').on('select2:unselecting', function(e) {
     // disable the unselect element for now as we validate
     e.preventDefault()

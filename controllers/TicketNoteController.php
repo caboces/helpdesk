@@ -78,6 +78,7 @@ class TicketNoteController extends Controller
     public function actionCreate()
     {
         $model = new TicketNote();
+        $ticket_id = $this->request->get('ticket_id');
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -87,8 +88,9 @@ class TicketNoteController extends Controller
             $model->loadDefaultValues();
         }
 
-        return $this->render('create', [
+        return $this->renderAjax('create', [
             'model' => $model,
+            'ticket_id' => $ticket_id
         ]);
     }
 

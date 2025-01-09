@@ -10,16 +10,39 @@ use yii\widgets\ActiveForm;
 
 <div class="ticket-note-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'id' => 'add-ticket-note-form',
+        'enableClientValidation' => true,
+        'validateOnSubmit' => true,
+    ]); ?>
 
-    <?= $form->field($model, 'id')->textInput() ?>
+    <!-- Hidden user id field -->
+    <?= $form->field($model, "last_modified_by_user_id", [
+            'template' => '{input}',
+            'options' => ['tag' => false],
+            'inputOptions' => ['value' => Yii::$app->user->id]
+        ])->hiddenInput([
+            'readonly' => true, 
+        ])->label(false)
+    ?>
 
-    <?= $form->field($model, 'ticket_id')->textInput() ?>
+    <?php
+        if (isset($ticket_id)) {
+            echo $form->field($model, "ticket_id", ['inputOptions' => ['value' => $ticket_id]])->textInput(['readonly' => true, 'class' => 'read-only form-control']);
+        } else {
+            echo $form->field($model, "ticket_id")->textInput();
+        }
+    ?>
 
-    <?= $form->field($model, 'note')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'note')->textarea(['maxlength' => true]) ?>
+
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Confirm new tech note', [
+            'id' => 'confirm-ticket-note',
+            'class' => 'mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan',
+            'form' => 'add-ticket-note-form',
+        ]); ?>
     </div>
 
     <?php ActiveForm::end(); ?>
