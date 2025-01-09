@@ -171,7 +171,7 @@ class TicketController extends Controller
         $departmentBuildingData = DepartmentBuilding::getBuildingNamesFromDepartmentId($model);
         $districtBuildingData = DistrictBuilding::getBuildingNamesFromDistrictId($model);
         // users
-        $assignedTechData = TechTicketAssignment::getTechNamesFromTicketId($model);
+        $assignedTechData = TechTicketAssignment::getTechNamesFromTicketId($model->id);
         $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
         if ($this->request->isPost) {
             // if validation fails, this will not work
@@ -185,6 +185,13 @@ class TicketController extends Controller
                         $model->link('users', $user);
                     }
                 }
+
+                // each thing below needs to store a "draft" version of the model, that is, no call to /*/create is made (* being 'asset', 'part', or 'time-entry' or else no ticket_id exists)
+                // create each asset record
+
+                // create each parts record
+
+                // create each time_entry record
 
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
@@ -268,7 +275,7 @@ class TicketController extends Controller
                 $districtBuildingData = DistrictBuilding::getBuildingNamesFromDistrictId($model);
                 // users
                 $users = ArrayHelper::map(User::getUsers(), 'id', 'username');
-                $assignedTechData = TechTicketAssignment::getTechNamesFromTicketId($model);
+                $assignedTechData = TechTicketAssignment::getTechNamesFromTicketId($model->id);
 
                 if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
 

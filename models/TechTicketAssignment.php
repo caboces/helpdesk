@@ -74,12 +74,12 @@ class TechTicketAssignment extends \yii\db\ActiveRecord
      * 
      * @return all tech usernames in an alphabetical array
      */
-    public static function getTechNamesFromTicketId($model) {
+    public static function getTechNamesFromTicketId($ticket_id) {
         return TechTicketAssignment::find()
         ->select(['tech_ticket_assignment.id', 'tech_ticket_assignment.user_id', 'tech_ticket_assignment.ticket_id', 'user.username'])
         ->innerJoin ('user', 'tech_ticket_assignment.user_id = user.id')
         // this 'where' statement might be wrong...
-        ->where(['ticket_id' => $model->id])
+        ->where(['ticket_id' => $ticket_id])
         ->orderBy('username ASC')
         ->asArray()
         ->all();

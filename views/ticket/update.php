@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Inflector;
 
 /** @var yii\web\View $this */
 /** @var app\models\Ticket $model */
@@ -17,7 +18,25 @@ $this->title = 'Update Ticket: ' . $model->id;
     </div>
 
     <p>You are currently editing the details of this ticket. To save your changes, click the "Save" button. Your changes will be logged in this ticket's activity, along with your tech note (if provided).</p>
-
+    <?php if (Yii::$app->session->hasFlash('timeEntryErrors')): ?>
+        <div class="alert alert-danger">
+            <h2>Time Entry Errors</h2>
+            <hr>
+            <?php foreach (Yii::$app->session->getFlash('timeEntryErrors') as $username => $timeEntry): ?>
+                <h4>Time Entry failed for user "<?= Html::encode($username) ?>":</h4>
+                <ul>
+                    <?php foreach($timeEntry as $timeEntryField => $fieldErrors): ?>
+                    <strong><?= Html::encode(Inflector::camel2words($timeEntryField)) ?></strong>
+                    <ul>
+                        <?php foreach($fieldErrors as $error): ?>
+                            <li><?= Html::encode($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
     <?= $this->render(
         '_form',
         [

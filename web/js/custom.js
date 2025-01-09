@@ -156,7 +156,7 @@ $(document).on('click', '.modal-button-add',  function(e) {
     $section = $parent.closest('.expanding-input-section')
     $section.append($clone)
     // update input numbers
-    $clone.find('input').each(function() {
+    $clone.find('input, select, textarea').each(function() {
         const name = $(this).attr('name')
         // match a string like "[123]", where 123 is any number
         const match = name.match(/\[(\d+)\]/)

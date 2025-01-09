@@ -71,57 +71,67 @@ class TimeEntryController extends Controller
     /**
      * Creates a new TimeEntry model.
      * 
-     * If creation is successful, the browser will be redirected to the related ticket's 'update' page.
+     * If creation is successful, the browser will be redirected whatever 'redirect' was defined to.
      * @param int $id of the ticket model time is being added to
      * @return string|\yii\web\Response
      */
-    public function actionCreate($id)
+    public function actionCreate()
     {
-        $ticket = Ticket::findOne($id);
-        $model = new TimeEntry();
+        $models = [new TimeEntry()];
+        $ticket_id = $this->request->get('ticket_id');
+        $view_or_update_redirect = $this->request->get('redirect')?? "/ticket/view";
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['/ticket/update', 'id' => $ticket->id]);
+            $count = count($this->request->post('TimeEntry'));
+            for ($i = 0; $i < $count; $i++) {
+                $models[$i] = new TimeEntry();
+            }
+            // validate and load
+            if (TimeEntry::loadMultiple($models, $this->request->post()) && TimeEntry::validateMultiple($models)) {
+                foreach ($models as $model) {
+                    // do not run validation since we already did
+                    $model->save(false);
+                }
+                // redirect to ticket update OR view. ticket_id should be valid here if it passed model validation
+                return $this->redirect([$view_or_update_redirect, 'id' => $ticket_id]);
+            } else {
+                // form errors
+                $errors = [];
+                foreach ($models as $model) {
+                    if ($model->hasErrors()) {
+                        $errors[$model->user->username] = $model->getErrors();
+                    }
+                }
+                // timeEntryErrors looks like this:
+                // array:4 [▼
+                //  "mary_poppins" => array:1 [▼
+                //      "entry_date" => array:1 [▼
+                //          0 => "Please select the date of the hours worked."
+                //      ]
+                //   ]
+                // "admin" => array:2 [▼
+                //      "entry_date" => array:1 [▼
+                //          0 => "Please select the date of the hours worked."
+                //      ]
+                // "user_id" => array:1 [▼
+                //     0 => "User ID is required. Please make sure the relevant tech is assigned to the ticket."
+                //      ]
+                //    ]
+                // ]
+                Yii::$app->session->setFlash('timeEntryErrors', $errors);
+                return $this->redirect([$view_or_update_redirect, 'id' => $ticket_id]);
             }
         } else {
-            $model->loadDefaultValues();
+            foreach ($models as $model) {
+                $model->loadDefaultValues();
+            }
         }
 
         $this->layout = 'blank';
 
         return $this->renderAjax('create', [
-            'model' => $model,
-            'ticket' => $ticket
-        ]);
-    }
-
-    /**
-     * Creates a new TimeEntry model from the Ticket View.
-     * 
-     * If creation is successful, the browser will be redirected to the related ticket's 'view' page.
-     * @param int $id of the ticket model time is being added to
-     * @return string|\yii\web\Response
-     */
-    public function actionCreateFromView($id)
-    {
-        $ticket = Ticket::findOne($id);
-        $model = new TimeEntry();
-
-        if ($this->request->isPost) {
-            // temp set to false so i can try to get results to save at all
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['/ticket/view', 'id' => $ticket->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        $this->layout = 'blank';
-
-        return $this->renderAjax('create', [
-            'model' => $model,
-            'ticket' => $ticket
+            'models' => $models,
+            'ticket_id' => $ticket_id
         ]);
     }
 

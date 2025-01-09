@@ -19,6 +19,16 @@ $this->title = 'Create Ticket';
 
     <p>You are currently creating a new ticket. To save your changes, click the "Save" button. Your changes will be logged in this ticket's activity, along with your tech note (if provided).</p>
 
+    <?php if (Yii::$app->session->hasFlash('timeEntryErrors')): ?>
+        <div class="alert alert-danger">
+            <h4>Time Entry Errors</h4>
+            <ul class="list-group">
+                <?php foreach(Yii::$app->session->getFlash('timeEntryErrors') as $error): ?>
+                    <li><?= Html::encode($error) ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
     <?= $this->render(
         '_form',
         [
