@@ -17,6 +17,7 @@ use yii\db\Query;
  * @property int $user_id
  * @property int $ticket_id
  * @property int $last_modified_by_user_id
+ * @property string|null $note
  * @property string|null $created
  * @property string|null $modified
  *
@@ -51,11 +52,11 @@ class TimeEntry extends \yii\db\ActiveRecord
             [['user_id'], 'required', 'message' => 'User ID is required. Please make sure the relevant tech is assigned to the ticket.'],
             [['last_modified_by_user_id'], 'required', 'message' => 'Entry editor id is required.'],
             [['entry_date', 'created', 'modified'], 'safe'],
+            [['note'], 'string', 'max' => 500],
             // foreign keys
             [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['last_modified_by_user_id' => 'id']],
-            
             /* 
              * TIME ENTRIES FORMAT VALIDATOR
              * - time entries can have between 0-2 whole integers
@@ -81,6 +82,7 @@ class TimeEntry extends \yii\db\ActiveRecord
             'user_id' => 'User',
             'ticket_id' => 'Ticket ID',
             'last_modified_by_user_id' => 'Last Entry Editor',
+            'note' => 'Time Entry Note',
             'created' => 'Created',
             'modified' => 'Modified',
         ];

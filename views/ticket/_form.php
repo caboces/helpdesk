@@ -652,6 +652,9 @@ use yii\bootstrap5\ButtonDropdown;
 									return ($model->itinerate_time == 0 ? '' : $model->itinerate_time);
 								}
 							],
+							'note' => [
+								'attribute' => 'note',
+							],
 							[
 								'attribute' => 'last_modified_by',
 								'value' => function($model) {

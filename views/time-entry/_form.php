@@ -81,6 +81,11 @@ use yii\jui\DatePicker;
                     <?= $form->field($model, "[$index]itinerate_time")->textInput() ?>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <?= $form->field($model, "[$index]note")->textInput() ?>
+                </div>
+            </div>
             <div class="form-group">
                 <?= Html::button('Remove', ['class' => 'modal-button-remove btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>
                 <?= Html::button('Add', ['class' => 'modal-button-add btn btn-primary bg-iris border-iris btn-skinny']); ?>

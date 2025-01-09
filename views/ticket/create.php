@@ -2,6 +2,7 @@
 
 use app\models\Part;
 use yii\helpers\Html;
+use yii\helpers\Inflector;
 
 /** @var yii\web\View $this */
 /** @var app\models\Ticket $model */
@@ -21,12 +22,21 @@ $this->title = 'Create Ticket';
 
     <?php if (Yii::$app->session->hasFlash('timeEntryErrors')): ?>
         <div class="alert alert-danger">
-            <h4>Time Entry Errors</h4>
-            <ul class="list-group">
-                <?php foreach(Yii::$app->session->getFlash('timeEntryErrors') as $error): ?>
-                    <li><?= Html::encode($error) ?></li>
-                <?php endforeach; ?>
-            </ul>
+            <h2>Time Entry Errors</h2>
+            <hr>
+            <?php foreach (Yii::$app->session->getFlash('timeEntryErrors') as $username => $timeEntry): ?>
+                <h4>Time Entry failed for user "<?= Html::encode($username) ?>":</h4>
+                <ul>
+                    <?php foreach($timeEntry as $timeEntryField => $fieldErrors): ?>
+                    <strong><?= Html::encode(Inflector::camel2words($timeEntryField)) ?></strong>
+                    <ul>
+                        <?php foreach($fieldErrors as $error): ?>
+                            <li><?= Html::encode($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endforeach; ?>
         </div>
     <?php endif; ?>
     <?= $this->render(

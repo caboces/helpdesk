@@ -18,6 +18,7 @@ class TimeEntrySearch extends TimeEntry
     {
         return [
             [['id', 'user_id', 'ticket_id', 'last_modified_by_user_id'], 'integer'],
+            [['note'], 'string'],
             [['created', 'modified'], 'safe'],
         ];
     }
@@ -73,6 +74,7 @@ class TimeEntrySearch extends TimeEntry
             // new tickets (no ticket_id yet) should be showing NO time entries. Without the ternary, it shows ALL
             'ticket_id' => ($this->ticket_id != null ? $this->ticket_id : false),
             'last_modified_by_user_id' => $this->last_modified_by_user_id,
+            'note' => $this->note,
             'created' => $this->created,
             'modified' => $this->modified,
         ]);
