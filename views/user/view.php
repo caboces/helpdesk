@@ -93,10 +93,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <h3>Current Assignments</h3>
         <div class="table-container">
             <?php
-            echo ExportMenu::widget([
-                'dataProvider' => $currentUserAssignmentsProvider,
-                'columns' => $ticketColumns,
-            ]) . "<hr>\n" .
             GridView::widget([
                 'dataProvider' => $currentUserAssignmentsProvider,
                 'columns' => $ticketColumns,
@@ -108,10 +104,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <h3>Past Assignments</h3>
         <div class="table-container">
             <?php
-            echo ExportMenu::widget([
-                'dataProvider' => $pastUserAssignmentsProvider,
-                'columns' => $ticketColumns,
-            ]) . "<hr>\n" .
             GridView::widget([
                 'dataProvider' => $pastUserAssignmentsProvider,
                 'columns' => $ticketColumns,

@@ -274,13 +274,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Get the technician monthly report -> tech times for each user
      */
-    public static function getTechnicianMonthlyReport($month, $year) {
-        $startDay = $year . '-' . $month . '-01'; // start day
-        $endDay = date('Y-m-t', strtotime($startDay));
-        if ($month == '00') { // All months
-            $startDay = $year.'-01-01';
-            $endDay = $year.'-12-31';
-        }
+    public static function getTechnicianMonthlyReport($startDate, $endDate) {
         return User::find()->select([
             'user.fname',
             'user.lname',
@@ -301,7 +295,7 @@ class User extends ActiveRecord implements IdentityInterface
                 'SUM(itinerate_time) as itinerate_time'
             ])->groupBy(['time_entry.ticket_id','time_entry.user_id'])
                 ->having('tech_time > 0 OR overtime > 0 OR travel_time > 0 OR itinerate_time > 0')
-                ->where('time_entry.created BETWEEN \'' . $startDay . '\' AND \'' . $endDay . '\'')], // must use 'groupBy' so the aggregate functions work since ticket_id is ambiguous in an aggregate context
+                ->where('time_entry.created BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')], // must use 'groupBy' so the aggregate functions work since ticket_id is ambiguous in an aggregate context
             // on clause
             'times.ticket_id = tech_ticket_assignment.ticket_id AND times.user_id = tech_ticket_assignment.user_id',
         )->groupBy('user.id') // group by user name

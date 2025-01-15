@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\District;
 use app\models\HourlyRate;
 use app\models\JobType;
 use app\models\Part;
@@ -52,7 +53,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * Lists all User models.
+     * Lists all reports.
      *
      * @return string
      */
@@ -63,6 +64,13 @@ class ReportsController extends Controller
             // placeholder
         ]);
     }
+
+    // ======================================================================================================
+    // TODO: Would be nice to abstract out the "report" at some point so we dont have so much duplicate code.
+    // You can try creating a "report.php" file and then basically copy the format each of the reports have,
+    // but you'd end up with a giant if/elseif statement of query parameters directing to the correct report.
+    // That is probably much worse than just writing individual action...() functions for each report.
+    // ======================================================================================================
 
     /**
      * Displays the Billing Detail Report
@@ -105,10 +113,10 @@ class ReportsController extends Controller
             'last_day_effective'
         ];
 
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
-        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
         $dataProvider = new ArrayDataProvider([
-            'allModels' => Ticket::getBillingDetailReportQueryDivisionDepartment($month, $year)->asArray()->all()
+            'allModels' => Ticket::getBillingDetailReportQueryDivisionDepartment($startDate, $endDate)->asArray()->all()
         ]);
         $gridColumns = [
             [
@@ -116,17 +124,20 @@ class ReportsController extends Controller
                 'label' => 'Code'
             ],
             [
-                'label' => 'Division > Department / District > Building',
-                'format' => 'raw',
-                'value' => function($model) {
-                    if ($model['code'] == 'BOCES') {
-                        return Html::decode($model['division_name'].'&nbsp;>&nbsp;'.$model['department_name']);
-                    } else if ($model['code'] == 'DISTRICT') {
-                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
-                    } else if ($model['code'] == 'EXTERNAL') {
-                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
-                    }
-                }
+                'attribute' => 'division_name',
+                'label' => 'Division'
+            ],
+            [
+                'attribute' => 'department_name',
+                'label' => 'Department'
+            ],
+            [
+                'attribute' => 'district_name',
+                'label' => 'District'
+            ],
+            [
+                'attribute' => 'building_name',
+                'label' => 'Building'
             ],
             [
                 'attribute' => 'id',
@@ -147,27 +158,75 @@ class ReportsController extends Controller
             [
                 'attribute' => 'parts_cost',
                 'value' => function($model) {
-                    return Yii::$app->formatter->asCurrency($model['parts_cost'], '$');
+                    return Yii::$app->formatter->asCurrency($model['parts_cost']?? 0, '$');
                 },
-                'label' => 'Parts Cost'
+                'label' => 'Parts Cost',
+                'pageSummary' => true,
             ],
             [
                 'attribute' => 'total_cost',
                 'value' => function($model) {
-                    return Yii::$app->formatter->asCurrency($model['total_cost'], '$');
+                    return Yii::$app->formatter->asCurrency($model['total_cost']?? 0, '$');
                 },
-                'label' => 'Total Cost'
+                'label' => 'Total Cost',
+            ]
+        ];
+
+        $totalsDataProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getBillingDetailReportQueryDivisionDepartmentTotals($startDate, $endDate)->asArray()->all(),
+        ]);
+
+        $totalsColumns = [
+            [
+                'attribute' => 'code',
+                'label' => 'Code'
+            ],
+            [
+                'attribute' => 'division_name',
+                'label' => 'Division'
+            ],
+            [
+                'attribute' => 'department_name',
+                'label' => 'Department'
+            ],
+            [
+                'attribute' => 'district_name',
+                'label' => 'District'
+            ],
+            [
+                'attribute' => 'building_name',
+                'label' => 'Building'
+            ],
+            [
+                'attribute' => 'total_hours',
+                'label' => 'Total Hours',
+            ],
+            [
+                'attribute' => 'parts_total',
+                'label' => 'Total Parts Cost',
+                'value' => function($model) {
+                    return Yii::$app->formatter->asCurrency($model['parts_total']?? 0, '$');
+                }
+            ],
+            [
+                'attribute' => 'total_cost',
+                'label' => 'Grand Total',
+                'value' => function($model) {
+                    return Yii::$app->formatter->asCurrency($model['total_cost']?? 0, '$');
+                }
             ]
         ];
 
         $this->layout = 'blank';
         return $this->render('billing-detail-report', [
-            'year' => $year,
-            'month' => $month,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'dataProvider' => $dataProvider,
             'gridColumns' => $gridColumns,
             'laborRatesDataProvider' => $laborRatesDataProvider,
             'laborRatesColumns' => $laborRatesColumns,
+            'totalsDataProvider' => $totalsDataProvider,
+            'totalsColumns' => $totalsColumns,
         ]);
     }
 
@@ -179,8 +238,8 @@ class ReportsController extends Controller
      */
     public function actionMasterTicketSummary()
     {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
-        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
         $query = Ticket::getMasterTicketSummaryQuery();
         
         $dataProvider = new ArrayDataProvider([
@@ -215,8 +274,8 @@ class ReportsController extends Controller
 
         $this->layout = 'blank';
         return $this->render('master-ticket-summary', [
-            'month' => $month,
-            'year' => $year,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'dataProvider' => $dataProvider,
             'gridColumns' => $gridColumns
         ]);
@@ -229,12 +288,45 @@ class ReportsController extends Controller
      */
     public function actionSupportAndRepairLaborBilling()
     {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
-        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $laborRatesDataProvider = new ActiveDataProvider([
+            'query' => HourlyRate::find()->with('jobType')
+                ->where('\'' . date('Y-m-d') . '\' between first_day_effective and last_day_effective'),
+            'sort' => [
+                'defaultOrder' => [
+                    'last_day_effective' => SORT_ASC
+                ]
+            ]
+        ]);
+
+        $laborRatesColumns = [
+            [
+                'attribute' => 'job_type_name',
+                'value' => function($model) {
+                    return $model->jobType->name;
+                },
+                'label' => 'Job Type'
+            ],
+            [
+                'attribute' => 'rate',
+                'value' => function($model) {
+                    return $model->rate? '$' . $model->rate : ''; 
+                }
+            ],
+            [
+                'attribute' => 'summer_rate',
+                'value' => function($model) {
+                    return $model->summer_rate? '$' . $model->summer_rate : '';
+                }
+            ],
+            'first_day_effective', 
+            'last_day_effective'
+        ];
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
         $jobType = Yii::$app->getRequest()->getQueryParam('jobType', 5); // 'Troubleshoot' in job_type table
         $jobTypes = ArrayHelper::map(JobType::find()->where(['id' => [5, 7]])->asArray()->all(), 'id', 'name'); // 5 and 7 are 'Troubleshoot' and 'Audio Visual Production'
         $dataProvider = new ArrayDataProvider([
-            'allModels' => Ticket::getSupportAndRepairLaborBillingReport($month, $year, $jobType)
+            'allModels' => Ticket::getSupportAndRepairLaborBillingReport($startDate, $endDate, $jobType)
         ]);
 
         $gridColumns = [
@@ -242,17 +334,20 @@ class ReportsController extends Controller
                 'attribute' => 'code'
             ],
             [
-                'label' => 'Division > Department / District > Building',
-                'format' => 'raw',
-                'value' => function($model) {
-                    if ($model['code'] == 'BOCES') {
-                        return Html::decode($model['division_name'].'&nbsp;>&nbsp;'.$model['department_name']);
-                    } else if ($model['code'] == 'DISTRICT') {
-                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
-                    } else if ($model['code'] == 'EXTERNAL') {
-                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
-                    }
-                }
+                'attribute' => 'division_name',
+                'label' => 'Division'
+            ],
+            [
+                'attribute' => 'department_name',
+                'label' => 'Department'
+            ],
+            [
+                'attribute' => 'district_name',
+                'label' => 'District'
+            ],
+            [
+                'attribute' => 'building_name',
+                'label' => 'Building'
             ],
             [
                 'attribute' => 'Tech Time',
@@ -272,22 +367,69 @@ class ReportsController extends Controller
             ]
         ];
 
+        $totalsDataProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getSupportAndRepairLaborBillingReportTotals($startDate, $endDate, $jobType),
+        ]);
+
+        $totalsColumns = [
+            [
+                'attribute' => 'code',
+                'label' => 'Code'
+            ],
+            [
+                'attribute' => 'division_name',
+                'label' => 'Division'
+            ],
+            [
+                'attribute' => 'department_name',
+                'label' => 'Department'
+            ],
+            [
+                'attribute' => 'district_name',
+                'label' => 'District'
+            ],
+            [
+                'attribute' => 'building_name',
+                'label' => 'Building'
+            ],
+            [
+                'attribute' => 'total_tech_time',
+                'label' => 'Total Tech Time',
+            ],
+            [
+                'attribute' => 'total_overtime',
+                'label' => 'Total Overtime',
+            ],
+            [
+                'attribute' => 'total_travel_time',
+                'label' => 'Total Travel Time',
+            ],
+            [
+                'attribute' => 'total_itinerate_time',
+                'label' => 'Total Itinerate Time',
+            ]
+        ];
+
         $this->layout = 'blank';
         return $this->render('support-and-repair-labor-billing', [
-            'month' => $month,
-            'year' => $year,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'jobType' => $jobType,
             'jobTypes' => $jobTypes,
             'dataProvider' => $dataProvider,
-            'gridColumns' => $gridColumns
+            'gridColumns' => $gridColumns,
+            'laborRatesDataProvider' => $laborRatesDataProvider,
+            'laborRatesColumns' => $laborRatesColumns,
+            'totalsDataProvider' => $totalsDataProvider,
+            'totalsColumns' => $totalsColumns,
         ]);
     }
 
     public function actionTechnicianMonthlyReport() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
-        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
         $dataProvider = new ArrayDataProvider([
-            'allModels' => User::getTechnicianMonthlyReport($month, $year)->asArray()->all()
+            'allModels' => User::getTechnicianMonthlyReport($startDate, $endDate)->asArray()->all()
         ]);
         $gridColumns = [
             [
@@ -325,56 +467,62 @@ class ReportsController extends Controller
 
         $this->layout = 'blank';
         return $this->render('technician-monthly-report',[
-            'month' => $month,
-            'year' => $year,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'dataProvider' => $dataProvider,
-            'gridColumns' => $gridColumns
+            'gridColumns' => $gridColumns,
         ]);
     }
 
     public function actionPartBillingSummary() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
-        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
         $dataProvider = new ArrayDataProvider([
-            'allModels' => Ticket::getPartBillingSummary($month, $year)->asArray()->all()
+            'allModels' => Ticket::getPartBillingSummary($startDate, $endDate)->asArray()->all()
         ]);
         $gridColumns = [
             [
                 'attribute' => 'code'
             ],
             [
-                'label' => 'Division > Department / District > Building',
-                'format' => 'raw',
-                'value' => function($model) {
-                    if ($model['code'] == 'BOCES') {
-                        return Html::decode($model['division_name'].'&nbsp;>&nbsp;'.$model['department_name']);
-                    } else if ($model['code'] == 'DISTRICT') {
-                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
-                    } else if ($model['code'] == 'EXTERNAL') {
-                        return Html::decode($model['district_name'].'&nbsp;>&nbsp;'.$model['building_name']);
-                    }
-                }
+                'attribute' => 'division_name',
+                'label' => 'Division'
+            ],
+            [
+                'attribute' => 'department_name',
+                'label' => 'Department'
+            ],
+            [
+                'attribute' => 'district_name',
+                'label' => 'District'
+            ],
+            [
+                'attribute' => 'building_name',
+                'label' => 'Building'
             ],
             [
                 'attribute' => 'parts_totals',
-                'label' => 'Parts Totals'
+                'label' => 'Parts Totals',
+                'value' => function($model) {
+                    return $model['parts_totals']? '$' . $model['parts_totals'] : '';
+                }
             ],
         ];
 
         $this->layout = 'blank';
         return $this->render('part-billing-summary',[
-            'month' => $month,
-            'year' => $year,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'dataProvider' => $dataProvider,
             'gridColumns' => $gridColumns
         ]);
     }
 
     public function actionWnyricIpadRepairLaborReport() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
-        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
         $dataProvider = new ArrayDataProvider([
-            'allModels' => Ticket::getWnyricIpadRepairLaborReport($month, $year)->asArray()->all()
+            'allModels' => Ticket::getWnyricIpadRepairLaborReport($startDate, $endDate)->asArray()->all()
         ]);
         $gridColumns = [
             [
@@ -402,18 +550,18 @@ class ReportsController extends Controller
 
         $this->layout = 'blank';
         return $this->render('wnyric-ipad-repair-labor-report',[
-            'month' => $month,
-            'year' => $year,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'dataProvider' => $dataProvider,
             'gridColumns' => $gridColumns
         ]);
     }
 
     public function actionWnyricIpadPartsSummary() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
-        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
         $dataProvider = new ArrayDataProvider([
-            'allModels' => Ticket::getWnyricIpadPartsSummary($month, $year)->asArray()->all()
+            'allModels' => Ticket::getWnyricIpadPartsSummary($startDate, $endDate)->asArray()->all()
         ]);
         $gridColumns = [
             [
@@ -435,8 +583,8 @@ class ReportsController extends Controller
 
         $this->layout = 'blank';
         return $this->render('wnyric-ipad-parts-summary',[
-            'month' => $month,
-            'year' => $year,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'dataProvider' => $dataProvider,
             'gridColumns' => $gridColumns
         ]);
@@ -444,49 +592,32 @@ class ReportsController extends Controller
     
 
     public function actionWnyricIpadRepairBillingReport() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
-        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => Ticket::getWnyricIpadRepairBillingReport($month, $year)->asArray()->all()
-        ]);
-        $gridColumns = [
-            [
-                'label' => 'Ticket ID'
-            ],
-            [
-                'label' => 'District'
-            ],
-            [
-                'label' => 'Job Description'
-            ],
-            [
-                'label' => 'RIC Queue Ticket'
-            ],
-            [
-                'label' => 'Tech Time'
-            ],
-            [
-                'label' => 'Labor Cost'
-            ],
-            [
-                'label' => 'Who'
-            ]
-        ];
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
+
+        // build the 'districts' object
+        $districts = District::findBySql("
+            SELECT * 
+            FROM `district`
+            INNER JOIN `ticket` ON `ticket`.`district_id` = `district`.`id`
+            INNER JOIN `part` ON `part`.`ticket_id` = `ticket`.`id` AND `part`.`created` BETWEEN :startDate AND :endDate
+            INNER JOIN `time_entry` ON `time_entry`.`ticket_id` = `ticket`.`id` AND `time_entry`.`created` BETWEEN :startDate AND :endDate
+            WHERE `ticket`.`job_category
+        ", [':startDate' => $startDate, ':endDate' => $endDate])->all();
 
         $this->layout = 'blank';
         return $this->render('wnyric-ipad-repair-billing-report',[
-            'month' => $month,
-            'year' => $year,
-            'dataProvider' => $dataProvider,
-            'gridColumns' => $gridColumns
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'districts' => $districts,
         ]);
     }
 
     public function actionNonWnyricIpadRepairLaborReport() {
-        $month = Yii::$app->getRequest()->getQueryParam('month', date('m'));
-        $year = Yii::$app->getRequest()->getQueryParam('year', date('Y'));
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
         $dataProvider = new ArrayDataProvider([
-            'allModels' => Ticket::getNonWnyricIpadRepairLaborReport($month, $year)->asArray()->all()
+            'allModels' => Ticket::getNonWnyricIpadRepairLaborReport($startDate, $endDate)->asArray()->all()
         ]);
         $gridColumns = [
             [
@@ -514,8 +645,8 @@ class ReportsController extends Controller
 
         $this->layout = 'blank';
         return $this->render('non-wnyric-ipad-repair-labor-report',[
-            'month' => $month,
-            'year' => $year,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'dataProvider' => $dataProvider,
             'gridColumns' => $gridColumns
         ]);

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "{{%ticket}}".
@@ -367,13 +368,7 @@ class Ticket extends \yii\db\ActiveRecord
             ->asArray()
             ->one();
     }
-    public static function getBillingDetailReportQueryDivisionDepartment($month, $year) {
-        $startDay = $year . '-' . $month . '-01'; // start day
-        $endDay = date('Y-m-t', strtotime($startDay));
-        if ($month == '00') { // All months
-            $startDay = $year.'-01-01';
-            $endDay = $year.'-12-31';
-        }
+    public static function getBillingDetailReportQueryDivisionDepartment($startDate, $endDate) {
         return Ticket::find()->select([
             'customer_type.code AS code',
             'division.name AS division_name',
@@ -399,7 +394,7 @@ class Ticket extends \yii\db\ActiveRecord
                     + SUM(`time_entry`.overtime)
                     + SUM(`time_entry`.travel_time)
                     + SUM(`time_entry`.itinerate_time), 0)'
-            ])->where('time_entry.created BETWEEN \'' . $startDay . '\' AND \'' . $endDay . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
+            ])->where('time_entry.created BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
             'times.ticket_id = ticket.id'
         )->leftJoin([
             'part' => Part::find()->select([
@@ -408,19 +403,54 @@ class Ticket extends \yii\db\ActiveRecord
             ])->groupBy('part.ticket_id')], 
             'ticket.id = part.ticket_id'
             // Use the hourly rate that was effective on the first of that month. How would you make it so time_entries split between two hourly_rates would work...?
-        )->innerJoin('hourly_rate', 'ticket.job_type_id = hourly_rate.job_type_id AND :startDay BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective', ['startDay' => $startDay])
+        )->innerJoin('hourly_rate', 'ticket.job_type_id = hourly_rate.job_type_id AND :startDate BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective', ['startDate' => $startDate])
         ->where('division.status = 10 OR district.status = 10')
         ->groupBy('ticket.id')
         ->having('total_cost > 0')
-        ->orderBy('division.name ASC, department.name ASC');
+        ->orderBy('code ASC, division.name ASC, department.name ASC, district_name ASC, building_name ASC');
     }
-    public static function getSupportAndRepairLaborBillingReport($month, $year, $jobType) {
-        $startDay = $year . '-' . $month . '-01'; // start day
-        $endDay = date('Y-m-t', strtotime($startDay));
-        if ($month == '00') { // All months
-            $startDay = $year.'-01-01';
-            $endDay = $year.'-12-31';
-        }
+
+    public static function getBillingDetailReportQueryDivisionDepartmentTotals($startDate, $endDate) {
+        // using DISTINCT here fixes the problem, but probably not the best solution
+        return Ticket::find()->select([
+            'customer_type.code AS code',
+            'division.name AS division_name',
+            'department.name AS department_name',
+            'district.name AS district_name',
+            'building.name AS building_name',
+            'SUM(times.total_hours) AS total_hours',
+            'SUM(part.parts_cost) AS parts_total',
+            'SUM(hourly_rate.rate * times.total_hours) + IFNULL(SUM(part.parts_cost), 0) AS total_cost',
+        ])->distinct(true)->innerJoin('customer_type', 'ticket.customer_type_id = customer_type.id')
+        ->leftJoin('division', 'ticket.division_id = division.id')
+        ->leftJoin('department', 'ticket.department_id = department.id')
+        ->leftJoin('district', 'ticket.district_id = district.id')
+        ->leftJoin('district_building', 'ticket.district_building_id = district_building.id')
+        ->leftJoin('building', 'building.id = district_building.building_id')
+        ->innerJoin([
+            'times' => TimeEntry::find()->select([
+                'time_entry.ticket_id',
+                'total_hours' => 'IFNULL(SUM(`time_entry`.tech_time)
+                    + SUM(`time_entry`.overtime)
+                    + SUM(`time_entry`.travel_time)
+                    + SUM(`time_entry`.itinerate_time), 0)'
+            ])->where('time_entry.created BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
+            'times.ticket_id = ticket.id'
+        )->leftJoin([
+            'part' => Part::find()->select([
+                'part.ticket_id',
+                'parts_cost' => 'IFNULL(SUM(`part`.unit_price * `part`.quantity), 0)'
+            ])->groupBy('part.ticket_id')], 
+            'ticket.id = part.ticket_id'
+            // Use the hourly rate that was effective on the first of that month. How would you make it so time_entries split between two hourly_rates would work...?
+        )->innerJoin('hourly_rate', 'ticket.job_type_id = hourly_rate.job_type_id AND :startDate BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective', ['startDate' => $startDate])
+        ->where('division.status = 10 OR district.status = 10')
+        ->groupBy(new Expression('customer_type.code, division.name, department.name, district.name, building.name WITH ROLLUP'))
+        ->having('total_cost > 0')
+        ->orderBy('code ASC, division.name ASC, department.name ASC, district_name ASC, building_name ASC');
+    }
+
+    public static function getSupportAndRepairLaborBillingReport($startDate, $endDate, $jobType) {
         return Yii::$app->getDb()->createCommand("
             SELECT `customer_type`.`code` AS code,
             `division`.`name` AS `division_name`,
@@ -451,21 +481,55 @@ class Ticket extends \yii\db\ActiveRecord
                     SUM(`time_entry`.travel_time) AS `travel_time`,
                     SUM(`time_entry`.itinerate_time) AS `itinerate_time`
                 FROM `time_entry`
-                WHERE `time_entry`.created BETWEEN :startDay AND :endDay
+                WHERE `time_entry`.created BETWEEN :startDate AND :endDate
                 GROUP BY `time_entry`.ticket_id
             ) `times` ON `times`.ticket_id = `ticket`.id
             WHERE `ticket`.job_type_id = :jobType
-            ORDER BY `customer_type`.name ASC, `division`.name, `department`.name, `district`.name, `department`.name
-            ;", [':startDay' => $startDay, ':endDay' => $endDay, ':jobType' => $jobType])->queryAll();
+            ORDER BY `customer_type`.name ASC, `division`.name, `department`.name, `district`.name, `building`.name
+            ;", [':startDate' => $startDate, ':endDate' => $endDate, ':jobType' => $jobType])->queryAll();
     }
 
-    public static function getPartBillingSummary($month, $year) {
-        $startDay = $year . '-' . $month . '-01'; // start day
-        $endDay = date('Y-m-t', strtotime($startDay));
-        if ($month == '00') { // All months
-            $startDay = $year.'-01-01';
-            $endDay = $year.'-12-31';
-        }
+    public static function getSupportAndRepairLaborBillingReportTotals($startDate, $endDate, $jobType) {
+        return Yii::$app->getDb()->createCommand("
+            SELECT DISTINCT `customer_type`.`code` AS code,
+            `division`.`name` AS `division_name`,
+            `department`.`name` AS `department_name`,
+            `district`.`name` AS `district_name`,
+            `building`.`name` AS `building_name`,
+            SUM(`times`.tech_time) AS `total_tech_time`,
+            SUM(`times`.overtime) AS `total_overtime`,
+            SUM(`times`.travel_time) AS `total_travel_time`,
+            SUM(`times`.itinerate_time) AS `total_itinerate_time`
+            FROM `ticket`
+            INNER JOIN `customer_type`
+                ON `customer_type`.`id` = `ticket`.`customer_type_id`
+            LEFT JOIN `division`
+                ON `ticket`.division_id = `division`.id
+            LEFT JOIN `department`
+                ON `ticket`.department_id = `department`.id
+            LEFT JOIN `district`
+                ON `ticket`.district_id = `district`.id
+            LEFT JOIN `district_building`
+                ON `district`.id = `district_building`.district_id
+            LEFT JOIN `building`
+                ON `district_building`.building_id = `building`.id
+            INNER JOIN (
+                SELECT `time_entry`.ticket_id,
+                    SUM(`time_entry`.tech_time) AS `tech_time`,
+                    SUM(`time_entry`.overtime) AS `overtime`,
+                    SUM(`time_entry`.travel_time) AS `travel_time`,
+                    SUM(`time_entry`.itinerate_time) AS `itinerate_time`
+                FROM `time_entry`
+                WHERE `time_entry`.created BETWEEN :startDate AND :endDate
+                GROUP BY `time_entry`.ticket_id
+            ) `times` ON `times`.ticket_id = `ticket`.id
+            WHERE `ticket`.job_type_id = :jobType
+            GROUP BY `customer_type`.code, `division`.name, `department`.name, `district`.name, `building`.name WITH ROLLUP
+            ORDER BY `customer_type`.code ASC, `division`.name, `department`.name, `district`.name, `building`.name
+            ;", [':startDate' => $startDate, ':endDate' => $endDate, ':jobType' => $jobType])->queryAll();
+    }
+
+    public static function getPartBillingSummary($startDate, $endDate) {
         return Ticket::find()->select([
             'customer_type.code',
             'division.name as division_name',
@@ -482,7 +546,7 @@ class Ticket extends \yii\db\ActiveRecord
             'parts' => Part::find()->select([
                 'part.ticket_id',
                 'totals' => 'IFNULL(SUM(part.unit_price * part.quantity), 0)'
-            ])->where('part.created BETWEEN \'' . $startDay . '\' AND \'' . $endDay . '\'')->groupBy('part.ticket_id')->having('totals > 0')],
+            ])->where('part.created BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('part.ticket_id')->having('totals > 0')],
             'parts.ticket_id = ticket.id'
         )->orderBy('division.name, department.name, district.name, department.name');
     }
@@ -536,13 +600,7 @@ class Ticket extends \yii\db\ActiveRecord
         ->orderBy('division.name, department.name, district.name, department.name');
     }
 
-    public static function getWnyricIpadRepairLaborReport($month, $year) {
-        $startDay = $year . '-' . $month . '-01'; // start day
-        $endDay = date('Y-m-t', strtotime($startDay));
-        if ($month == '00') { // All months
-            $startDay = $year.'-01-01';
-            $endDay = $year.'-12-31';
-        }
+    public static function getWnyricIpadRepairLaborReport($startDate, $endDate) {
         return Ticket::find()->select([
             'ticket.id',
             'district.name',
@@ -559,21 +617,15 @@ class Ticket extends \yii\db\ActiveRecord
                     + SUM(`time_entry`.overtime)
                     + SUM(`time_entry`.travel_time)
                     + SUM(`time_entry`.itinerate_time), 0)'
-            ])->where('time_entry.created BETWEEN \'' . $startDay . '\' AND \'' . $endDay . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
+            ])->where('time_entry.created BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
             'times.ticket_id = ticket.id'
-        )->innerJoin('hourly_rate', 'ticket.job_type_id = hourly_rate.job_type_id AND :startDay BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective', ['startDay' => $startDay])
+        )->innerJoin('hourly_rate', 'ticket.job_type_id = hourly_rate.job_type_id AND :startDate BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective', ['startDate' => $startDate])
         ->where(['ticket.customer_type_id' => 2, 'ticket.job_category_id' => 25])
         ->groupBy('ticket.id')
         ->orderBy('district.name');
     }
 
-    public static function getWnyricIpadPartsSummary($month, $year) {
-        $startDay = $year . '-' . $month . '-01'; // start day
-        $endDay = date('Y-m-t', strtotime($startDay));
-        if ($month == '00') { // All months
-            $startDay = $year.'-01-01';
-            $endDay = $year.'-12-31';
-        }
+    public static function getWnyricIpadPartsSummary($startDate, $endDate) {
         return Ticket::find()->select([
             'ticket.id',
             'district.name',
@@ -585,20 +637,16 @@ class Ticket extends \yii\db\ActiveRecord
             'part' => Part::find()->select([
                 'part.ticket_id',
                 'parts_cost' => 'IFNULL(SUM(`part`.unit_price * `part`.quantity), 0)'
-            ])->where('part.created BETWEEN \'' . $startDay . '\' AND \'' . $endDay . '\'')->groupBy('part.ticket_id')->having('parts_cost > 0')], 
+            ])->where('part.created BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('part.ticket_id')->having('parts_cost > 0')], 
             'ticket.id = part.ticket_id'
             // Use the hourly rate that was effective on the first of that month. How would you make it so time_entries split between two hourly_rates would work...?
-        )->innerJoin('hourly_rate', 'ticket.job_type_id = hourly_rate.job_type_id AND :startDay BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective', ['startDay' => $startDay])
+        )->innerJoin('hourly_rate', 'ticket.job_type_id = hourly_rate.job_type_id AND :startDate BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective', ['startDate' => $startDate])
         ->where(['ticket.customer_type_id' => 2, 'ticket.job_category_id' => 25])
         ->groupBy('ticket.id')
         ->orderBy('district.name');
     }
 
-    public static function getWnyricIpadRepairBillingReport($month, $year) {
-
-    }
-
-    public static function getNonWnyricIpadRepairLaborReport($month, $year) {
-        
+    public static function getNonWnyricIpadRepairLaborReport($startDate, $endDate) {
+        return Ticket::find();
     }
 }
