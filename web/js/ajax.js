@@ -22,3 +22,5 @@ $.pjax.reload({container: '#grid-inactive'});
 
 // tech time entries grid in ticket form
 $.pjax.reload({container: '#tech-time-entries'});
+$.pjax.reload({container: '#assets-entries'});
+$.pjax.reload({container: '#parts-entries'});

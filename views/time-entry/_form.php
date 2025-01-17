@@ -47,20 +47,10 @@ use yii\jui\DatePicker;
                         ); ?>
                 </div>
                 <div class="col">
-                    <!-- <div class="form-group field-timeentry-entry_date required"> -->
-                        <!--<label class="control-label" for="timeentry-entry_date">Entry Date</label> -->
-                        <?php //$form->field($model, "[$index]entry_date")->widget(DatePicker::class,
-                            //['dateFormat' => 'php:m/d/Y',
-                            //    'clientOptions' => [
-                            //        'yearRange' => '-1:0',
-                            //        'altFormat' => 'php:Y-m-d',
-                            //    ]], ['placeholder' => 'mm/dd/yyyy'])->textInput(['placeholder' => Yii::t('app', 'mm/dd/yyyy')]); ?>
-                        <!-- <input type="date" id="timeentry-entry_date" class="form-control" name="TimeEntry[{$index}][entry_date]" placeholder="mm/dd/yyyy" aria-required="true" value="<?= date('Y-m-d'); ?>"> -->
-                    <!-- </div> -->
-                        <?= $form->field($model, "[$index]entry_date")->input('date', [
-                            'dateFormat' => 'php:m/d/Y',
-                            'value' => date('Y-m-d')
-                        ]); ?>
+                    <?= $form->field($model, "[$index]entry_date")->input('date', [
+                        'dateFormat' => 'php:m/d/Y',
+                        'value' => date('Y-m-d')
+                    ]); ?>
                 </div>
                 <!-- do not allow the techs to change this value, but still submit the ticket id as if it's new input -->
                 <div class="col">

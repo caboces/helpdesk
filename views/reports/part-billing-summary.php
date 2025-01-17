@@ -22,7 +22,6 @@ $this->title = 'Part Billing Summary';
     </div>
     <div>
         <div>
-            <strong>Select a date range</strong>
             <?= $this->render('date-form', ['startDate' => $startDate, 'endDate' => $endDate]) ?>
         </div>
         <div class="border-top pt-2 mt-2">

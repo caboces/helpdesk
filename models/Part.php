@@ -40,7 +40,7 @@ class Part extends \yii\db\ActiveRecord
         return [
             [['ticket_id', 'last_modified_by_user_id', 'part_name', 'quantity', 'unit_price'], 'required'],
             [['ticket_id', 'last_modified_by_user_id', 'quantity', 'pending_delivery'], 'integer'],
-            [['unit_price'], 'number'],
+            [['unit_price'], 'number', 'min' => '0.01', 'max' => 99.99],
             [['created', 'modified'], 'safe'],
             [['part_number', 'part_name'], 'string', 'max' => 100],
             [['note'], 'string', 'max' => 500],

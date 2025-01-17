@@ -35,8 +35,9 @@ use app\models\TicketClosedResolvedSearch;
 use app\models\Asset;
 use app\models\TicketNote;
 use app\models\TicketRecentlyDeletedSearch;
-use kartik\grid\ActionColumn;
 use yii\data\ActiveDataProvider;
+use yii\grid\ActionColumn;
+use yii\helpers\Url;
 use yii\web\ServerErrorHttpException;
 
 /**
@@ -723,6 +724,13 @@ class TicketController extends Controller
         ]);
         // asset columns
         $assetColumns = [
+            [
+                'class' => ActionColumn::class,
+                'template' => '{delete}',
+                'urlCreator' => function ($action, Asset $model, $key, $index) {
+                    return Url::to(['asset/' . $action, 'id' => $model->id]);
+                }
+            ],
             'new_prop_tag' => [
                 'attribute' => 'new_prop_tag',
                 'label' => 'Asset Tag',
@@ -761,6 +769,13 @@ class TicketController extends Controller
         ]);
         // parts columns
         $partsColumns = [
+            [
+                'class' => ActionColumn::class,
+                'template' => '{delete}',
+                'urlCreator' => function ($action, Part $model, $key, $index) {
+                    return Url::to(['part/' . $action, 'id' => $model->id]);
+                }
+            ],
             'part_number' => [
                 'attribute' => 'part_number',
             ],
@@ -774,7 +789,10 @@ class TicketController extends Controller
                 'attribute' => 'unit_price',
             ],
             'pending_delivery' => [
-                'attribute' => 'pending_delivery'
+                'attribute' => 'pending_delivery',
+                'value' => function(Part $model) {
+                    return $model->pending_delivery == 1? 'Yes' : 'No';
+                },
             ],
             'note' => [
                 'attribute' => 'note',
@@ -803,8 +821,15 @@ class TicketController extends Controller
                 ]
             ]
         ]);
-        // parts columns
+        // ticket note columns
         $ticketNotesColumns = [
+            [
+                'class' => ActionColumn::class,
+                'template' => '{delete}',
+                'urlCreator' => function ($action, TicketNote $model, $key, $index) {
+                    return Url::to(['ticket-note/' . $action, 'id' => $model->id]);
+                }
+            ],
             'note' => [
                 'attribute' => 'note',
             ],

@@ -750,6 +750,10 @@ p.quick-glance-label {
   color: #7c2700;;
 }
 
+.hover-row:hover {
+  background:color#ccc;
+}
+
 
 /* ===========================================================================================
 || MEDIA QUERIES
@@ -758,5 +762,17 @@ p.quick-glance-label {
 @media only screen and (min-width: 1250px) {
   #pills-tab>li {
     flex: 1 1 200px;
+  }
+}
+
+@media print {
+  .date-form {
+    display:none;
+  }
+  .print-button {
+    display:none;
+  }
+  .report > * {
+    font-size: 10pt;
   }
 }

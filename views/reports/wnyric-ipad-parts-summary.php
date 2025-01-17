@@ -18,54 +18,65 @@ $this->title = 'WNYRIC iPad Parts Summary';
             </svg>
             <h1><?= Html::encode($this->title) ?></h1>
         </div>
-        <p>This report returns the total costs for the specified year and month for parts needed for WNYRIC iPad labor.</p>
+        <p>This report returns the total costs for the specified date range for parts needed for WNYRIC iPad labor.</p>
     </div>
     <div>
         <div>
-            <strong>Select a date range</strong>
             <?= $this->render('date-form', ['startDate' => $startDate, 'endDate' => $endDate]) ?>
-            <!-- Button trigger modal -->
-            <button type="button" class="d-inline-block btn btn-primary" data-bs-toggle="modal" data-bs-target="#labor-rates-modal">
-                View labor rates
-            </button>
         </div>
         <div class="border-top pt-2 mt-2">
             <span>You are viewing the <strong><?= Html::encode(date('F j, Y', strtotime($startDate))) ?></strong> to <strong><?= Html::encode(date('F j, Y', strtotime($endDate))) ?></strong> report.</span>
             <div>
                 <h3>Report</h3>
-                <?php
-                    echo ExportMenu::widget([
-                        'dataProvider' => $dataProvider,
-                        'columns' => $gridColumns,
-                        'dropdownOptions' => [
-                            'label' => 'Export All',
-                            'class' => 'btn btn-outline-secondary btn-default'
-                        ]
-                    ]) . "<hr>\n" .
-                    GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        'columns' => $gridColumns,
-                    ]); 
-                ?>
-            </div>
-            <div>
-                <h3>Totals</h3>
-                <?php
-                    echo ExportMenu::widget([
-                        'dataProvider' => $totalsDataProvider,
-                        'columns' => $totalsColumns,
-                        'dropdownOptions' => [
-                            'label' => 'Export All',
-                            'class' => 'btn btn-outline-secondary btn-default'
-                        ]
-                    ]) . "<hr>\n" .
-                    GridView::widget([
-                        'dataProvider' => $totalsDataProvider,
-                        'columns' => $totalsColumns,
-                    ]); 
-                ?>
+                <div class="report">
+                    <?php if ($model['districts']): ?>
+                    <table class="border table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Ticket ID</th>
+                                <th scope="col">District</th>
+                                <th scope="col">Job Description</th>
+                                <th scope="col">RIC Que Ticket</th>
+                                <th scope="col">Charges</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($model['districts'] as $district): ?>
+                        <?php foreach($district['tickets'] as $ticket): ?>
+                        <tr>
+                            <td><?= Html::encode($ticket['id']) ?></td>
+                            <td><?= Html::encode($district['name']) ?></td>
+                            <td><?= Html::encode($ticket['summary']) ?></td>
+                            <td>&nbsp;</td>
+                            <td>$<?= Html::encode(number_format($ticket['totalPartsCost'], 2)) ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>Total for <?= Html::encode($district['name']) ?></td>
+                            <td>$<?= Html::encode($district['totalPartsCost']) ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr class="fw-bold fst-italic">
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>Total for WNYRIC</td>
+                                <td>$<?= Html::encode(number_format($model['totalPartsCost'], 2)) ?></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <?php else: ?>
+                <div>
+                    Nothing to report.
+                </div>
+                <?php endif; ?>
             </div>
         </div>
-        <?= $this->render('labor-rate-modal', ['laborRatesDataProvider' => $laborRatesDataProvider, 'laborRatesColumns' => $laborRatesColumns]) ?>
     </div>
 </div>

@@ -5,7 +5,11 @@ use yii\helpers\Url;
 
 ?>
 <!-- Form will GET to whatever the report's URL is -->
-<?= Html::beginForm([Url::to([Yii::$app->controller->getRoute()])], 'GET'); ?>
+<?= Html::beginForm([Url::to([Yii::$app->controller->getRoute()])], 'GET', ['class' => 'date-form']); ?>
+<div>
+    <strong class="d-block">Select a date range</strong>
+    <small class="d-block">The following date form queries from 12:00 AM on the start date to 11:59 PM on the end date.</small>
+</div>
 <div class="d-flex pb-2">
     <div class="pe-1">
         <?= Html::label('Start Date', 'startDate', ['class' => 'form-label d-block']); ?>

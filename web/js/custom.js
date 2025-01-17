@@ -79,7 +79,7 @@ $('#ticket-customer_type_id').on('change', function() {
  * Get click of new time-entry button from ticket form.
  * Opens a modal window for creating tech time entries.
  */
-$('#time-entry-modal-button').click(function () {
+$('.time-entry-modal-button').click(function () {
     $('#time-entry-modal').modal('show')
     .find('#time-entry-modal-content')
     .load($(this).attr('value'), function() {

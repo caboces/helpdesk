@@ -130,16 +130,17 @@ class PartController extends Controller
 
     /**
      * Deletes an existing Part model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * If deletion is successful, the browser will be redirected to the 'ticket/update' page.
      * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
+        $ticket_id = $this->findModel($id)->ticket_id;
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
     }
 
     /**

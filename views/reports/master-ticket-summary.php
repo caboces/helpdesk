@@ -3,8 +3,6 @@
 use yii\helpers\Html;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
-use yii\helpers\Url;
-use yii\jui\DatePicker;
 
 /** @var yii\web\View $this */
 
@@ -22,7 +20,6 @@ $this->title = 'Billing Detail Report';
     </div>
     <div>
         <div>
-            <strong>Select a date range</strong>
             <?= $this->render('date-form', ['startDate' => $startDate, 'endDate' => $endDate]) ?>
             <!-- Button trigger modal -->
             <button type="button" class="d-inline-block btn btn-primary" data-bs-toggle="modal" data-bs-target="#labor-rates-modal">

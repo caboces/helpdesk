@@ -109,8 +109,7 @@ use yii\bootstrap5\ButtonDropdown;
 				<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
 			</svg> New time entry', [
 			'value' => Url::to("/time-entry/create?ticket_id={$model->id}&redirect=/ticket/".Yii::$app->controller->action->id),
-			'id' => 'time-entry-modal-button',
-			'class' => 'btn btn-primary bg-iris border-iris',
+			'class' => 'time-entry-modal-button btn btn-primary bg-iris border-iris',
 			// disable if creating a new ticket
 			'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
 		]); ?>
@@ -531,18 +530,12 @@ use yii\bootstrap5\ButtonDropdown;
 					<div id="assets-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
 						<div class="table-container container-fluid overflow-x-scroll">
 							<?php
-								echo ExportMenu::widget([
-									'dataProvider' => $assetProvider,
-									'columns' => $assetColumns,
-									'dropdownOptions' => [
-										'label' => 'Export All',
-										'class' => 'btn btn-outline-secondary btn-default'
-									]
-								]) . "<hr>\n" .
-								GridView::widget([
+								Pjax::begin(['id' => 'assets-entries']);
+								echo GridView::widget([
 									'dataProvider' => $assetProvider,
 									'columns' => $assetColumns,
 								]); 
+								Pjax::end();
 							?>
 						</div>
 					</div>
@@ -567,18 +560,12 @@ use yii\bootstrap5\ButtonDropdown;
 					<div id="parts-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
 						<div class="table-container container-fluid overflow-x-scroll">
 							<?php
-								echo ExportMenu::widget([
-									'dataProvider' => $partsProvider,
-									'columns' => $partsColumns,
-									'dropdownOptions' => [
-										'label' => 'Export All',
-										'class' => 'btn btn-outline-secondary btn-default'
-									]
-								]) . "<hr>\n" .
-								GridView::widget([
+								Pjax::begin(['id' => 'parts-entires']);
+								echo GridView::widget([
 									'dataProvider' => $partsProvider,
 									'columns' => $partsColumns,
 								]); 
+								Pjax::end();
 							?>
 						</div>
 					</div>
@@ -589,6 +576,16 @@ use yii\bootstrap5\ButtonDropdown;
 			<div class="subsection-info-block">
 				<h2>Time entries</h2>
 				<p>Hours spent on the current ticket</p>
+				<!-- Add time entry -->
+				<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16" aria-hidden="true">
+						<path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+						<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+					</svg> New time entry', [
+					'value' => Url::to("/time-entry/create?ticket_id={$model->id}&redirect=/ticket/".Yii::$app->controller->action->id),
+					'class' => 'time-entry-modal-button btn btn-primary bg-iris border-iris',
+					// disable if creating a new ticket
+					'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+				]); ?>
 				<div id="ticket-time-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
 					<div class="stat-box flex-fill">
 						<p>
@@ -723,18 +720,12 @@ use yii\bootstrap5\ButtonDropdown;
 					<div id="ticket-notes-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
 						<div class="table-container container-fluid overflow-x-scroll">
 							<?php
-								echo ExportMenu::widget([
-									'dataProvider' => $ticketNotesProvider,
-									'columns' => $ticketNotesColumns,
-									'dropdownOptions' => [
-										'label' => 'Export All',
-										'class' => 'btn btn-outline-secondary btn-default'
-									]
-								]) . "<hr>\n" .
-								GridView::widget([
+								Pjax::begin(['id' => 'ticket-note-entries']);
+								echo GridView::widget([
 									'dataProvider' => $ticketNotesProvider,
 									'columns' => $ticketNotesColumns,
 								]); 
+								Pjax::end();
 							?>
 						</div>
 					</div>

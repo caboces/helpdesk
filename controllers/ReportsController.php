@@ -2,11 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\Asset;
 use app\models\District;
 use app\models\HourlyRate;
+use app\models\Inventory;
 use app\models\JobType;
 use app\models\Part;
 use app\models\Ticket;
+use app\models\TimeEntry;
 use app\models\User;
 use kartik\grid\ExpandRowColumn;
 use kartik\grid\GridView as GridGridView;
@@ -518,137 +521,292 @@ class ReportsController extends Controller
         ]);
     }
 
+    /**
+     * Gets the WNYRIC iPad Repair Labor Report.
+     * Shows for each district the tickets and the time and cost of labor spent fixing ipads..
+     */
     public function actionWnyricIpadRepairLaborReport() {
         $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
         $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => Ticket::getWnyricIpadRepairLaborReport($startDate, $endDate)->asArray()->all()
-        ]);
-        $gridColumns = [
-            [
-                'label' => 'Ticket ID'
-            ],
-            [
-                'label' => 'District'
-            ],
-            [
-                'label' => 'Job Description'
-            ],
-            [
-                'label' => 'RIC Queue Ticket'
-            ],
-            [
-                'label' => 'Tech Time'
-            ],
-            [
-                'label' => 'Labor Cost'
-            ],
-            [
-                'label' => 'Who'
-            ]
-        ];
+        
+        // declare the model
+        $model = [];
+        // store the districts, only grab districts WITH tickets WITH time entries in the specified date range
+        $model['districts'] = District::find()
+            ->innerJoin('ticket', 'ticket.district_id = district.id AND ticket.job_category_id = 25')
+            ->innerJoin('time_entry', 'time_entry.ticket_id = ticket.id AND time_entry.entry_date BETWEEN :startDate AND :endDate')
+            ->params([':startDate' => $startDate, ':endDate' => $endDate])
+            ->orderBy('district.name')
+            ->asArray()
+            ->all();
+        // set the grand totals to zero
+        $model['totalTechTime'] = 0;
+        $model['totalLaborCost'] = 0;
+        // loop through each district and set the tickets + other fields
+        foreach ($model['districts'] as &$district) {
+            // get the tickets, only grabbing ones with districts and time entries in the date range
+            $district['tickets'] = Ticket::find()
+                ->innerJoin('time_entry', 'ticket.id = time_entry.ticket_id')
+                ->innerJoin('district', "ticket.district_id = {$district['id']}")
+                ->where('time_entry.entry_date BETWEEN :startDate AND :endDate AND ticket.job_category_id = 25')
+                ->params([':startDate' => $startDate, ':endDate' => $endDate])
+                ->orderBy('district.name')
+                ->asArray()
+                ->all();
+            $district['totalTechTime'] = 0;
+            $district['totalLaborCost'] = 0;
+            // loop through each ticket and set the component fields like time_entry
+            foreach($district['tickets'] as &$ticket) {
+                // get the list of time_entries
+                $ticket['time_entry'] = TimeEntry::find()
+                    ->where("ticket_id = {$ticket['id']} AND time_entry.entry_date BETWEEN :startDate AND :endDate")
+                    ->params([':startDate' => $startDate, ':endDate' => $endDate])
+                    ->asArray()
+                    ->all();
+                $ticket['totalTechTime'] = 0;
+                $ticket['totalLaborCost'] = 0;
+                // get the totals from the time entries
+                foreach ($ticket['time_entry'] as $time_entry) {
+                    $ticket['totalTechTime'] += $time_entry['tech_time'];
+                    // get hourly rate for ipad repairs, depending on when this time entry was added.
+                    $rate = HourlyRate::find()
+                        ->innerJoin('job_type', 'hourly_rate.job_type_id = job_type.id')
+                        ->innerJoin('job_type_category', 'job_type.id = job_type_category.job_type_id')
+                        ->innerJoin('job_category', 'job_type_category.job_category_id = job_category.id AND job_category.id = 25') // 25 is ipad
+                        ->where(':now BETWEEN first_day_effective AND last_day_effective',
+                        [':now' => $time_entry['entry_date']])->one()->rate;
+                    $ticket['totalLaborCost'] += $time_entry['tech_time'] * $rate;
+                }
+                $district['totalTechTime'] += $ticket['totalTechTime'];
+                $district['totalLaborCost'] += $ticket['totalLaborCost'];
+            }
+            $model['totalTechTime'] += $district['totalTechTime'];
+            $model['totalLaborCost'] += $district['totalLaborCost'];
+        }
 
         $this->layout = 'blank';
         return $this->render('wnyric-ipad-repair-labor-report',[
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'dataProvider' => $dataProvider,
-            'gridColumns' => $gridColumns
+            'model' => $model,
         ]);
     }
 
+    /**
+     * Gets the WNYRIC iPad Parts Summary.
+     * Shows for each district the tickets their cost of parts repairing ipads.
+     */
     public function actionWnyricIpadPartsSummary() {
         $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
         $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => Ticket::getWnyricIpadPartsSummary($startDate, $endDate)->asArray()->all()
-        ]);
-        $gridColumns = [
-            [
-                'label' => 'Ticket ID'
-            ],
-            [
-                'label' => 'District'
-            ],
-            [
-                'label' => 'Job Description'
-            ],
-            [
-                'label' => 'RIC Queue Ticket'
-            ],
-            [
-                'label' => 'Parts Cost'
-            ]
-        ];
+
+        $model = [];
+        // grab districts WITH tickets with iPad job category WITH parts 
+        $model['districts'] = District::find()
+            ->innerJoin('ticket', 'ticket.district_id = district.id AND ticket.job_category_id = 25')
+            ->innerJoin('part', 'part.ticket_id = ticket.id AND part.created BETWEEN :startDate AND :endDate')
+            ->params([':startDate' => $startDate, ':endDate' => $endDate])
+            ->asArray()
+            ->all();
+        $model['totalPartsCost'] = 0;
+        foreach ($model['districts'] as &$district) {
+            $district['tickets'] = 
+            $district['totalPartsCost'] = 0;
+
+            // only grab tickets with existing parts
+            $district['tickets'] = Ticket::find()
+                ->innerJoin('part', 'ticket.id = part.ticket_id')
+                ->where('part.created BETWEEN :startDate AND :endDate AND ticket.job_category_id = 25')
+                ->params([':startDate' => $startDate, ':endDate' => $endDate])
+                ->asArray()
+                ->all();
+        
+            // add ticket components
+            foreach ($district['tickets'] as &$ticket) {
+                // only grab parts that were created in the date range
+                $ticket['parts'] = Part::find()
+                    ->where("ticket_id = {$ticket['id']} AND part.created BETWEEN :startDate AND :endDate")
+                    ->params([':startDate' => $startDate, ':endDate' => $endDate])
+                    ->asArray()
+                    ->all();
+                $ticket['totalPartsCost'] = 0;
+                foreach ($ticket['parts'] as $part) {
+                    $ticket['totalPartsCost'] += ($part['unit_price'] * $part['quantity']);
+                }
+                $district['totalPartsCost'] += $ticket['totalPartsCost'];
+            }
+            $model['totalPartsCost'] += $district['totalPartsCost'];
+        }
 
         $this->layout = 'blank';
         return $this->render('wnyric-ipad-parts-summary',[
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'dataProvider' => $dataProvider,
-            'gridColumns' => $gridColumns
+            'model' => $model,
         ]);
     }
     
-
+    /**
+     * Gets the WNYRIC iPad Repair Billing Report.
+     * Shows for each district the tickets and cost of parts and labor for repairing ipads.
+     */
     public function actionWnyricIpadRepairBillingReport() {
         $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
         $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
 
-        // build the 'districts' object
-        $districts = District::findBySql("
-            SELECT * 
-            FROM `district`
-            INNER JOIN `ticket` ON `ticket`.`district_id` = `district`.`id`
-            INNER JOIN `part` ON `part`.`ticket_id` = `ticket`.`id` AND `part`.`created` BETWEEN :startDate AND :endDate
-            INNER JOIN `time_entry` ON `time_entry`.`ticket_id` = `ticket`.`id` AND `time_entry`.`created` BETWEEN :startDate AND :endDate
-            WHERE `ticket`.`job_category
-        ", [':startDate' => $startDate, ':endDate' => $endDate])->all();
+        // only choose districts that have had tickets and time_entires applied to them. as well as job_category_id 25 (wnyric ipad).
+        // additionally, these districts must have tickets that have either parts OR assets applied to them.
+        $model = [];
+        $model['districts'] = District::find()
+            ->innerJoin('ticket', 'ticket.district_id = district.id AND ticket.job_category_id = 25')
+            ->leftJoin('part', 'part.ticket_id = ticket.id AND part.created BETWEEN :startDate AND :endDate')
+            ->leftJoin('asset', 'asset.ticket_id = ticket.id AND asset.created BETWEEN :startDate AND :endDate')
+            ->innerJoin('time_entry', 'time_entry.ticket_id = ticket.id AND time_entry.created BETWEEN :startDate AND :endDate')
+            ->groupBy('district.id')
+            ->having('(COUNT(asset.new_prop_tag) > 0 OR COUNT(part.id) > 0) AND COUNT(time_entry.id) > 0')
+            ->params([':startDate' => $startDate . ' 00:00:00', ':endDate' => $endDate . ' 23:59:59'])
+            ->asArray()
+            ->all();
+        // populate the components of each district
+        foreach ($model['districts'] as &$district) {
+            $district['totalLaborHours'] = 0;
+            $district['totalLaborCost'] = 0;
+            $district['totalPartsCost'] = 0;
+            $district['totalCost'] = 0;
+            // get the tickets
+            $district['tickets'] = Ticket::find()
+                ->innerJoin('district', "ticket.district_id = district.id AND district.id = {$district['id']}")
+                ->leftJoin('part', 'part.ticket_id = ticket.id AND part.created BETWEEN :startDate AND :endDate')
+                ->leftJoin('asset', 'asset.ticket_id = ticket.id AND asset.created BETWEEN :startDate AND :endDate')
+                ->innerJoin('time_entry', 'time_entry.ticket_id = ticket.id AND time_entry.created BETWEEN :startDate AND :endDate')
+                ->where('ticket.job_category_id = 25')
+                ->groupBy('ticket.id')
+                ->having('(COUNT(asset.new_prop_tag) > 0 OR COUNT(part.id) > 0) AND COUNT(time_entry.id) > 0')
+                ->params([':startDate' => $startDate . ' 00:00:00', ':endDate' => $endDate . ' 23:59:59'])
+                ->asArray()
+                ->all();
+            // populate each ticket
+            foreach ($district['tickets'] as &$ticket) {
+                $ticket['parts'] = Part::find()
+                    ->where("part.ticket_id = {$ticket['id']} AND part.created BETWEEN :startDate AND :endDate")
+                    ->params([':startDate' => $startDate, ':endDate' => $endDate])
+                    ->asArray()
+                    ->all();
+                $ticket['assets'] = Asset::find()
+                    ->where("asset.ticket_id = {$ticket['id']} AND asset.created BETWEEN :startDate AND :endDate")
+                    ->params([':startDate' => $startDate, ':endDate' => $endDate])
+                    ->asArray()
+                    ->all(); // not sure if the created between condition is necessary since assets dont add to a billing
+                // unfortunately we need to populate the asset with some stuff from the inventory database
+                foreach ($ticket['assets'] as &$asset) {
+                    $asset['inventory'] = Inventory::find()->where("inventory.new_prop_tag = {$asset['new_prop_tag']}")->asArray()->one();
+                }
+                $ticket['time_entries'] = TimeEntry::find()
+                    ->where("time_entry.ticket_id = {$ticket['id']} AND time_entry.created BETWEEN :startDate AND :endDate")
+                    ->params([':startDate' => $startDate, ':endDate' => $endDate])
+                    ->asArray()
+                    ->all();
+                $ticket['totalLaborHours'] = 0;
+                $ticket['totalLaborCost'] = 0;
+                foreach ($ticket['time_entries'] as &$time_entry) {
+                    $ticket['totalLaborHours'] += $time_entry['tech_time'];
+                    // get hourly rate for ipad repairs, grabbing the rate from the time entry's entry date.
+                    $rate = HourlyRate::find()
+                        ->innerJoin('job_type', 'hourly_rate.job_type_id = job_type.id')
+                        ->innerJoin('job_type_category', 'job_type.id = job_type_category.job_type_id')
+                        ->innerJoin('job_category', 'job_type_category.job_category_id = job_category.id AND job_category.id = 25') // 25 is ipad
+                        ->where(':now BETWEEN first_day_effective AND last_day_effective',
+                        [':now' => $time_entry['entry_date']])->one()->rate;
+                    $ticket['totalLaborCost'] += $rate * $time_entry['tech_time'];
+                }
+                $ticket['totalPartsCost'] = 0;
+                foreach ($ticket['parts'] as &$part) {
+                    $ticket['totalPartsCost'] += ($part['quantity'] * $part['unit_price']);
+                }
+                $ticket['totalCost'] = $ticket['totalLaborCost'] + $ticket['totalPartsCost'];
+                $district['totalLaborHours'] += $ticket['totalLaborHours'];
+                $district['totalLaborCost'] += $ticket['totalLaborCost'];
+                $district['totalPartsCost'] += $ticket['totalPartsCost'];
+                $district['totalCost'] += $ticket['totalCost'];
+            }
+        }
 
         $this->layout = 'blank';
         return $this->render('wnyric-ipad-repair-billing-report',[
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'districts' => $districts,
+            'model' => $model,
         ]);
     }
 
+    /**
+     * Non WNYRIC iPad repair labor report.
+     * Gets the labor time and cost of repairing ipads in non wnyric regions.
+     */
     public function actionNonWnyricIpadRepairLaborReport() {
         $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
         $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => Ticket::getNonWnyricIpadRepairLaborReport($startDate, $endDate)->asArray()->all()
-        ]);
-        $gridColumns = [
-            [
-                'label' => 'Ticket ID'
-            ],
-            [
-                'label' => 'District'
-            ],
-            [
-                'label' => 'Job Description'
-            ],
-            [
-                'label' => 'RIC Queue Ticket'
-            ],
-            [
-                'label' => 'Tech Time'
-            ],
-            [
-                'label' => 'Labor Cost'
-            ],
-            [
-                'label' => 'Who'
-            ]
-        ];
+
+        $model = [];
+        // Get all districts that have tickets with time entires in non wnyric districts.
+        // but, they must have assets with "ipad" in their name.
+        $model['districts'] = District::find()
+            ->innerJoin('ticket', 'ticket.district_id = district.id AND ticket.job_category_id <> 25')
+            ->innerJoin('time_entry', 'time_entry.ticket_id = ticket.id AND time_entry.created BETWEEN :startDate AND :endDate')
+            ->innerJoin('asset', 'asset.ticket_id = ticket.id')
+            ->innerJoin('federated_inventory', 'federated_inventory.new_prop_tag = asset.new_prop_tag') // should be insanely slow 
+            ->where('LOWER(federated_inventory.item_description) LIKE \'%ipad%\'')                      // even more slow using like and wildcards
+            ->params([':startDate' => $startDate . ' 00:00:00', ':endDate' => $endDate . ' 23:59:59'])
+            ->asArray()
+            ->all();
+        // set the grand totals to zero
+        $model['totalTechTime'] = 0;
+        $model['totalLaborCost'] = 0;
+        // loop through each district and set the tickets + other fields
+        foreach ($model['districts'] as &$district) {
+            // get the tickets, only grabbing ones with districts and time entries in the date range
+            $district['tickets'] = Ticket::find()
+                ->innerJoin('time_entry', 'ticket.id = time_entry.ticket_id')
+                ->where('time_entry.entry_date BETWEEN :startDate AND :endDate AND ticket.job_category_id <> 25')
+                ->params([':startDate' => $startDate, ':endDate' => $endDate])
+                ->asArray()
+                ->all();
+            $district['totalTechTime'] = 0;
+            $district['totalLaborCost'] = 0;
+            // loop through each ticket and set the component fields like time_entry
+            foreach($district['tickets'] as &$ticket) {
+                // get the list of time_entries
+                $ticket['time_entry'] = TimeEntry::find()
+                    ->where("ticket_id = {$ticket['id']} AND time_entry.entry_date BETWEEN :startDate AND :endDate")
+                    ->params([':startDate' => $startDate, ':endDate' => $endDate])
+                    ->asArray()
+                    ->all();
+                $ticket['totalTechTime'] = 0;
+                $ticket['totalLaborCost'] = 0;
+                // get the totals from the time entries
+                foreach ($ticket['time_entry'] as $time_entry) {
+                    $ticket['totalTechTime'] += $time_entry['tech_time'];
+                    // get hourly rate for ipad repairs, depending on when this time entry was added.
+                    $rate = HourlyRate::find()
+                        ->innerJoin('job_type', 'hourly_rate.job_type_id = job_type.id')
+                        ->innerJoin('job_type_category', 'job_type.id = job_type_category.job_type_id')
+                        ->innerJoin('job_category', 'job_type_category.job_category_id = job_category.id AND job_category.id = 25') // 25 is ipad
+                        ->where(':now BETWEEN first_day_effective AND last_day_effective',
+                        [':now' => $time_entry['entry_date']])->one()->rate;
+                    $ticket['totalLaborCost'] += $time_entry['tech_time'] * $rate;
+                }
+                $district['totalTechTime'] += $ticket['totalTechTime'];
+                $district['totalLaborCost'] += $ticket['totalTechTime'];
+            }
+            $model['totalTechTime'] += $district['totalTechTime'];
+            $model['totalLaborCost'] += $district['totalLaborCost'];
+        }
 
         $this->layout = 'blank';
         return $this->render('non-wnyric-ipad-repair-labor-report',[
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'dataProvider' => $dataProvider,
-            'gridColumns' => $gridColumns
+            'model' => $model,
         ]);
     }
 }

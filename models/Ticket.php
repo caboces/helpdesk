@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use PhpOffice\PhpSpreadsheet\Calculation\Financial\Securities\Rates;
 use Yii;
 use yii\db\Expression;
 
@@ -260,7 +261,7 @@ class Ticket extends \yii\db\ActiveRecord
      * */
     public function getAssets()
     {
-        return $this->hasMany(Asset::class,['id'=>'ticket_id'])->viaTable('{{%asset}}',['ticket_id'=>'id']); 
+        return $this->hasMany(Asset::class,['ticket_id'=>'id']); 
     }
 
     /**
@@ -269,7 +270,7 @@ class Ticket extends \yii\db\ActiveRecord
      * */
     public function getParts()
     {
-        return $this->hasMany(Part::class,['id'=>'ticket_id'])->viaTable('{{%part}}',['ticket_id'=>'id']); 
+        return $this->hasMany(Part::class,['ticket_id'=>'id']); 
     }
 
     /**
@@ -279,6 +280,57 @@ class Ticket extends \yii\db\ActiveRecord
     public function getCreatedBy()
     {
         return $this->HasOne(User::class,['id'=>'created_by']); 
+    }
+
+    /**
+     * Get the total tech time on this ticket.
+     */
+    public function getTotalTechTime() {
+        $sum = 0;
+        foreach ($this->timeEntries as $timeEntry) {
+            $sum += ($timeEntry->tech_time + $timeEntry->overtime + $timeEntry->itinerate_time + $timeEntry->travel_time);
+        }
+        return $sum;
+    }
+
+    /**
+     * Get the total labor cost of the ticket.
+     */
+    public function getTotalLaborCost() {
+        $rate = HourlyRate::find()->where(':now BETWEEN first_day_effective AND last_day_effective AND job_type_id = :jobTypeId',
+            [':now' => date('Y-m-d'), 'jobTypeId' => $this->job_type_id])->one()->rate;
+        return $this->getTotalLaborHours() * $rate;
+    }
+
+    /**
+     * Get the total labor cost of the ticket.
+     */
+    public function getTotalPartsCost() {
+        $sum = 0;
+        // parts
+        foreach ($this->parts as $part) {
+            $sum += ($part->quantity * $part->unit_price);
+        }
+        return $sum;
+    }
+
+    /**
+     * Get the total labor hours.
+     */
+    public function getTotalLaborHours() {
+        $sum = 0;
+        // time entries
+        foreach ($this->timeEntries as $timeEntry) {
+            $sum += ($timeEntry->tech_time + $timeEntry->overtime + $timeEntry->itinerate_time + $timeEntry->travel_time);
+        }
+        return $sum;
+    }
+
+    /**
+     * Get the total cost of this ticket, including parts, time.
+     */
+    public function getTotalCost() {
+        return $this->getTotalLaborCost() + $this->getTotalPartsCost();
     }
 
     /**

@@ -10,11 +10,6 @@ use yii\helpers\Url;
 
 $this->title = 'WNYRIC iPad Repair Billing Report';
 ?>
-<style>
-    .hover-row:hover {
-        background:color#ccc;
-    }
-</style>
 <div class="wnyric-ipad-repair-billing-report">
     <div>
         <div class="title-icon d-flex align-items-center">
@@ -27,84 +22,128 @@ $this->title = 'WNYRIC iPad Repair Billing Report';
     </div>
     <div>
         <div>
-            <strong>Select a date range</strong>
             <?= $this->render('date-form', ['startDate' => $startDate, 'endDate' => $endDate]) ?>
         </div>
-        <div class="border-top pt-2 mt-2">
+        <div id="wnyric-ipad-repair-billing-report" class="border-top pt-2 mt-2">
             <span>You are viewing the <strong><?= Html::encode(date('F j, Y', strtotime($startDate))) ?></strong> to <strong><?= Html::encode(date('F j, Y', strtotime($endDate))) ?></strong> report.</span>
+            <div class="pt-2 print-button">
+                <?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16" aria-hidden="true">
+                            <path d="M11 2H9v3h2z"/>
+                            <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                        </svg>&nbsp;Print',
+                        ['class' => 'd-inline-block btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark']
+                ); ?>
+            </div>
             <div>
                 <h3>Report</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr class="hover-row">
-                            <th scope="col">District / Asset Make</th>
-                            <th scope="col">Ticket ID</th>
-                            <th scope="col">Description / Asset Model</th>
-                            <th scope="col">RIC Que Ticket / Part Quantity / Asset Serial #</th>
-                            <th scope="col">Date / Part Unit Price</th>
-                            <th scope="col">Tech Time</th>
-                            <th scope="col">Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($districts as $district): ?>
-                        <tr class="hover-row">
-                            <td><?= Html::encode($district->name) ?></td> 
-                        </tr>
-                        <?php foreach($district->tickets as $ticket): ?>
-                        <tr class="hover-row">
-                            <td><?= Html::encode($ticket->id) ?></td> 
-                            <td><?= Html::encode($ticket->summary) ?></td>
-                            <td><?= date('F j, Y', strtotime($ticket->created)) ?></td>
-                            <td><?= Html::encode(0/* $ticket->tech_time*/) ?></td>
-                            <td><?= Html::encode(0/*$ticket->cost*/) ?></td>
-                        </tr>
-                        <?php foreach($ticket->parts as $index => $part): ?>
-                        <tr class="hover-row">
-                            <td>Part #<?= Html::encode($index) ?></td> 
-                            <td><?= Html::encode($part->description) ?></td>
-                            <td><?= Html::encode($part->quantity) ?></td>
-                            <td><?= Html::encode($part->unit_price) ?></td>
-                            <td><?= Html::encode($part->quantity * $part->unit_price) ?></td>
-                        </tr>
-                        <?php endforeach ?>
-                        <?php foreach($ticket->assets as $index => $asset): ?>
-                        <tr class="hover-row">
-                            <td>Asset #<?= Html::encode($index) ?></td> 
-                            <td><?= Html::encode($asset->item_description) ?></td>
-                            <td><?= Html::encode($asset->new_prop_tag) ?></td>
-                            <td><?= Html::encode($asset->serial_number) ?></td>
-                            <td><?= Html::encode($asset->po) ?></td>
-                        </tr>
-                        <?php endforeach ?>
-                        <!-- Totals row for each ticket -->
-                        <tr class="hover-row">
-                            <td class="fw-bold">Total for Ticket ID #<?= Html::encode($ticket->id) ?></td> 
-                            <td>Labor Hours: <?= Html::encode(0/*$ticket->labor_hours*/) ?></td>
-                            <td>Labor Cost: <?= Html::encode(0/*$ticket->labor_cost*/) ?></td>
-                            <td>Parts: <?= Html::encode(0/*$ticket->parts_cost*/) ?></td>
-                            <td>Total: <?= Html::encode(0/*$ticket->total*/) ?></td>
-                        </tr>
-                        <?php endforeach ?>
-                        <!-- Totals row for each district -->
-                        <tr class="hover-row">
-                            <td class="fw-bold">Total for <?= Html::encode($district->name) ?></td> 
-                            <td>Labor Hours: <?= Html::encode(0) ?></td>
-                            <td>Labor Cost: <?= Html::encode(0) ?></td>
-                            <td>Parts: <?= Html::encode(0) ?></td>
-                            <td>Total: <?= Html::encode(0) ?></td>
-                        </tr>
-                        <?php endforeach ?>
-                    </tbody>
-                    <tfoot>
-                        <tr class="hover-row">
-                            <td class="fw-italic" scope="row">Grand Totals</td>
-                            <td><?= Html::encode(0/*$grand_parts_total*/) ?><!-- Part * quantity = parts total. --></td>
-                            <td><?= Html::encode(0/*$grand_tech_time_total*/) ?><!-- tech time total. --></td>
-                            <td><?= Html::encode(0/*$grand_cost_total*/) ?><!-- cost total. --></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <?php if ($model): ?>
+                <div class="report">
+                    <table class="border table table-striped">
+                        <thead>
+                            <tr class="hover-row">
+                                <th scope="col">District / Asset Make</th>
+                                <th scope="col">Ticket ID</th>
+                                <th scope="col">Description / Asset Prop Tag</th>
+                                <th scope="col">RIC Que Ticket / Part Quantity / Asset Serial #</th>
+                                <th scope="col">Date / Part Unit Price</th>
+                                <th scope="col">Tech Time</th>
+                                <th scope="col">Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($model['districts'] as $district): ?>
+                            <tr class="hover-row">
+                                <td><?= Html::encode($district['name']) ?></td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <?php foreach($district['tickets'] as $ticket): ?>
+                            <tr class="hover-row">
+                                <td>&nbsp;</td>
+                                <td style="text-align:center;"><?= Html::encode($ticket['id']) ?></td> 
+                                <td><?= Html::encode($ticket['summary']) ?></td>
+                                <td><?= Html::encode($ticket['description']) ?></td>
+                                <td><?= date('F j, Y', strtotime($ticket['modified'])) ?></td>
+                                <td><?= Html::encode(number_format($ticket['totalLaborHours'], 2)) ?></td>
+                                <td>$<?= Html::encode(number_format($ticket['totalLaborCost'], 2)) ?></td>
+                            </tr>
+                            <?php foreach($ticket['parts'] as $index => $part): ?>
+                            <tr class="hover-row">
+                                <td>&nbsp;</td>
+                                <td style="text-align:right;">Part #<?= Html::encode($index+1) ?></td> 
+                                <td><?= Html::encode($part['part_name']) ?></td>
+                                <td><?= Html::encode($part['note']) ?></td>
+                                <td><?= Html::encode($part['quantity']) ?></td>
+                                <td>$<?= Html::encode(number_format($part['unit_price'], 2)) ?></td>
+                                <td>$<?= Html::encode(number_format($part['quantity'] * $part['unit_price'], 2)) ?></td>
+                            </tr>
+                            <?php endforeach ?>
+                            <?php foreach($ticket['assets'] as $index => $asset): ?>
+                            <tr class="hover-row">
+                                <td>&nbsp;</td>
+                                <td style="text-align:right;">Asset #<?= Html::encode($index+1) ?></td> 
+                                <td><?= Html::encode($asset['inventory']['item_description']) ?></td>
+                                <td><?= Html::encode($asset['inventory']['new_prop_tag']) ?></td>
+                                <td><?= Html::encode($asset['inventory']['serial_number']) ?></td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <?php endforeach ?>
+                            <!-- Totals row for each ticket -->
+                            <tr class="hover-row">
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td class="fst-italic">Totals for Ticket ID #<?= Html::encode($ticket['id']) ?></td> 
+                                <td>Labor Cost: $<?= Html::encode(number_format($ticket['totalLaborCost'], 2)) ?></td>
+                                <td>Parts: $<?= Html::encode(number_format($ticket['totalPartsCost'], 2)) ?></td>
+                                <td>Labor Hours: <?= Html::encode(number_format($ticket['totalLaborHours'], 2)) ?></td>
+                                <td>Total: $<?= Html::encode(number_format($ticket['totalCost'], 2)) ?></td>
+                            </tr>
+                            <?php endforeach ?>
+                            <!-- Totals row for each district -->
+                            <tr class="hover-row">
+                                <td class="fst-italic" style="text-align:right;">Totals for <?= Html::encode($district['name']) ?></td> 
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>Labor Cost: $<?= Html::encode(number_format($district['totalLaborCost'], 2)) ?></td>
+                                <td>Parts: $<?= Html::encode(number_format($district['totalPartsCost'], 2)) ?></td>
+                                <td>Labor Hours: <?= Html::encode(number_format($district['totalLaborHours'], 2)) ?></td>
+                                <td>Total: $<?= Html::encode(number_format($district['totalCost'], 2)) ?></td>
+                            </tr>
+                            <?php endforeach ?>
+                        </tbody>
+                        <tfoot>
+                            <tr class="hover-row">
+                                <td class="fst-italic" scope="row" style="text-align:right;">Grand Totals</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <?php
+                                    $totalPartsCost = 0;
+                                    $totalTechTime = 0;
+                                    $totalCost = 0;
+                                    foreach ($model['districts'] as $district) {
+                                        $totalPartsCost += array_sum(array_column($district['tickets'], 'totalPartsCost'));
+                                        $totalTechTime += array_sum(array_column($district['tickets'], 'totalLaborHours'));
+                                        $totalCost += array_sum(array_column($district['tickets'], 'totalCost'));
+                                    } 
+                                ?>
+                                <td>$<?= Html::encode(number_format($totalPartsCost, 2)) ?><!-- Part * quantity = parts total. --></td>
+                                <td><?= Html::encode(number_format($totalTechTime, 2)) ?><!-- tech time total. --></td>
+                                <td class="fw-bold">$<?= Html::encode(number_format($totalCost, 2)) ?><!-- cost total. --></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <?php else: ?>
+                <div>
+                    Nothing to report.
+                </div>
+                <?php endif ?>
             </div>
         </div>
     </div>
