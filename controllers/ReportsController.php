@@ -428,6 +428,146 @@ class ReportsController extends Controller
         ]);
     }
 
+    /**
+     * Displays the Support and Repair Telecom Billing
+     *
+     * @return mixed
+     */
+    public function actionSupportAndRepairTelecomBilling()
+    {
+        $laborRatesDataProvider = new ActiveDataProvider([
+            'query' => HourlyRate::find()->with('jobType')
+                ->where('\'' . date('Y-m-d') . '\' between first_day_effective and last_day_effective'),
+            'sort' => [
+                'defaultOrder' => [
+                    'last_day_effective' => SORT_ASC
+                ]
+            ]
+        ]);
+
+        $laborRatesColumns = [
+            [
+                'attribute' => 'job_type_name',
+                'value' => function($model) {
+                    return $model->jobType->name;
+                },
+                'label' => 'Job Type'
+            ],
+            [
+                'attribute' => 'rate',
+                'value' => function($model) {
+                    return $model->rate? '$' . $model->rate : ''; 
+                }
+            ],
+            [
+                'attribute' => 'summer_rate',
+                'value' => function($model) {
+                    return $model->summer_rate? '$' . $model->summer_rate : '';
+                }
+            ],
+            'first_day_effective', 
+            'last_day_effective'
+        ];
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getSupportAndRepairTelecomBillingReport($startDate, $endDate)
+        ]);
+
+        $gridColumns = [
+            [
+                'attribute' => 'code'
+            ],
+            [
+                'attribute' => 'division_name',
+                'label' => 'Division'
+            ],
+            [
+                'attribute' => 'department_name',
+                'label' => 'Department'
+            ],
+            [
+                'attribute' => 'district_name',
+                'label' => 'District'
+            ],
+            [
+                'attribute' => 'building_name',
+                'label' => 'Building'
+            ],
+            [
+                'attribute' => 'Tech Time',
+                'label' => 'Tech Time'
+            ],
+            [
+                'attribute' => 'Overtime',
+                'label' => 'Overtime'
+            ],
+            [
+                'attribute' => 'Travel Time',
+                'label' => 'Travel Time'
+            ],
+            [
+                'attribute' => 'Itinerate Time',
+                'label' => 'Itinerate Time'
+            ]
+        ];
+
+        $totalsDataProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getSupportAndRepairTelecomBillingReportTotals($startDate, $endDate),
+        ]);
+
+        $totalsColumns = [
+            [
+                'attribute' => 'code',
+                'label' => 'Code'
+            ],
+            [
+                'attribute' => 'division_name',
+                'label' => 'Division'
+            ],
+            [
+                'attribute' => 'department_name',
+                'label' => 'Department'
+            ],
+            [
+                'attribute' => 'district_name',
+                'label' => 'District'
+            ],
+            [
+                'attribute' => 'building_name',
+                'label' => 'Building'
+            ],
+            [
+                'attribute' => 'total_tech_time',
+                'label' => 'Total Tech Time',
+            ],
+            [
+                'attribute' => 'total_overtime',
+                'label' => 'Total Overtime',
+            ],
+            [
+                'attribute' => 'total_travel_time',
+                'label' => 'Total Travel Time',
+            ],
+            [
+                'attribute' => 'total_itinerate_time',
+                'label' => 'Total Itinerate Time',
+            ]
+        ];
+
+        $this->layout = 'blank';
+        return $this->render('support-and-repair-telecom-billing', [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'dataProvider' => $dataProvider,
+            'gridColumns' => $gridColumns,
+            'laborRatesDataProvider' => $laborRatesDataProvider,
+            'laborRatesColumns' => $laborRatesColumns,
+            'totalsDataProvider' => $totalsDataProvider,
+            'totalsColumns' => $totalsColumns,
+        ]);
+    }
+
     public function actionTechnicianMonthlyReport() {
         $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
         $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
@@ -474,6 +614,77 @@ class ReportsController extends Controller
             'endDate' => $endDate,
             'dataProvider' => $dataProvider,
             'gridColumns' => $gridColumns,
+        ]);
+    }
+
+    /**
+     * Detailed technician monthly report
+     */
+    public function actionTechnicianDetailedMonthlyReport() {
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
+
+        $model = [];
+        $model['users'] = User::find()
+            ->innerJoin('tech_ticket_assignment', 'user.id = tech_ticket_assignment.user_id')
+            ->innerJoin('ticket', 'ticket.id = tech_ticket_assignment.ticket_id')
+            ->innerJoin('time_entry', 'time_entry.ticket_id = ticket.id AND time_entry.entry_date BETWEEN :startDate AND :endDate')
+            ->params([':startDate' => $startDate, ':endDate' => $endDate])
+            ->asArray()
+            ->all();
+        foreach ($model['users'] as &$user) {
+            $user['tickets'] = Ticket::find()
+                ->innerJoin('time_entry', 'time_entry.ticket_id = ticket.id AND time_entry.entry_date BETWEEN :startDate AND :endDate')
+                ->params([':startDate' => $startDate, ':endDate' => $endDate])
+                ->asArray()
+                ->all();
+            $user['totalTechTime'] = 0;
+            $user['totalOvertime'] = 0;
+            $user['totalTravelTime'] = 0;
+            $user['totalItinerateTime'] = 0;
+            foreach ($user['tickets'] as &$ticket) {
+                $customerName = Ticket::find()
+                    ->select('division.name AS divname, department.name AS deptname, district.name AS distname, building.name AS bldgname')
+                    ->leftJoin('division', 'ticket.division_id = division.id')
+                    ->leftJoin('department', 'ticket.department_id = department.id')
+                    ->leftJoin('district', 'ticket.district_id = district.id')
+                    ->leftJoin('district_building', 'ticket.district_building_id = district_building.id')
+                    ->leftJoin('building', 'district_building.building_id = building.id')
+                    ->where("ticket.id = {$ticket['id']}")
+                    ->asArray()
+                    ->one();
+                if ($customerName['divname'] && $customerName['deptname']) {
+                    $ticket['customer_name'] = $customerName['divname'].' > '.$customerName['deptname'];
+                } else if ($customerName['distname'] && $customerName['bldgname']) {
+                    $ticket['customer_name'] = $customerName['distname'].' > '.$customerName['bldgname'];
+                }
+                $ticket['time_entries'] = TimeEntry::find()
+                    ->where("time_entry.ticket_id = {$ticket['id']} AND time_entry.entry_date BETWEEN :startDate AND :endDate")
+                    ->params([':startDate' => $startDate, ':endDate' => $endDate])
+                    ->asArray()
+                    ->all();
+                $ticket['totalTechTime'] = 0;
+                $ticket['totalOvertime'] = 0;
+                $ticket['totalTravelTime'] = 0;
+                $ticket['totalItinerateTime'] = 0;
+                foreach ($ticket['time_entries'] as &$time_entry) {
+                    $ticket['totalTechTime'] += $time_entry['tech_time'];
+                    $ticket['totalOvertime'] += $time_entry['overtime'];
+                    $ticket['totalTravelTime'] += $time_entry['travel_time'];
+                    $ticket['totalItinerateTime'] = $time_entry['itinerate_time'];
+                }
+                $user['totalTechTime'] += $ticket['totalTechTime'];
+                $user['totalOvertime'] += $ticket['totalOvertime'];
+                $user['totalTravelTime'] += $ticket['totalTravelTime'];
+                $user['totalItinerateTime'] += $ticket['totalItinerateTime'];
+            }
+        }
+
+        $this->layout = 'blank';
+        return $this->render('technician-detailed-monthly-report',[
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'model' => $model, 
         ]);
     }
 
@@ -804,6 +1015,91 @@ class ReportsController extends Controller
 
         $this->layout = 'blank';
         return $this->render('non-wnyric-ipad-repair-labor-report',[
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'model' => $model,
+        ]);
+    }
+
+    public function actionTelecomPartsReport() {
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => Ticket::getTelecomPartsReport($startDate, $endDate)->asArray()->all()
+        ]);
+        $gridColumns = [
+            [
+                'attribute' => 'code'
+            ],
+            [
+                'attribute' => 'division_name',
+                'label' => 'Division'
+            ],
+            [
+                'attribute' => 'department_name',
+                'label' => 'Department'
+            ],
+            [
+                'attribute' => 'district_name',
+                'label' => 'District'
+            ],
+            [
+                'attribute' => 'building_name',
+                'label' => 'Building'
+            ],
+            [
+                'attribute' => 'parts_totals',
+                'label' => 'Parts Totals',
+                'value' => function($model) {
+                    return $model['parts_totals']? '$' . $model['parts_totals'] : '';
+                }
+            ],
+        ];
+
+        $this->layout = 'blank';
+        return $this->render('telecom-parts-report',[
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'dataProvider' => $dataProvider,
+            'gridColumns' => $gridColumns
+        ]);
+    }
+
+    public function actionTechnicianByCallTypeReport() {
+        $startDate = Yii::$app->getRequest()->getQueryParam('startDate', date('Y-m-01'));
+        $endDate = Yii::$app->getRequest()->getQueryParam('endDate', date('Y-m-t', strtotime(date('Y-m-d'))));
+
+        $model = [];
+        // get all users that have time entries in the date range
+        $model = Ticket::find()
+            ->select(['user.fname as first_name', 
+                'user.lname as last_name',
+                'customer_type.code as code',
+                'division.name as division_name',
+                'department.name as department_name',
+                'district.name as district_name',
+                'building.name as building_name',
+                'sum(time_entry.tech_time) as total_tech_time',
+                'sum(time_entry.overtime) as total_overtime',
+                'sum(time_entry.itinerate_time) as total_itinerate_time',
+                'sum(time_entry.travel_time) as total_travel_time'
+            ])->innerJoin('customer_type', 'customer_type.id = ticket.customer_type_id')
+            ->innerJoin('tech_ticket_assignment', 'ticket.id = tech_ticket_assignment.ticket_id')
+            ->innerJoin('user', 'user.id = tech_ticket_assignment.user_id')
+            ->innerJoin('time_entry', 'time_entry.user_id = user.id AND time_entry.ticket_id = ticket.id AND time_entry.entry_date BETWEEN :startDate AND :endDate')
+            ->leftJoin('division', 'ticket.division_id = division.id')
+            ->leftJoin('department', 'ticket.department_id = department.id')
+            ->leftJoin('district', 'ticket.district_id = district.id')
+            ->leftJoin('district_building', 'ticket.district_building_id = district_building.id')
+            ->leftJoin('building', 'district_building.building_id = building.id')
+            ->groupBy(['user.id', 'customer_type.id', 'district.id', 'building.id', 'division.id', 'department.id'])
+            ->orderBy('last_name, first_name, code, division_name, department_name, district_name, building_name')
+            ->params([':startDate' => $startDate, ':endDate' => $endDate])
+            ->asArray()
+            ->all();
+
+        $this->layout = 'blank';
+        return $this->render('technicians-by-call-type-report',[
             'startDate' => $startDate,
             'endDate' => $endDate,
             'model' => $model,

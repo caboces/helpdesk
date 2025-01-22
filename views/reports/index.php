@@ -44,7 +44,7 @@ $this->title = 'Reports';
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item p-2"><?= Html::a('Support and repair labor billing', ['reports/support-and-repair-labor-billing']) ?></li>
-                    <li class="list-group-item p-2"><?= Html::a('Support and repair telecom billing', ['reports/support-and-repair-telecom-billing'], ['class' => 'wip-link']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('Support and repair telecom billing', ['reports/support-and-repair-telecom-billing']) ?></li>
                 </ul>
             </div>
         </div>
@@ -60,7 +60,7 @@ $this->title = 'Reports';
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item p-2"><?= Html::a('Parts billing summary', ['reports/part-billing-summary']) ?></li>
-                    <li class="list-group-item p-2"><?= Html::a('Telecom parts report', ['reports/part-telecom-report'], ['class' => 'wip-link']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('Telecom parts report', ['reports/telecom-parts-report']) ?></li>
                 </ul>
             </div>
         </div>
@@ -77,8 +77,8 @@ $this->title = 'Reports';
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item p-2"><?= Html::a('Monthly report', ['reports/technician-monthly-report']) ?></li>
-                    <li class="list-group-item p-2"><?= Html::a('Detailed monthly report', ['reports/technician-detailed-monthly-report'], ['class' => 'wip-link']) ?></li>
-                    <li class="list-group-item p-2"><?= Html::a('By call type summary', ['reports/technician-by-call-type-report'], ['class' => 'wip-link']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('Detailed monthly report', ['reports/technician-detailed-monthly-report']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('By call type summary', ['reports/technician-by-call-type-report']) ?></li>
                 </ul>
             </div>
         </div>

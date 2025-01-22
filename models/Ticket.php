@@ -446,7 +446,7 @@ class Ticket extends \yii\db\ActiveRecord
                     + SUM(`time_entry`.overtime)
                     + SUM(`time_entry`.travel_time)
                     + SUM(`time_entry`.itinerate_time), 0)'
-            ])->where('time_entry.created BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
+            ])->where('time_entry.entry_date BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
             'times.ticket_id = ticket.id'
         )->leftJoin([
             'part' => Part::find()->select([
@@ -486,7 +486,7 @@ class Ticket extends \yii\db\ActiveRecord
                     + SUM(`time_entry`.overtime)
                     + SUM(`time_entry`.travel_time)
                     + SUM(`time_entry`.itinerate_time), 0)'
-            ])->where('time_entry.created BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
+            ])->where('time_entry.entry_date BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
             'times.ticket_id = ticket.id'
         )->leftJoin([
             'part' => Part::find()->select([
@@ -669,7 +669,7 @@ class Ticket extends \yii\db\ActiveRecord
                     + SUM(`time_entry`.overtime)
                     + SUM(`time_entry`.travel_time)
                     + SUM(`time_entry`.itinerate_time), 0)'
-            ])->where('time_entry.created BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
+            ])->where('time_entry.entry_date BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('time_entry.ticket_id')->having('total_hours > 0')],
             'times.ticket_id = ticket.id'
         )->innerJoin('hourly_rate', 'ticket.job_type_id = hourly_rate.job_type_id AND :startDate BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective', ['startDate' => $startDate])
         ->where(['ticket.customer_type_id' => 2, 'ticket.job_category_id' => 25])
@@ -698,7 +698,104 @@ class Ticket extends \yii\db\ActiveRecord
         ->orderBy('district.name');
     }
 
-    public static function getNonWnyricIpadRepairLaborReport($startDate, $endDate) {
-        return Ticket::find();
+    public static function getTelecomPartsReport($startDate, $endDate) {
+        return Ticket::find()->select([
+            'customer_type.code',
+            'division.name as division_name',
+            'department.name as department_name',
+            'district.name as district_name',
+            'building.name as building_name',
+            'parts.totals as parts_totals'
+        ])->leftJoin('customer_type', 'ticket.customer_type_id = customer_type.id')
+        ->leftJoin('division', 'ticket.division_id = division.id')
+        ->leftJoin('department', 'ticket.department_id = department.id')
+        ->leftJoin('district', 'ticket.district_id = district.id')
+        ->leftJoin('district_building', 'ticket.district_building_id = district_building.id')
+        ->leftJoin('building', 'building.id = district_building.building_id')->innerJoin([
+            'parts' => Part::find()->select([
+                'part.ticket_id',
+                'totals' => 'IFNULL(SUM(part.unit_price * part.quantity), 0)'
+            ])->where('part.created BETWEEN \'' . $startDate . '\' AND \'' . $endDate . '\'')->groupBy('part.ticket_id')->having('totals > 0')],
+            'parts.ticket_id = ticket.id'
+        )->orderBy('division.name, department.name, district.name, department.name')
+        ->where('job_category_id = 21'); // 21 is telephone maintenance
+    }
+
+    public static function getSupportAndRepairTelecomBillingReport($startDate, $endDate) {
+        return Yii::$app->getDb()->createCommand("
+            SELECT `customer_type`.`code` AS code,
+            `division`.`name` AS `division_name`,
+            `department`.`name` AS `department_name`,
+            `district`.`name` AS `district_name`,
+            `building`.`name` AS `building_name`,
+            `times`.tech_time AS `Tech Time`,
+            `times`.overtime AS `Overtime`,
+            `times`.travel_time AS `Travel Time`,
+            `times`.itinerate_time AS `Itinerate Time`
+            FROM `ticket`
+            INNER JOIN `customer_type`
+                ON `customer_type`.`id` = `ticket`.`customer_type_id`
+            LEFT JOIN `division`
+                ON `ticket`.division_id = `division`.id
+            LEFT JOIN `department`
+                ON `ticket`.department_id = `department`.id
+            LEFT JOIN `district`
+                ON `ticket`.district_id = `district`.id
+            LEFT JOIN `district_building`
+                ON `district`.id = `district_building`.district_id
+            LEFT JOIN `building`
+                ON `district_building`.building_id = `building`.id
+            INNER JOIN (
+                SELECT `time_entry`.ticket_id,
+                    SUM(`time_entry`.tech_time) AS `tech_time`,
+                    SUM(`time_entry`.overtime) AS `overtime`,
+                    SUM(`time_entry`.travel_time) AS `travel_time`,
+                    SUM(`time_entry`.itinerate_time) AS `itinerate_time`
+                FROM `time_entry`
+                WHERE `time_entry`.created BETWEEN :startDate AND :endDate
+                GROUP BY `time_entry`.ticket_id
+            ) `times` ON `times`.ticket_id = `ticket`.id
+            WHERE `ticket`.job_category_id = 21
+            ORDER BY `customer_type`.name ASC, `division`.name, `department`.name, `district`.name, `building`.name
+            ;", [':startDate' => $startDate, ':endDate' => $endDate])->queryAll();
+    }
+    public static function getSupportAndRepairTelecomBillingReportTotals($startDate, $endDate) {
+        return Yii::$app->getDb()->createCommand("
+            SELECT DISTINCT `customer_type`.`code` AS code,
+            `division`.`name` AS `division_name`,
+            `department`.`name` AS `department_name`,
+            `district`.`name` AS `district_name`,
+            `building`.`name` AS `building_name`,
+            SUM(`times`.tech_time) AS `total_tech_time`,
+            SUM(`times`.overtime) AS `total_overtime`,
+            SUM(`times`.travel_time) AS `total_travel_time`,
+            SUM(`times`.itinerate_time) AS `total_itinerate_time`
+            FROM `ticket`
+            INNER JOIN `customer_type`
+                ON `customer_type`.`id` = `ticket`.`customer_type_id`
+            LEFT JOIN `division`
+                ON `ticket`.division_id = `division`.id
+            LEFT JOIN `department`
+                ON `ticket`.department_id = `department`.id
+            LEFT JOIN `district`
+                ON `ticket`.district_id = `district`.id
+            LEFT JOIN `district_building`
+                ON `district`.id = `district_building`.district_id
+            LEFT JOIN `building`
+                ON `district_building`.building_id = `building`.id
+            INNER JOIN (
+                SELECT `time_entry`.ticket_id,
+                    SUM(`time_entry`.tech_time) AS `tech_time`,
+                    SUM(`time_entry`.overtime) AS `overtime`,
+                    SUM(`time_entry`.travel_time) AS `travel_time`,
+                    SUM(`time_entry`.itinerate_time) AS `itinerate_time`
+                FROM `time_entry`
+                WHERE `time_entry`.created BETWEEN :startDate AND :endDate
+                GROUP BY `time_entry`.ticket_id
+            ) `times` ON `times`.ticket_id = `ticket`.id
+            WHERE `ticket`.job_category_id = 21
+            GROUP BY `customer_type`.code, `division`.name, `department`.name, `district`.name, `building`.name WITH ROLLUP
+            ORDER BY `customer_type`.code ASC, `division`.name, `department`.name, `district`.name, `building`.name
+            ;", [':startDate' => $startDate, ':endDate' => $endDate])->queryAll();
     }
 }
