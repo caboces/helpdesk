@@ -19,6 +19,8 @@ use yii\helpers\Html;
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
         crossorigin="anonymous">
     </script>
+    <!-- Captcha script -->
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <?php $this->head() ?>
 </head>
 

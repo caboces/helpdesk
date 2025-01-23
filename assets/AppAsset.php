@@ -24,7 +24,8 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
         'js/ajax.js',
-        'js/custom.js'
+        'js/custom.js',
+        'ticket-draft.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

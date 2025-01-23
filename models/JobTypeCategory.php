@@ -83,7 +83,7 @@ class JobTypeCategory extends \yii\db\ActiveRecord
         return new \app\models\query\JobTypeCategoryQuery(get_called_class());
     }
 
-        /**
+    /**
      * Gets all ids/names of job categories based off of the selected job type id
      * 
      * @return all job category names in an alphabetical array
