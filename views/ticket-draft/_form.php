@@ -2,16 +2,24 @@
 
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap5\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\TicketDraft $model */
-/** @var yii\widgets\ActiveForm $form */
+/** @var yii\bootstrap5\ActiveForm $form */
 ?>
-
+<script>
+    function reCaptchaOnSubmit(token) {
+        $('#ticket-draft-form').submit()
+    }
+</script>
 <div class="ticket-draft-form">
     <!-- TODO Move all onchange inline'd javascript code to a javascript file at some point -->
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'id' => 'ticket-draft-form',
+        'enableClientValidation' => true,
+        'validateOnSubmit' => true,
+    ]); ?>
     <div>
         <div class="question-box">
             <div class="row">
@@ -125,27 +133,29 @@ use yii\widgets\ActiveForm;
         <div class="question-box">
             <div class="row">
                 <div class="col-md-6">
-                    <?= $form->field($model, 'requestor')->textInput(['maxlength' => 100, 'placeholder' => 'Your Name']) ?>
+                    <?= $form->field($model, 'requestor')->textInput(['maxlength' => 100, 'placeholder' => 'First Last', 'required' => true]) ?>
                 </div>
                 <div class="col-md-6">
-                    <?= $form->field($model, 'location')->textInput(['maxlength' => 100, 'placeholder' => 'ALCSD']) ?>
+                    <?= $form->field($model, 'location')->textInput(['maxlength' => 100, 'required' => true]) ?>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <?= $form->field($model, 'email')->textInput(['maxlength' => 100, 'placeholder' => 'johndoe@xyz.com']) ?>
+                    <?= $form->field($model, 'email')->textInput(['maxlength' => 100, 'required' => true]) ?>
                 </div>
                 <div class="col-md-6">
-                    <?= $form->field($model, 'phone')->textInput(['maxlength' => 100, 'placeholder' => '(xxx) xxx-xxxx']) ?>
+                    <?= $form->field($model, 'phone')->textInput(['maxlength' => 100, 'placeholder' => '(xxx) xxx-xxxx', 'required' => true]) ?>
                 </div>
             </div>
         </div>
         <div class="question-box">
             <div class="row">
-                <?= $form->field($model, 'summary')->textInput(['maxlength' => 100, 'placeholder' => 'Printer not working']) ?>
+                <?= $form->field($model, 'summary')->textInput(['maxlength' => 100, 'required' => true]) ?>
+                <small class="fst-italic">100 character limit</small>
             </div>
             <div class="row">
-                <?= $form->field($model, 'description')->textarea(['maxlength' => 500, 'required' => true, 'placeholder' => 'I tried turning it on and off again and nothing worked']) ?>
+                <?= $form->field($model, 'description')->textarea(['maxlength' => 500, 'required' => true]) ?>
+                <small class="fst-italic">500 character limit</small>
             </div>
         </div>
         <div class="question-box">
@@ -202,7 +212,7 @@ use yii\widgets\ActiveForm;
             <?= Html::submitButton('Submit Ticket to CABOCES', [
                 'class' => 'btn btn-success g-recaptcha', 
                 'data-sitekey' => '6LcEMsEqAAAAACHqBOkDNZDP7CFW2JjMLvPdN7IQ',
-                'data-callback' => 'ticketDraftModule.onSubmit',
+                'data-callback' => 'reCaptchaOnSubmit',
                 'data-action' => 'submit',]) ?>
         </div>
     </div>

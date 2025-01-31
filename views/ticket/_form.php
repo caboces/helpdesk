@@ -71,6 +71,11 @@ use yii\bootstrap5\ButtonDropdown;
 
 	<?php $form = ActiveForm::begin(); ?>
 
+	<!-- Ticket draft object, hidden. Only here if we are creating a new ticket -->
+	<?php if (Yii::$app->controller->action->id == 'create'): ?>
+	<?= Html::hiddenInput('ticket-draft', $ticketDraft, ['id' => 'hidden-ticket-draft-data']) ?>
+	<?php endif; ?>
+
 	<!-- action buttons -->
 	<div class='container-fluid p-2 | bg-dark shadow-sm'>
 		<?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
@@ -274,39 +279,7 @@ use yii\bootstrap5\ButtonDropdown;
 								])->dropDownList($departments, 
 								[
 									'prompt' => 'Select Department',
-									'onchange' => '
-										$.ajax({
-											type: "POST",
-											url: "'.Yii::$app->urlManager->createUrl(["ticket/department-building-dependent-dropdown-query"]) . '",
-											data: {department_search_reference: $(this).val()},
-											dataType: "json",
-											success: function(response) {
-												$("#ticket-division_id").val("");
-
-
-												$("#ticket-department_building_id").empty();
-												var count = response.length;
-
-												if (count === 0) {
-													$("#ticket-department_building_id").empty();
-													$("#ticket-department_building_id").append("<option value=\'" + id + "\'>Sorry, no buildings available for this department</option>");
-												} else {
-													$("#ticket-department_building_id").append("<option value=\'" + id + "\'>Select Department Building</option>");
-													for (var i = 0; i < count; i++) {
-														var id = response[i][\'id\'];
-														var name = response[i][\'name\'];
-														$("#ticket-department_building_id").append("<option value=\'" + id + "\'>" + name + "</option>");
-
-														// this is so redundant...
-														var division = response[i][\'division\'];
-														$("#ticket-division_id").val(division);
-													}
-												}
-											}
-										});
-									'
 								]
-								
 							); ?>
 
 							<!-- district  selection -->
@@ -319,30 +292,6 @@ use yii\bootstrap5\ButtonDropdown;
 								])->dropDownList($districts, 
 								[
 									'prompt' => 'Select District',
-									'onchange' => '
-										$.ajax({
-											type: "POST",
-											url: "'.Yii::$app->urlManager->createUrl(["ticket/district-building-dependent-dropdown-query"]) . '",
-											data: {district_search_reference: $(this).val()},
-											dataType: "json",
-											success: function(response) {
-												$("#ticket-district_building_id").empty();
-												var count = response.length;
-
-												if (count === 0) {
-													$("#ticket-district_building_id").empty();
-													$("#ticket-district_building_id").append("<option value=\'" + id + "\'>Sorry, buildings available for this district</option>");
-												} else {
-													$("#ticket-district_building_id").append("<option value=\'" + id + "\'>Select District Building</option>");
-													for (var i = 0; i < count; i++) {
-														var id = response[i][\'id\'];
-														var name = response[i][\'name\'];
-														$("#ticket-district_building_id").append("<option value=\'" + id + "\'>" + name + "</option>");
-													}
-												}
-											}
-										});
-									'
 								]
 								
 							); ?>
@@ -406,35 +355,7 @@ use yii\bootstrap5\ButtonDropdown;
 							<!-- Types will affect which options are shown for categories, determined by the junction table job_type_category -->
 							<?= $form->field($model, 'job_type_id')->dropDownList($types, [
 								'prompt' => 'Select Type',
-								'onchange' => '
-									$.ajax({
-										type: "POST",
-										url: "'.Yii::$app->urlManager->createUrl(["ticket/job-category-dependent-dropdown-query"]) . '",
-										data: {job_category_search_reference: $(this).val()},
-										dataType: "json",
-										success: function(response) {
-											// clear the current job_category selection
-											$("#ticket-job_category_id").empty();
-											var count = response.length;
-
-											if (count === 0) {
-												$("#ticket-job_category_id").empty();
-												$("#ticket-job_category_id").empty().append("<option value=\'" + id + "\'>Sorry, no categories available for this type</option>");
-											} else {
-												$("#ticket-job_category_id").append("<option value=\'" + id + "\'>Select Category</option>");
-												for (var i = 0; i < count; i++) {
-													var id = response[i][\'id\'];
-													var name = response[i][\'name\'];
-													$("#ticket-job_category_id").append("<option value=\'" + id + "\'>" + name + "</option");
-												}
-											}
-										}
-									});
-								'
 							]); ?>
-							
-							<!-- ?= $form->field($model, 'job_type_id')
-								->dropDownList($types, ['prompt' => 'Select Type']) ?> -->
 						</div>
 						<div class="col-md-6">
 							<!-- This is the dependent table, based on Type input -->

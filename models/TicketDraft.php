@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "ticket_draft".
  *
  * @property int $id
+ * @property int $customer_type_id
  * @property string $requestor
  * @property int|null $division_id
  * @property int|null $department_id
@@ -50,7 +51,7 @@ class TicketDraft extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['requestor', 'location', 'job_type_id', 'job_category_id', 'summary', 'description', 'email', 'phone', 'ip_address', 'accept_language', 'user_agent'], 'required'],
+            [['requestor', 'customer_type_id','location', 'job_type_id', 'job_category_id', 'summary', 'description', 'email', 'phone', 'ip_address', 'accept_language', 'user_agent'], 'required'],
             [['division_id', 'department_id', 'department_building_id', 'district_id', 'district_building_id', 'job_type_id', 'job_category_id', 'frozen'], 'integer'],
             [['created', 'modified'], 'safe'],
             [['requestor', 'location'], 'string', 'max' => 100],
@@ -59,6 +60,9 @@ class TicketDraft extends \yii\db\ActiveRecord
             [['email', 'phone'], 'string', 'max' => 45],
             [['ip_address'], 'string', 'max' => 48],
             [['accept_language', 'user_agent'], 'string', 'max' => 255],
+            [['job_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => JobCategory::class, 'targetAttribute' => ['job_category_id' => 'id']],
+            [['job_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => JobType::class, 'targetAttribute' => ['job_type_id' => 'id']],
+            [['customer_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => CustomerType::class, 'targetAttribute' => ['customer_type_id' => 'id']],
             [['department_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => DepartmentBuilding::class, 'targetAttribute' => ['department_building_id' => 'id']],
             [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::class, 'targetAttribute' => ['department_id' => 'id']],
             [['district_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => DistrictBuilding::class, 'targetAttribute' => ['district_building_id' => 'id']],
@@ -74,21 +78,22 @@ class TicketDraft extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'customer_type_id' => 'Customer Type',
             'requestor' => 'Requestor',
-            'division_id' => 'Division ID',
-            'department_id' => 'Department ID',
-            'department_building_id' => 'Department Building ID',
-            'district_id' => 'District ID',
-            'district_building_id' => 'District Building ID',
+            'division_id' => 'Division',
+            'department_id' => 'Department',
+            'department_building_id' => 'Department Building',
+            'district_id' => 'District',
+            'district_building_id' => 'District Building',
             'location' => 'Location',
-            'job_type_id' => 'Job Type ID',
-            'job_category_id' => 'Job Category ID',
+            'job_type_id' => 'Job Type',
+            'job_category_id' => 'Job Category',
             'summary' => 'Summary',
             'description' => 'Description',
             'email' => 'Email',
             'phone' => 'Phone',
             'frozen' => 'Frozen',
-            'ip_address' => 'Ip Address',
+            'ip_address' => 'IP Address',
             'accept_language' => 'Accept Language',
             'user_agent' => 'User Agent',
             'created' => 'Created',
@@ -157,11 +162,18 @@ class TicketDraft extends \yii\db\ActiveRecord
     }
 
     /**
+     * Sets the frozen field for this ticket draft to 1
+     */
+    public function freeze() {
+        $this->frozen = 1;
+        $this->save();
+    }
+
+    /**
      * {@inheritdoc}
      * @return \app\models\query\TicketDraftQuery the active query used by this AR class.
      */
-    public static function find()
-    {
+    public static function find() {
         return new \app\models\query\TicketDraftQuery(get_called_class());
     }
 }

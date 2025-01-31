@@ -33,6 +33,7 @@ use app\models\TechTicketAssignment;
 use app\models\TicketAssignmentSearch;
 use app\models\TicketClosedResolvedSearch;
 use app\models\Asset;
+use app\models\TicketDraft;
 use app\models\TicketNote;
 use app\models\TicketRecentlyDeletedSearch;
 use yii\data\ActiveDataProvider;
@@ -100,6 +101,18 @@ class TicketController extends Controller
         $departments = ArrayHelper::map(Department::getDepartments(), 'name', 'name');
         $divisions = ArrayHelper::map(Division::getDivisions(), 'name', 'name');
         $buildings = ArrayHelper::map(Building::getBuildings(), 'name', 'name');
+        
+        // get ticket drafts for the ticket queue
+        $ticketDraftsDataProvider = new ActiveDataProvider([
+            'query' => TicketDraft::find()
+                ->where('ticket_draft.frozen != 1')
+                ->orderBy('ticket_draft.created'),
+            'sort' => [
+                'defaultOrder' => [
+                    'created' => SORT_ASC
+                ]
+            ]
+        ]);
 
         $this->layout = 'blank';
         return $this->render('index', [
@@ -127,6 +140,7 @@ class TicketController extends Controller
             'departments' => $departments,
             'divisions' => $divisions,
             'buildings' => $buildings,
+            'ticketDraftsDataProvider' => $ticketDraftsDataProvider,
         ]);
     }
 
@@ -152,6 +166,33 @@ class TicketController extends Controller
     {
         $model = new Ticket();
         $model->created_by = Yii::$app->user->id;
+
+        // if ticketDraftId was queried, then fill in some fields with that.
+        $ticketDraftId = Yii::$app->getRequest()->getQueryParam('ticketDraftId');
+
+        $ticketDraft = null;
+        // get the ticket draft model if the id was provided to the controller
+        if ($ticketDraftId) {
+            $ticketDraft = TicketDraft::find()
+                ->select(['customer_type_id', 
+                    'division_id', 
+                    'department_id', 
+                    'department_building_id', 
+                    'district_id', 
+                    'district_building_id', 
+                    'requestor',
+                    'location',
+                    'job_type_id',
+                    'job_category_id',
+                    'summary',
+                    'description',
+                    'email',
+                    'phone'])
+                ->where("ticket_draft.frozen = 0")
+                ->where("ticket_draft.id = {$ticketDraftId}")
+                ->one()
+                ->toArray();
+        }
 
         // search tech time entries for ticket
         $techTimeEntrySearch = new TimeEntrySearch();
@@ -190,6 +231,12 @@ class TicketController extends Controller
                     }
                 }
 
+                // if this ticket was created with a Ticket Draft, then set that ticket draft's "frozen" value to 1 (true).
+                if ($ticketDraftId) {
+                    TicketDraft::find()->where(['id' => $ticketDraftId])->one()->freeze();
+                }
+
+                // TODO later. So you can create assets,parts,time entries, and notes in the ticket creation rather than update.
                 // each thing below needs to store a "draft" version of the model, that is, no call to /*/create is made (* being 'asset', 'part', or 'time-entry' or else no ticket_id exists)
                 // create each asset record
 
@@ -241,6 +288,7 @@ class TicketController extends Controller
             'partsColumns' => $partsGridProps['columns'],
             'ticketNotesProvider' => $ticketNoteGridProps['provider'],
             'ticketNotesColumns' => $ticketNoteGridProps['columns'],
+            'ticketDraft' => json_encode($ticketDraft),
         ]);
     }
 

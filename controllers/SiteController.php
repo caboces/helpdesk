@@ -15,6 +15,8 @@ use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\SignupForm;
 use app\models\ContactForm;
+use app\models\TicketDraft;
+use yii\data\ActiveDataProvider;
 use yii\web\ForbiddenHttpException;
 
 /**
@@ -228,7 +230,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
+        Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with the provided token.');
         return $this->goHome();
     }
 

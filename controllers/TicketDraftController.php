@@ -91,7 +91,6 @@ class TicketDraftController extends Controller
      */
     public function actionCreate()
     {
-
         // TODO not great that this is in the source code, but yii2 has 0 support for env files without installing another package.
         // problem is, this VM has some funky crap with the internet connection, so its hard to install new dependencies. 
         // Fix it later
@@ -111,7 +110,11 @@ class TicketDraftController extends Controller
         $departmentBuildingData = DepartmentBuilding::getBuildingNamesFromDepartmentId($model);
         $districtBuildingData = DistrictBuilding::getBuildingNamesFromDistrictId($model);
 
-        $errors = [];
+        // Check if this ip address is blocked!
+        $isIpBlocked = BlockedIpAddress::find()->where(['ip_address' => Yii::$app->request->getUserIP()])->exists();
+        if ($isIpBlocked) {
+            return new ForbiddenHttpException("You are forbidden from accessing this resource.");
+        }
 
         if ($this->request->isPost) {
             $honeypot = $this->request->post('vc090h3n');
@@ -123,17 +126,27 @@ class TicketDraftController extends Controller
                 $blockedIp->save();
                 return new ForbiddenHttpException("You are forbidden from accessing this resource.");
             }
-            if ($model->load($this->request->post())) {
-                $model->ip_address = Yii::$app->request->getUserIP();
-                $model->user_agent = Yii::$app->request->getUserAgent();
-                // useful, if it has stuff like zn-CH, vs, en-US, we know they are probably a bot
-                $model->accept_language = Yii::$app->request->getAcceptableLanguages();
+            $model->ip_address = Yii::$app->request->getUserIP();
+            $model->user_agent = Yii::$app->request->getUserAgent();
+            // useful, if it has stuff like zn-CH, vs, en-US, we know they are probably a bot
+            $model->accept_language = implode(';', Yii::$app->request->getAcceptableLanguages());
+            if ($model->load($this->request->post()) && $model->validate()) {
+                // save the model
+                $model->save(false);
 
-                return $this->redirect(['view', 'id' => $model->id]);
+                // send an email to the requestor
+                $this->sendTicketDraftEmail($model);
+
+                Yii::$app->session->setFlash('success', 'The ticket request was successfully submitted.');
+                return $this->redirect(['/ticket-draft/create', 'model' => $model]);
             } else {
                 // form errors
+                $errors = [];
+                if ($model->hasErrors()) {
+                    $errors = $model->getErrors();
+                }
                 Yii::$app->session->setFlash('ticketDraftErrors', $errors);
-                return $this->redirect(['/ticket-draft/create']);
+                return $this->redirect(['/ticket-draft/create', 'model' => $model]);
             }
         } else {
             $model->loadDefaultValues();
@@ -268,6 +281,35 @@ class TicketDraftController extends Controller
             }
 
             return $this->asJson($data);
+    }
+
+    
+    /**
+     * Sends an email to the requestor that the request for a ticket has been created.
+     *
+     * @param ticketModel The ticket
+     * @return bool whether the email was sent
+     */
+    public function sendTicketDraftEmail(TicketDraft $ticketDraftModal) {
+        // string of user emails
+        $recipients = $ticketDraftModal->email;
+        // create Yii email object array
+        $emails = [];
+        $emails[] = Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'ticketDraftCreated-html', 'text' => 'ticketDraftCreated-text'],
+            )
+            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+            ->setTo($recipients)
+            ->setSubject('CABOCES Help Desk: Ticket Request Created');
+        if (!empty($emails)) {
+            // send multiple to save bandwidth
+            return Yii::$app->mailer->sendMultiple($emails);
+        } else {
+            // no emails to deliver
+            return false;
+        }
     }
 
     /**

@@ -1,6 +1,10 @@
 <?php
 
+use app\models\TicketDraft;
+use kartik\grid\ActionColumn;
+use kartik\grid\GridView;
 use yii\bootstrap5\Html;
+use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 
@@ -17,11 +21,11 @@ $this->title = 'Dashboard';
     <div>
         <p>Welcome! You are accessing an early version of the CA BOCES Help Desk 2 app. Features and behaviours of this app are not final. The information accessible in this version may be sensitive. <strong>Do not share your login information for this app with anyone</strong>.</p>
         <p>There are several unfinished features in the application. You are encouraged to:
-            <ul>
-                <li>Note parts you feel are incomplete, even if you believe them to be known to the developers. Your feedback can help shape how these features will be implemented.</li>
-                <li>Note your frustrations and confusion. This will not only help with developing features further, but also give the developers a sense of what the "Help" section should look like for future users.</li>
-                <li>Test (and/or break) everything! Breaking things now will make the application stronger in the future.</li>
-            </ul>
+        <ul>
+            <li>Note parts you feel are incomplete, even if you believe them to be known to the developers. Your feedback can help shape how these features will be implemented.</li>
+            <li>Note your frustrations and confusion. This will not only help with developing features further, but also give the developers a sense of what the "Help" section should look like for future users.</li>
+            <li>Test (and/or break) everything! Breaking things now will make the application stronger in the future.</li>
+        </ul>
         <p>We will have follow up meetings to discuss your experiences at a later date.</p>
         <p>Please contact Emma Fox (Programmer, <a href="mailto:emma_fox@caboces.org">emma_fox@caboces.org</a>) or Frank Wilson (IT Project Manager, <a href="mailto:frank_wilson@caboces.org">frank_wilson@caboces.org</a>) with any urgent concerns regarding the application.</p>
         <p>Thank you for your time spent testing this application!</p>

@@ -48,5 +48,5 @@ use app\models\JobStatus;
             <td>Date Submitted</td>
             <td><?= Html::encode($ticket->created) ?></td>
         </tr>
-    </tr>
-</table>
+    </table>
+</div>

@@ -45,6 +45,9 @@ $this->title = 'Ticket Management';
             <button class="nav-link active" id="pills-assignments-tab" data-bs-toggle="pill" data-bs-target="#pills-assignments" type="button" role="tab" aria-controls="pills-assignments" aria-selected="true">Assignments</button>
         </li>
         <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-ticket-queue-tab" data-bs-toggle="pill" data-bs-target="#pills-ticket-queue" type="button" role="tab" aria-controls="pills-ticket-queue" aria-selected="true">Ticket Queue</button>
+        </li>
+        <li class="nav-item" role="presentation">
             <button class="nav-link" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all" aria-selected="false">Open</button>
         </li>
         <li class="nav-item" role="presentation">
@@ -209,6 +212,41 @@ $this->title = 'Ticket Management';
                         ],
                     ]); ?>
                     <?php Pjax::end(); ?>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-ticket-queue" role="tabpanel" aria-labelledby="pills-ticket-queue-tab">
+            <div class="subsection-info-block">
+                <h2>Ticket Queue</h2>
+                <p>Ticket requests by external users</p>
+                <div class="table-container container-fluid overflow-x-scroll">
+                    <?= GridView::widget([
+                        'dataProvider' => $ticketDraftsDataProvider,
+                        'tableOptions' => ['class' => 'table table-bordered'],
+                        'columns' => [
+                            [
+                                'class' => ActionColumn::class,
+                                'template' => '{create}',
+                                'buttons' => [
+                                    'create' => function ($url, $model, $key) {
+                                        return Html::a('Create Ticket', Url::toRoute('/ticket/create?ticketDraftId='.$model->id));
+                                    }
+                                ]
+                            ],
+                            [
+                                'attribute' => 'requestor',
+                                'label' => 'Requestor',
+                            ],
+                            [
+                                'attribute' => 'summary',
+                                'label' => 'Summary',
+                            ],
+                            [
+                                'attribute' => 'description',
+                                'label' => 'Description',
+                            ]
+                        ],
+                    ]); ?>
                 </div>
             </div>
         </div>
