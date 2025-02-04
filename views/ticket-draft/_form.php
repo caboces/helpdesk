@@ -209,6 +209,7 @@ use yii\bootstrap5\ActiveForm;
         <?= $form->field($model, 'division_id')->hiddenInput()->label(false); ?>
 
         <div class="form-group">
+            <p>Please note that we will not be accepting file uploads in this form due to security limitations.</p>
             <?= Html::submitButton('Submit Ticket to CABOCES', [
                 'class' => 'btn btn-success g-recaptcha', 
                 'data-sitekey' => '6LcEMsEqAAAAACHqBOkDNZDP7CFW2JjMLvPdN7IQ',

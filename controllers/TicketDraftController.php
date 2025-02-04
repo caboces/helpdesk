@@ -137,7 +137,6 @@ class TicketDraftController extends Controller
 
             // Send recaptcha request. If failed, then redirect to ticket draft again.
             $client = new Client();
-
             $captchaResponse = $client->createRequest()
                 ->setMethod('POST')
                 ->setUrl('https://www.google.com/recaptcha/api/siteverify')
