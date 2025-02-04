@@ -301,4 +301,13 @@ class User extends ActiveRecord implements IdentityInterface
         )->groupBy('user.id') // group by user name
         ->orderBy('user.lname asc, user.fname asc');
     }
+
+    /**
+     * Return all tech emails in an array
+     */
+    public static function getAllEmails() {
+        return User::find()->select([
+            'user.email'
+        ])->asArray()->all();
+    }
 }

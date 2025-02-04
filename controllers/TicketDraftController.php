@@ -13,6 +13,7 @@ use app\models\Division;
 use app\models\JobType;
 use app\models\JobTypeCategory;
 use app\models\TicketDraft;
+use app\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
@@ -20,6 +21,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\httpclient\Client;
 use yii\web\ForbiddenHttpException;
 
 /**
@@ -130,11 +132,38 @@ class TicketDraftController extends Controller
             $model->user_agent = Yii::$app->request->getUserAgent();
             // useful, if it has stuff like zn-CH, vs, en-US, we know they are probably a bot
             $model->accept_language = implode(';', Yii::$app->request->getAcceptableLanguages());
+
+            // Send recaptcha request. If failed, then redirect to ticket draft again.
+            $client = new Client();
+
+            $captchaResponse = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('https://www.google.com/recaptcha/api/siteverify')
+                ->setData([
+                    'secret' => $reCaptchaPrivateApiKey,
+                    'response' => $this->request->post('g-recaptcha-response'),
+                    'remoteip' => Yii::$app->request->getUserIP(),
+                ])
+                ->setFormat(Client::FORMAT_URLENCODED)
+                ->send();
+            // this won't work in dev because there is no internet connection.
+            if ($captchaResponse->isOk) {
+                // reCaptcha failed
+                if (!$captchaResponse->data['success']) {
+                    Yii::$app->session->setFlash('captchaError', 'There was an error verifying your reCAPTCHA.');
+                    return $this->redirect(['/ticket-draft/create', 'model' => $model]);
+                }
+            } else {
+                Yii::$app->session->setFlash('captchaError', 'There was an error verifying your reCAPTCHA. Google\'s API may be down or the server lost internet connection.');
+                return $this->redirect(['/ticket-draft/create', 'model' => $model]);
+            }
+            // reCAPTCHA passed
+
             if ($model->load($this->request->post()) && $model->validate()) {
                 // save the model
                 $model->save(false);
 
-                // send an email to the requestor
+                // send an email to the requestor and all techs
                 $this->sendTicketDraftEmail($model);
 
                 Yii::$app->session->setFlash('success', 'The ticket request was successfully submitted.');
@@ -205,104 +234,122 @@ class TicketDraftController extends Controller
     }
 
     /**
+     * TODO Copied from TicketController.php
      * Populate the ticket categories DDL based on selected job type id
      * Can probably remove the job type naming and stuff, think i only need category stuff. not sure what ill do yet
      */
     public function actionJobCategoryDependentDropdownQuery() {
         $search_reference = Yii::$app->request->post('job_category_search_reference');
-            $query = new Query();
-            $query->select(['job_type_category.id', 'job_type_category.job_type_id', 'job_type_category.job_category_id', 'job_category.name'])
-                    ->from('job_type_category')
-                    ->innerJoin('job_category', 'job_type_category.job_category_id = job_category.id')
-                    ->where(['job_type_id' => $search_reference])
-                    ->orderBy('name ASC');
-            $rows = $query->all();
+        $query = new Query();
+        $query->select(['job_type_category.id', 'job_type_category.job_type_id', 'job_type_category.job_category_id', 'job_category.name'])
+            ->from('job_type_category')
+            ->innerJoin('job_category', 'job_type_category.job_category_id = job_category.id')
+            ->where(['job_type_id' => $search_reference])
+            ->orderBy('name ASC');
+        $rows = $query->all();
 
-            $data = [];
-            if (!empty($rows)) {
-                foreach ($rows as $row) {
-                    $data[] = ['id' => $row['job_category_id'], 'name' => $row['name']];
-                }
-            } else {
-                $data = '';
+        $data = [];
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $data[] = ['id' => $row['job_category_id'], 'name' => $row['name']];
             }
+        } else {
+            $data = '';
+        }
 
-            return $this->asJson($data);
+        return $this->asJson($data);
     }
 
     /**
+     * TODO Copied from TicketController.php
      * Dependent dropdown query for DistrictBuilding. Checks for change
      */
     public function actionDistrictBuildingDependentDropdownQuery()
     {
-            $search_reference = Yii::$app->request->post('district_search_reference');
-            $query = new Query;
-            $query->select(['district_building.id', 'district_building.district_id', 'district_building.building_id', 'building.name'])
-                    ->from('district_building')
-                    ->innerJoin('building', 'district_building.building_id = building.id')
-                    ->where(['district_id' => $search_reference])
-                    ->orderBy('name ASC');
-            $rows = $query->all();
+        $search_reference = Yii::$app->request->post('district_search_reference');
+        $query = new Query;
+        $query->select(['district_building.id', 'district_building.district_id', 'district_building.building_id', 'building.name'])
+            ->from('district_building')
+            ->innerJoin('building', 'district_building.building_id = building.id')
+            ->where(['district_id' => $search_reference])
+            ->orderBy('name ASC');
+        $rows = $query->all();
 
-            $data = [];
-            if (!empty($rows)) {
-                foreach ($rows as $row) {
-                    $data[] = ['id' => $row['id'], 'name' => $row['name']];
-                }
-            } else {
-                $data = '';
+        $data = [];
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $data[] = ['id' => $row['id'], 'name' => $row['name']];
             }
+        } else {
+            $data = '';
+        }
 
-            return $this->asJson($data);
+        return $this->asJson($data);
     }
 
     /**
+     * TODO Copied from TicketController.php
      * Dependent dropdown query for DepartmentBuilding. Checks for change
      */
     public function actionDepartmentBuildingDependentDropdownQuery()
     {
-            $search_reference = Yii::$app->request->post('department_search_reference');
-            $query = new Query;
-            $query->select(['department_building.id', 'department_building.department_id', 'department_building.building_id', 'building.name', 'department.division_id'])
-                    ->from('department_building')
-                    ->innerJoin('building', 'department_building.building_id = building.id')
-                    ->innerJoin('department', 'department_building.department_id = department.id')
-                    ->where(['department_id' => $search_reference])
-                    ->orderBy('name ASC');
-            $rows = $query->all();
+        $search_reference = Yii::$app->request->post('department_search_reference');
+        $query = new Query;
+        $query->select(['department_building.id', 'department_building.department_id', 'department_building.building_id', 'building.name', 'department.division_id'])
+            ->from('department_building')
+            ->innerJoin('building', 'department_building.building_id = building.id')
+            ->innerJoin('department', 'department_building.department_id = department.id')
+            ->where(['department_id' => $search_reference])
+            ->orderBy('name ASC');
+        $rows = $query->all();
 
-            $data = [];
-            if (!empty($rows)) {
-                foreach ($rows as $row) {
-                    $data[] = ['id' => $row['id'], 'name' => $row['name'], 'division' => $row['division_id']];
-                }
-            } else {
-                $data = '';
+        $data = [];
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $data[] = ['id' => $row['id'], 'name' => $row['name'], 'division' => $row['division_id']];
             }
+        } else {
+            $data = '';
+        }
 
-            return $this->asJson($data);
+        return $this->asJson($data);
     }
 
     
     /**
-     * Sends an email to the requestor that the request for a ticket has been created.
+     * Sends an email to the requestor and techs that a new draft was created.
+     * 
+     * Must separate the $app->mailer calls from requestor and the techs so the requestor isn't also thrown into
+     * the bulk email.
      *
      * @param ticketModel The ticket
-     * @return bool whether the email was sent
+     * @return bool whether the emails were sent
      */
-    public function sendTicketDraftEmail(TicketDraft $ticketDraftModal) {
-        // string of user emails
-        $recipients = $ticketDraftModal->email;
+    public function sendTicketDraftEmail(TicketDraft $model) {
+        // string of user email
+        $recipients = $model->email;
         // create Yii email object array
         $emails = [];
-        $emails[] = Yii::$app
-            ->mailer
+        $emails[] = Yii::$app->mailer
             ->compose(
                 ['html' => 'ticketDraftCreated-html', 'text' => 'ticketDraftCreated-text'],
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+                ['ticketDraft' => $model]
+            )->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ': Automated Email'])
             ->setTo($recipients)
-            ->setSubject('CABOCES Help Desk: Ticket Request Created');
+            ->setSubject('CABOCES Help Desk: Ticket Request Submitted');
+        
+        // Send emails to all techs of the new draft
+        $techEmails = User::getAllEmails();
+        // add to emails
+        $emails[] = Yii::$app->mailer
+            ->compose(
+                ['html' => 'ticketDraftCreatedTechNotification-html', 'text' => 'ticketDraftCreatedTechNotification-text'],
+                ['ticketDraft' => $model]
+            )->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ': Automated Email'])
+            ->setTo($techEmails)
+            // attach files
+            ->setSubject('CABOCES Help Desk: New Ticket Request');
+
         if (!empty($emails)) {
             // send multiple to save bandwidth
             return Yii::$app->mailer->sendMultiple($emails);

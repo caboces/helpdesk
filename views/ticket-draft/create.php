@@ -31,6 +31,13 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     <?php endif; ?>
 
+    <!-- Ticket Draft captcha error -->
+    <?php if (Yii::$app->session->hasFlash('captchaError')): ?>
+        <div class="alert alert-danger">
+            <strong><?= Html::encode(Yii::$app->session->getFlash('captchaError')) ?></strong>
+        </div>
+    <?php endif; ?>
+
     <!-- Ticket Draft creation Success -->
     <?php if (Yii::$app->session->hasFlash('success')): ?>
         <div class="alert alert-success">
