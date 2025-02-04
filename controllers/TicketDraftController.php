@@ -97,6 +97,8 @@ class TicketDraftController extends Controller
         // problem is, this VM has some funky crap with the internet connection, so its hard to install new dependencies. 
         // Fix it later
         $reCaptchaPrivateApiKey = '6LcEMsEqAAAAAHb_vxGCjgC8iY5Xm2IbUAGDvEpE';
+        // 0 is very likely a bot, 1.0 is clean. So, treat 0.5 as the threshold to determine if they are a bot or not.
+        $reCaptchaActionThreshold = 0.5;
         $model = new TicketDraft();
 
         $jobTypes = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
@@ -151,6 +153,10 @@ class TicketDraftController extends Controller
                 // reCaptcha failed
                 if (!$captchaResponse->data['success']) {
                     Yii::$app->session->setFlash('captchaError', 'There was an error verifying your reCAPTCHA.');
+                    return $this->redirect(['/ticket-draft/create', 'model' => $model]);
+                }
+                if (!$captchaResponse->data['action'] < $reCaptchaActionThreshold) {
+                    Yii::$app->session->setFlash('captchaError', 'You failed the reCAPTCHA. Try again.');
                     return $this->redirect(['/ticket-draft/create', 'model' => $model]);
                 }
             } else {
