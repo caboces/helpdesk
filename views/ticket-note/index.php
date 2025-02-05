@@ -9,7 +9,7 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Ticket Notes';
+$this->title = 'Ticket Journal Entries';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ticket-note-index">
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Ticket Note', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Ticket Journal Entry', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
 

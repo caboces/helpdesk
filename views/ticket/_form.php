@@ -61,7 +61,7 @@ use yii\bootstrap5\ButtonDropdown;
 	<!-- Ticket note creation modal -->
 	<?php 
 		Modal::begin([
-			'title' => 'Add Ticket Note',
+			'title' => 'Add Ticket Journal Entry',
 			'id' => 'ticket-note-modal',
 			'size' => 'modal-lg',
 		]);
@@ -218,7 +218,7 @@ use yii\bootstrap5\ButtonDropdown;
 			<button class="nav-link" id="pills-time-entries-tab" data-bs-toggle="pill" data-bs-target="#pills-time-entries" type="button" role="tab" aria-controls="pills-time-entries" aria-selected="false">Time Entries</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-ticket-notes-tab" data-bs-toggle="pill" data-bs-target="#pills-ticket-notes" type="button" role="tab" aria-controls="pills-ticket-notes" aria-selected="false">Ticket Notes</button>
+			<button class="nav-link" id="pills-ticket-notes-tab" data-bs-toggle="pill" data-bs-target="#pills-ticket-notes" type="button" role="tab" aria-controls="pills-ticket-notes" aria-selected="false">Ticket Journal</button>
 		</li>
 	</ul>
 

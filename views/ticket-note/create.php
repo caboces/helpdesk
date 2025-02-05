@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var app\models\TicketNote $model */
 
-$this->title = 'Create Ticket Note';
-$this->params['breadcrumbs'][] = ['label' => 'Ticket Notes', 'url' => ['index']];
+$this->title = 'Create Ticket Journal Entry';
+$this->params['breadcrumbs'][] = ['label' => 'Ticket Journal Entries', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ticket-note-create">

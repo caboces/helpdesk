@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /** @var app\models\TicketNote $model */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Ticket Notes', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Ticket Journal Note Entries', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>

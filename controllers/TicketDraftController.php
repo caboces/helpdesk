@@ -154,7 +154,7 @@ class TicketDraftController extends Controller
                     Yii::$app->session->setFlash('captchaError', 'There was an error verifying your reCAPTCHA.');
                     return $this->redirect(['/ticket-draft/create', 'model' => $model]);
                 }
-                if (!$captchaResponse->data['action'] < $reCaptchaActionThreshold) {
+                if ($captchaResponse->data['score'] < $reCaptchaActionThreshold) {
                     Yii::$app->session->setFlash('captchaError', 'You failed the reCAPTCHA. Try again.');
                     return $this->redirect(['/ticket-draft/create', 'model' => $model]);
                 }
@@ -345,15 +345,19 @@ class TicketDraftController extends Controller
         
         // Send emails to all techs of the new draft
         $techEmails = User::getAllEmails();
-        // add to emails
-        $emails[] = Yii::$app->mailer
-            ->compose(
-                ['html' => 'ticketDraftCreatedTechNotification-html', 'text' => 'ticketDraftCreatedTechNotification-text'],
-                ['ticketDraft' => $model]
-            )->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ': Automated Email'])
-            ->setTo($techEmails)
-            // attach files
-            ->setSubject('CABOCES Help Desk: New Ticket Request');
+        foreach ($techEmails as &$arr) {
+            $email = $arr['email'];
+            // add to emails
+            $emails[] = Yii::$app->mailer
+                ->compose(
+                    ['html' => 'ticketDraftCreatedTechNotification-html', 'text' => 'ticketDraftCreatedTechNotification-text'],
+                    ['ticketDraft' => $model]
+                )->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ': Automated Email'])
+                ->setTo($email)
+                // attach files
+                ->setSubject('CABOCES Help Desk: New Ticket Request');
+        }
+        
 
         if (!empty($emails)) {
             // send multiple to save bandwidth
