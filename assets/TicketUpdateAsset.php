@@ -10,12 +10,9 @@ namespace app\assets;
 use yii\web\AssetBundle;
 
 /**
- * Main application asset bundle.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * ticket update asset bundle
  */
-class AppAsset extends AssetBundle
+class TicketUpdateAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
@@ -23,7 +20,10 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
-        'js/app.js'
+        'js/ajax.js',
+        'js/custom.js',
+        'js/ticket-draft.js',
+        'js/ticket.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -1,0 +1,50 @@
+/**
+
+    activity.css
+
+    Styles pertaining to the activity pane
+
+**/
+
+.col-auto {
+    width: auto;
+  }
+  
+.activity .entry {
+    overflow-y: scroll;
+  
+    border-radius: 10px;
+    max-height: 150px;
+    padding: 10px 15px;
+  
+    background: #fff;
+  
+    color: #0c1955;
+}
+  
+.activity .entry::-webkit-scrollbar-thumb { border-radius: 10px; }
+  
+.entry p,
+.entry a {
+    margin: 0;
+    padding: 0;
+  }
+  
+.entry a {
+    color:#06738f;;
+}
+  
+.entry p:not(:last-child),
+.entry a {
+    margin-bottom: 10px;
+}
+  
+.entry p:last-child {
+    margin-top: 10px;
+}
+  
+.activity-date {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: #707070;
+}

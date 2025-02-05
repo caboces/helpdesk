@@ -1,0 +1,29 @@
+/**
+
+    pagination.css
+
+    Styling pertaining to pagination
+
+**/
+
+ul.pagination li {
+    margin: 0 3px;
+  }
+  
+  ul.pagination li a {
+    border-radius: 25%;
+    border: 2px solid #e9e9e9;
+  
+    padding: 5px 8px;
+  
+    font-size: .85rem;
+    text-decoration: none;
+    color: #06738f;
+  }
+  
+  ul.pagination li.active a {
+    border-color: #5f4bb6;
+  
+    font-weight: 600;
+    color: #5f4bb6;
+  }

@@ -1,0 +1,17 @@
+/**
+
+    login.css
+
+    Login form styling
+
+**/
+
+.bg-login {
+    background: url('./images/bg-login.jpg');
+    background-size: cover;
+    background-position: center;
+}
+  
+#login-form label {
+    color: #00ccff;
+}

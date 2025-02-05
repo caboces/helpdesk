@@ -84,7 +84,7 @@ use yii\bootstrap5\ButtonDropdown;
 				<path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
 				<path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
 				<path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
-			</svg> New tech note', [
+			</svg> New tech journal entry', [
 				'value' => Url::to("/ticket-note/create?ticket_id={$model->id}&redirect=/ticket/".Yii::$app->controller->action->id),
 				'class' => 'ticket-note-modal-button btn btn-primary bg-iris border-iris',
 				// disable if creating a new ticket
@@ -623,16 +623,16 @@ use yii\bootstrap5\ButtonDropdown;
 		<div class="tab-pane fade" id="pills-ticket-notes" role="tabpanel" aria-labelledby="pills-ticket-notes">
 			<div class="subsection-info-block">
 				<div>
-					<h2>Tech Notes</h2>
-					<p>These are the notes left by other techs about the ticket.</p>
+					<h2>Ticket Journal</h2>
+					<p>These are the journal entries left by other techs about the ticket.</p>
 					<!-- Add tech note 
-					 I called it ticket_note internally, but we'll say "tech note" in the frontend i guess 
+					 I called it ticket_note internally, but we'll say "tech journal" in the frontend i guess 
 					 -->
 					<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16" aria-hidden="true">
 							<path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
 							<path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
 							<path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
-						</svg> New tech note', [
+						</svg> New tech journal entry', [
 							'value' => Url::to("/ticket-note/create?ticket_id={$model->id}&redirect=/ticket/".Yii::$app->controller->action->id),
 							'class' => 'ticket-note-modal-button btn btn-primary bg-iris border-iris',
 							// disable if creating a new ticket

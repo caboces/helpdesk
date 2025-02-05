@@ -1,5 +1,6 @@
 <?php
 
+use app\assets\TicketCreateAsset;
 use app\models\Part;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
@@ -8,6 +9,9 @@ use yii\helpers\Inflector;
 /** @var app\models\Ticket $model */
 
 $this->title = 'Create Ticket';
+
+TicketCreateAsset::register($this);
+
 ?>
 <div class="ticket-create">
 
@@ -18,7 +22,7 @@ $this->title = 'Create Ticket';
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
 
-    <p>You are currently creating a new ticket. To save your changes, click the "Save" button. Your changes will be logged in this ticket's activity, along with your tech note (if provided).</p>
+    <p>You are currently creating a new ticket. To save your changes, click the "Save" button. Your changes will be logged in this ticket's activity, along with your tech journal entry (if provided).</p>
 
     <!-- Time Entry Errors -->
     <?php if (Yii::$app->session->hasFlash('timeEntryErrors')): ?>

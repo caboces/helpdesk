@@ -10,20 +10,22 @@ namespace app\assets;
 use yii\web\AssetBundle;
 
 /**
- * Main application asset bundle.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * ticket create asset bundle
  */
-class AppAsset extends AssetBundle
+class TicketCreateAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
+        'css/pills-tab.css',
+        'css/forms.css',
+        'css/select2.css',
+        'css/gridview.css',
     ];
     public $js = [
-        'js/app.js'
+        'js/ticket.js',
+        'js/ticket-create.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

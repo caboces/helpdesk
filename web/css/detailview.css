@@ -1,0 +1,51 @@
+/**
+
+    detailview.css
+
+    Styling pertaining to detailviews
+
+**/
+
+.detail-view-container {
+    margin-bottom: 1rem;
+}
+  
+.detail-view-container h3{
+    margin-bottom: 0;
+    border-radius: 5px 5px 0 0;
+    width: 300px;
+    padding: .5rem;
+  
+    background: #09a2c9;
+    font-size: 1rem;
+    color: #fff;
+}
+  
+.detail-view-container .table-container {
+    box-shadow: 3px 3px 5px rgba(32, 4, 63, 0.1);
+    border-radius: 0 5px 5px 5px;
+    border: 1px solid rgba(32, 4, 63, 0.1);
+    height: auto;
+    padding: 0;
+  
+    background: #fff;
+}
+  
+.detail-view-container .table-container .table {
+    margin-bottom: 0;
+}
+  
+.detail-view th {
+    width: 30%;
+  
+    font-weight: normal;
+    color: #0f667c;
+}
+  
+.detail-view tr:nth-child(odd) td{
+    background-color: #f4f2ff;
+}
+  
+.detail-view a {
+    color: #06738f;
+}

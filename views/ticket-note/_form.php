@@ -38,7 +38,7 @@ use yii\widgets\ActiveForm;
 
 
     <div class="form-group">
-        <?= Html::submitButton('Confirm new tech note', [
+        <?= Html::submitButton('Confirm new tech journal entry', [
             'id' => 'confirm-ticket-note',
             'class' => 'mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan',
             'form' => 'add-ticket-note-form',

@@ -1,0 +1,26 @@
+/**
+
+    select2.css
+
+    Styling pertaining to select2 elements
+
+**/
+
+
+/* select2 freaks out if you remove content from one of its elements */
+.select2 {
+    width: 100% !important;
+}
+  
+  /* make the tags a little prettier */
+li.select2-selection__choice {
+    padding: 0.15rem;
+  
+    background: #5f4bb60c !important;
+}
+  
+  /* get rid of that gross box-shadow */
+.select2-container--krajee-bs5 .select2-selection {
+    box-shadow: none !important;
+    padding: 0.15rem;
+}

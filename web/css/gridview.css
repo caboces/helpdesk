@@ -1,0 +1,118 @@
+/**
+
+    gridview.css
+
+    contains styling for gridviews.
+
+**/
+
+.table-container {
+    padding: 1rem 0 0 0;
+}
+
+/* change alternating table row colors to be prettier */
+tr:nth-child(odd) td {
+    background-color: #fbfaff;
+}
+
+/* applied to ticket table rows when the priority is critical */
+.critical td {
+    box-shadow: inset 200px 200px #5d18ff2a !important;
+}
+
+.high td {
+    box-shadow: inset 200px 200px #ff585841 !important;
+}
+
+.filters td {
+    background-color: #070e33dc;
+}
+
+th a {
+    text-decoration: none;
+
+    color: #06738f;
+}
+
+/* add sorting icons to gridview sort links */
+a.asc:after,
+a.desc:after {
+    content: '';
+    left: 3px;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border: solid 5px transparent;
+    margin: 4px 4px 2px 4px;
+    background: transparent;
+}
+
+a.asc:after {
+    border-bottom: solid 7px #212529;
+    border-top-width: 0;
+}
+
+a.desc:after {
+    border-top: solid 7px #212529;
+    border-bottom-width: 0;
+}
+
+.grid-view th {
+    white-space: nowrap;
+}
+
+.apply-word-break {
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.hint-block {
+    display: block;
+    margin-top: 5px;
+    color: #999;
+}
+
+.error-summary {
+    color: #a94442;
+    background: #fdf7f7;
+    border-left: 3px solid #eed3d7;
+    padding: 10px 20px;
+    margin: 0 0 15px 0;
+}
+
+.dot {
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 10px;
+    height: 10px;
+
+    background-color: rgb(219, 219, 219);
+}
+
+.table-header {
+    margin: 2rem 0 -.5rem;
+}
+
+/* hyperlinks in table need to be adjusted, shaded parts didn't originally have enough contrast and broke ADA rules */
+.grid-view a {
+    color:#06738f;
+}
+
+/* highlight rows on hover (this is at the bottom of this section because of the obnoxious amount of important rules needed to change GridView appearance...) */
+/* right now this applies to the ticket index page only */
+.ticket-index .grid-view table tbody tr:hover td {
+    box-shadow: none !important;
+    background-color: #09a3c94f;
+    cursor: pointer;
+}

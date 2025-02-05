@@ -17,7 +17,7 @@ $this->title = 'Update Ticket: ' . $model->id;
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
 
-    <p>You are currently editing the details of this ticket. To save your changes, click the "Save" button. Your changes will be logged in this ticket's activity, along with your tech note (if provided).</p>
+    <p>You are currently editing the details of this ticket. To save your changes, click the "Save" button. Your changes will be logged in this ticket's activity, along with your tech journal entry (if provided).</p>
     
     <!-- Time Entry Errors-->
     <?php if (Yii::$app->session->hasFlash('timeEntryErrors')): ?>
@@ -81,6 +81,28 @@ $this->title = 'Update Ticket: ' . $model->id;
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
+
+    <!-- Parts Errors-->
+    <?php if (Yii::$app->session->hasFlash('partErrors')): ?>
+        <div class="alert alert-danger">
+            <h2>Part Errors</h2>
+            <hr>
+            <?php foreach (Yii::$app->session->getFlash('partErrors') as $part_name => $part): ?>
+                <h4>Part Error for Part Name "<?= Html::encode($part_name) ?>":</h4>
+                <ul>
+                    <?php foreach($part as $partField => $fieldErrors): ?>
+                    <strong><?= Html::encode(Inflector::camel2words($partField)) ?></strong>
+                    <ul>
+                        <?php foreach($fieldErrors as $error): ?>
+                            <li><?= Html::encode($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
     <?= $this->render(
         '_form',
         [

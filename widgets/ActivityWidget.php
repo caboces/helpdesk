@@ -50,7 +50,7 @@ class ActivityWidget extends Widget
             // $header = 'Ticket ' . $ticket_id . ' (' . $summary . ')';
             $header = $this->createEntryHeader($entry);
             $subheader = 'Action: ' . $type . ' by ' . $username;
-            $body = 'Tech note: ' . $description;
+            $body = 'Tech journal entry: ' . $description;
             $footer = $created;
 
             $entry_test = '

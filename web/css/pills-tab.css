@@ -1,0 +1,43 @@
+/**
+
+    pills-tab.css
+
+    controls pill tab styling
+
+**/
+
+#pills-tab {
+    display: inline-flex;
+    justify-content: space-evenly;
+  
+    width: 100%;
+  
+    background-color: #09a2c9;
+}
+
+#pills-tab>li {
+    flex: 1 1 50%;
+    border: 1px solid #fff;
+}
+
+#pills-tab>li>button {
+    border-radius: 0;
+    width: 100%;
+    padding: 15px;
+
+    background-color: transparent;
+
+    /* font-weight: bold; */
+    color:#0c1955;
+}
+
+#pills-tab>li>button.active {
+    background-color: #ffffff62;
+}
+
+/* media query: make the tab pane items smaller */
+@media only screen and (min-width: 1250px) {
+    #pills-tab>li {
+      flex: 1 1 200px;
+    }
+  }

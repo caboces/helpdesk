@@ -1,0 +1,62 @@
+/**
+
+    views.css
+
+    Styling pertaining to views (when you go to /model/view?id=xxx)
+
+**/
+
+/* primary action bars */
+.primary-action-button-bar {
+    padding: 0.5rem;
+  
+    background-color: #070e33;
+}
+
+  /* contact bar */
+.quick-glance-contact-info {
+    padding: 1rem 1rem;
+  
+    text-align: center;
+  
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  
+    background-color: #ebebeb;
+}
+  
+.quick-glance-contact-info a {
+    color: #06738f;
+}
+  
+  /* quick-glance info sections */
+.quick-glance {
+    border: 1px solid rgba(32, 4, 63, 0.1);
+    border-radius: 0 0px 5px 5px;
+  
+    background-color: #fff;
+}
+  
+.quick-glance-segment {
+    padding: 1rem 1.5rem;
+}
+  
+.quick-glance-info-line {
+    display: flex;
+    gap: 5px;
+    line-height: 1.2;
+}
+  
+p.quick-glance-label {
+    margin: 15px 0;
+  
+    font-size: 2rem;
+    color: #0f667c;
+}
+  
+.quick-glance .timestamp p {
+    line-height: 1;
+    font-size: 0.8rem;
+    color: #707070;
+}

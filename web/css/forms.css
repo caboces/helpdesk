@@ -1,0 +1,166 @@
+/**
+
+    forms.css
+
+    Styling pertaining to forms
+
+**/
+
+.question-box,
+.question-box-no-trim {
+    box-shadow: 3px 3px 5px rgba(255, 255, 255, 0.027);
+    margin-bottom: 1rem;
+    border: 1px solid rgba(32, 4, 63, 0.1);
+    border-left: 5px solid #09a2c9;
+    border-radius: 3px;
+    padding: 1rem;
+
+    background-color: #fff;
+}
+
+.question-box-no-trim {
+    box-shadow: none;
+    border: 1px solid rgba(32, 4, 63, 0.1);
+}
+
+/* i don't know how to make bootstrap do what i want so this is a long rule oops */
+.secondary-action-button-bar {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 10px;
+
+    box-shadow: 3px 3px 5px rgba(255, 255, 255, 0.027);
+    border: 1px solid rgba(32, 4, 63, 0.1);
+    border-left: 5px solid #535353;
+    border-radius: 3px;
+    padding: 1rem;
+
+    background-color: #fff;
+}
+
+/* make buttons a little smaller than eveyrthing else + give them margin so they stack nicely */
+.btn {
+    margin: 3px 0;
+    font-size: 0.9rem;
+}
+
+/* stupid "More" button on action bars */
+.dropdown-toggle,
+.dropdown-toggle button:hover,
+.dropdown-toggle button:active,
+.dropdown-toggle button:visited {
+    color: #fff !important;
+}
+
+/* don't use that ugly blue color on bootstrap5 buttons when hovering */
+button.bg-pacific-cyan:hover,
+a.btn.bg-pacific-cyan:hover {
+    border-color: #066882;
+    background-color: #066882;
+    color: #fff;
+}
+
+button.bg-iris:hover,
+a.btn.bg-iris:hover {
+    border-color: #3d3174;
+    background-color: #3d3174;
+    color: #fff;
+}
+
+button.bg-lavender:hover,
+a.btn.bg-lavender:hover {
+    border-color: #3d3174;
+    background-color: #3d3174;
+    color: #fff;
+}
+
+button.border-imperial-red:hover {
+    border-color: #F15152;
+    background-color: #F15152;
+}
+
+/* override bs5 disabled button styles */
+button.bg-pacific-cyan:disabled,
+a.btn.bg-pacific-cyan:disabled {
+    box-shadow: inset 2000px 2000px #0000001e;
+    border-color: #0bb2db;
+    background-color: #0bb2db;
+}
+
+button.bg-iris:disabled,
+a.btn.bg-iris:disabled {
+    box-shadow: inset 2000px 2000px #0000001e;
+    border-color: #3d3174;
+    background-color: #3d3174;
+}
+
+button.bg-lavender:disabled,
+a.btn.bg-lavender:disabled {
+    box-shadow: inset 2000px 2000px #0000001e;
+    border-color: #0f3a25;
+    background-color: #0f3a25;
+}
+
+
+/* you can find these in the time entry forms. normal sized buttons are too large */
+button.btn-skinny {
+    font-size: .7rem;
+}
+
+/* make the form labels a little more appealing. helps to keep them from blending in with user input */
+label.form-label,
+label.control-label {
+    margin-bottom: 0.2rem;
+
+    font-size: 0.9rem;
+    color: #087d9b;
+}
+
+div#ticket-customer_type_id {
+    border-right: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+.form-check {
+    padding-top: 5px;
+    padding-bottom: 6px;
+}
+
+.grid-view .form-control {
+    padding: 2px 5px;
+}
+
+.read-only {
+    background-color: #ddd7ff;
+    cursor: not-allowed;
+}
+
+/* this is for the time entry stats in the ticket form */
+#ticket-time-stats p {
+    margin: 0;
+}
+
+.stat-box {
+    margin: 5px;
+    border: 1px solid rgb(230, 230, 230);
+    min-width: 200px;
+    padding: .5rem;
+
+    text-align: center;
+}
+
+.total-billable-hours-box {
+    background:#3cff001c;
+}
+
+.totaled-hours {
+    color: #00708b;
+}
+
+::placeholder {
+    color: #919191 !important;
+    opacity: 1; /* firefox */
+}
+::-ms-input-placeholder { /* Edge 12 -18 */
+    color: #cfcfcf !important;
+}

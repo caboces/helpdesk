@@ -244,7 +244,7 @@ class TicketController extends Controller
 
                 // create each time_entry record
 
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['/ticket/update', 'id' => $model->id]);
             } else {
                 // make a better ticket creation failure?
                 throw new ServerErrorHttpException('A problem occured while trying to create the ticket.');
