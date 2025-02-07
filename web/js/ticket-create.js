@@ -12,11 +12,11 @@ jQuery(() => {
      * autofills the ticket form with fields from the ticket draft
      */
     const autofillTicketFormModule = {
-        autofill: async function () {
+        autofill: function () {
             new Promise((resolve, reject) => {
                 // check if the hidden json field loaded correctly.
                 const tmp = JSON.parse($('#hidden-ticket-draft-data').val())
-                if (Object.keys(tmp).length != 0) {
+                if (tmp && Object.keys(tmp).length != 0) {
                     // get the json version of the ticket draft. It is stored as a json string in the hidden input
                     resolve(tmp)
                     return
@@ -91,6 +91,8 @@ jQuery(() => {
                 if (ticketDraft.phone) {
                     $('#ticket-requester_phone').val(ticketDraft.phone)
                 }
+            }).catch(() => {
+                console.info('No ticket draft to autofill')
             })
         }
     }

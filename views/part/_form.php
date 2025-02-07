@@ -15,12 +15,12 @@ use yii\widgets\ActiveForm;
         'enableClientValidation' => true,
         'validateOnSubmit' => true,
     ]); ?>
-    <div id="parts-box" class="expanding-input-section asset-container">
+    <div id="parts-box" class="dynamic-form asset-container">
         <h3>Add Parts</h3>
 
         <?php foreach ($models as $index => $model): ?>
 
-        <div class="duplicate-input-group question-box-no-trim">
+        <div class="dynamic-form-input-group question-box-no-trim">
             <?= $form->field($model, "[$index]last_modified_by_user_id", [
                         'template' => '{input}',
                         'options' => ['tag' => false],
@@ -65,8 +65,8 @@ use yii\widgets\ActiveForm;
                 <?= $form->field($model, "[$index]note")->textInput(['maxlength' => true]) ?>
             </div>
             <div class="form-group">
-                <?= Html::button('Remove', ['class' => 'modal-button-remove btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>
-                <?= Html::button('Add', ['class' => 'modal-button-add btn btn-primary bg-iris border-iris btn-skinny']); ?>
+                <?= Html::button('Remove', ['class' => 'dynamic-form-button-remove btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>
+                <?= Html::button('Add', ['class' => 'dynamic-form-button-add btn btn-primary bg-iris border-iris btn-skinny']); ?>
             </div>
         </div>
 

@@ -39,6 +39,7 @@ use app\models\TicketRecentlyDeletedSearch;
 use yii\data\ActiveDataProvider;
 use yii\grid\ActionColumn;
 use yii\helpers\Url;
+use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 
 /**
@@ -349,12 +350,10 @@ class TicketController extends Controller
                         }
                     }
 
-                    echo '<script>console.log("test2")</script>';
-
                     // TODO: add tech note space
                     // $model->link('activities', Yii::$app->user->identity);
 
-                    return $this->redirect(['view', 'id' => $model->id]);
+                    return $this->redirect(['update', 'id' => $model->id]);
                 } 
 
                 $assetGridProps = $this->getTicketAssetGridProperties($model);
@@ -564,6 +563,23 @@ class TicketController extends Controller
             // wrong permissions!
             throw new ForbiddenHttpException('You do not have permission to reopen tickets.');
         }
+    }
+
+    /**
+     * Get the current primary tech of this ticket, if it exists
+     */
+    public function actionGetPrimaryTech() {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $ticket_id = Yii::$app->request->get('ticket_id');
+        $primaryTech = Ticket::find()->where("id = $ticket_id")->one()->getPrimaryTech()->select([
+            'user.id',
+            'user.username',
+            'user.fname',
+            'user.lname',
+            'user.email'
+            ])->one();
+
+        return ['primaryTech' => $primaryTech];
     }
 
     /**

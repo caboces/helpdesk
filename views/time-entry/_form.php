@@ -20,14 +20,14 @@ use yii\jui\DatePicker;
         'validateOnSubmit' => true,
     ]); ?>
 
-    <div class="expanding-input-section entries-container">
+    <div class="dynamic-form entries-container">
         <div class="alert alert-info p-2" role="alert">
             <em>Please enter times in quarter hour increments (e.g. 0.25 => 15mins; 1.50 => 1hr 30mins; 2.75 => 2hrs 45mins)</em>
         </div>
         
         <?php foreach ($models as $index => $model): ?>
 
-        <div class="duplicate-input-group question-box-no-trim">
+        <div class="dynamic-form-input-group question-box-no-trim">
             <?= $form->field($model, "[$index]last_modified_by_user_id", [
                     'template' => '{input}',
                     'options' => ['tag' => false],
@@ -77,8 +77,8 @@ use yii\jui\DatePicker;
                 </div>
             </div>
             <div class="form-group">
-                <?= Html::button('Remove', ['class' => 'modal-button-remove btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>
-                <?= Html::button('Add', ['class' => 'modal-button-add btn btn-primary bg-iris border-iris btn-skinny']); ?>
+                <?= Html::button('Remove', ['class' => 'dynamic-form-button-remove btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>
+                <?= Html::button('Add', ['class' => 'dynamic-form-button-add btn btn-primary bg-iris border-iris btn-skinny']); ?>
             </div>
         </div>
 

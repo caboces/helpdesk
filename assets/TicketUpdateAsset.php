@@ -18,12 +18,15 @@ class TicketUpdateAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
+        'css/pills-tab.css',
+        'css/forms.css',
+        'css/select2.css',
+        'css/gridview.css',
     ];
     public $js = [
-        'js/ajax.js',
-        'js/custom.js',
-        'js/ticket-draft.js',
         'js/ticket.js',
+        ['js/ticket-update.js', 'type' => 'module'],
+        ['js/dynamic-forms.js', 'type' => 'module'],
     ];
     public $depends = [
         'yii\web\YiiAsset',

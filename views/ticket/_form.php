@@ -1,5 +1,6 @@
 <?php
 
+use app\assets\TicketUpdateAsset;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
@@ -18,6 +19,8 @@ use yii\bootstrap5\ButtonDropdown;
 /** @var yii\web\View $this */
 /** @var app\models\Ticket $model */
 /** @var yii\bootstrap5\ActiveForm $form */
+
+TicketUpdateAsset::register($this)
 ?>
 
 <div class="ticket-form">
@@ -86,7 +89,7 @@ use yii\bootstrap5\ButtonDropdown;
 				<path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
 			</svg> New tech journal entry', [
 				'value' => Url::to("/ticket-note/create?ticket_id={$model->id}&redirect=/ticket/".Yii::$app->controller->action->id),
-				'class' => 'ticket-note-modal-button btn btn-primary bg-iris border-iris',
+				'class' => 'ticket-note-button btn btn-primary bg-iris border-iris',
 				// disable if creating a new ticket
 				'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
 		]); ?>
@@ -634,7 +637,7 @@ use yii\bootstrap5\ButtonDropdown;
 							<path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
 						</svg> New tech journal entry', [
 							'value' => Url::to("/ticket-note/create?ticket_id={$model->id}&redirect=/ticket/".Yii::$app->controller->action->id),
-							'class' => 'ticket-note-modal-button btn btn-primary bg-iris border-iris',
+							'class' => 'ticket-note-button btn btn-primary bg-iris border-iris',
 							// disable if creating a new ticket
 							'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
 					]); ?>
@@ -658,13 +661,10 @@ use yii\bootstrap5\ButtonDropdown;
 	<!-- action buttons -->
 	<div class='secondary-action-button-bar'>
 		<?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
-		<?= Html::button('Technicians', ['id' => 'secondary-pill-nav-technicians', 'class' => 'btn btn-outline-secondary']); ?>
-		<?= Html::button('Equipment', ['id' => 'secondary-pill-nav-equipment', 'class' => 'btn btn-outline-secondary']); ?>
-		<?= Html::button('Time entries', ['id' => 'secondary-pill-nav-time-entries', 'class' => 'btn btn-outline-secondary']); ?>
 		<?= Html::submitButton('<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16" aria-hidden="true">
-						<path d="M11 2H9v3h2z"/>
-						<path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
-					</svg> Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark']); ?>
+				<path d="M11 2H9v3h2z"/>
+				<path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+			</svg> Save ticket', ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark']); ?>
 	</div>
 	<?php ActiveForm::end(); ?>
 

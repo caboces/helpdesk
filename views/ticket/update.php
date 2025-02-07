@@ -1,5 +1,6 @@
 <?php
 
+use app\assets\TicketUpdateAsset;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 
@@ -7,6 +8,7 @@ use yii\helpers\Inflector;
 /** @var app\models\Ticket $model */
 
 $this->title = 'Update Ticket: ' . $model->id;
+TicketUpdateAsset::register($this);
 ?>
 <div class="ticket-update">
 
@@ -19,88 +21,26 @@ $this->title = 'Update Ticket: ' . $model->id;
 
     <p>You are currently editing the details of this ticket. To save your changes, click the "Save" button. Your changes will be logged in this ticket's activity, along with your tech journal entry (if provided).</p>
     
-    <!-- Time Entry Errors-->
+    <!-- time entry errors -->
     <?php if (Yii::$app->session->hasFlash('timeEntryErrors')): ?>
-        <div class="alert alert-danger">
-            <h2>Time Entry Errors</h2>
-            <hr>
-            <?php foreach (Yii::$app->session->getFlash('timeEntryErrors') as $username => $timeEntry): ?>
-                <h4>Time Entry for user "<?= Html::encode($username) ?>":</h4>
-                <ul>
-                    <?php foreach($timeEntry as $timeEntryField => $fieldErrors): ?>
-                    <strong><?= Html::encode(Inflector::camel2words($timeEntryField)) ?></strong>
-                    <ul>
-                        <?php foreach($fieldErrors as $error): ?>
-                            <li><?= Html::encode($error) ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endforeach; ?>
-        </div>
+        <?= $this->render('ticket-field-error', [
+            'errorType' => 'timeEntryErrors',
+            'errorTitle' => 'Time Entry',
+        ]); ?>
     <?php endif; ?>
-
-    <!-- Asset Errors-->
+    <!-- asset errors -->
     <?php if (Yii::$app->session->hasFlash('assetErrors')): ?>
-        <div class="alert alert-danger">
-            <h2>Asset Errors</h2>
-            <hr>
-            <?php foreach (Yii::$app->session->getFlash('assetErrors') as $new_prop_tag => $asset): ?>
-                <h4>Asset Error for Asset ID "<?= Html::encode($new_prop_tag) ?>":</h4>
-                <ul>
-                    <?php foreach($asset as $assetField => $fieldErrors): ?>
-                    <strong><?= Html::encode(Inflector::camel2words($assetField)) ?></strong>
-                    <ul>
-                        <?php foreach($fieldErrors as $error): ?>
-                            <li><?= Html::encode($error) ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endforeach; ?>
-        </div>
+        <?= $this->render('ticket-field-error', [
+            'errorType' => 'assetErrors',
+            'errorTitle' => 'Asset',
+        ]); ?>
     <?php endif; ?>
-
-    <!-- Parts Errors-->
+    <!-- part errors -->
     <?php if (Yii::$app->session->hasFlash('partErrors')): ?>
-        <div class="alert alert-danger">
-            <h2>Part Errors</h2>
-            <hr>
-            <?php foreach (Yii::$app->session->getFlash('partErrors') as $part_name => $part): ?>
-                <h4>Part Error for Part Name "<?= Html::encode($part_name) ?>":</h4>
-                <ul>
-                    <?php foreach($part as $partField => $fieldErrors): ?>
-                    <strong><?= Html::encode(Inflector::camel2words($partField)) ?></strong>
-                    <ul>
-                        <?php foreach($fieldErrors as $error): ?>
-                            <li><?= Html::encode($error) ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
-
-    <!-- Parts Errors-->
-    <?php if (Yii::$app->session->hasFlash('partErrors')): ?>
-        <div class="alert alert-danger">
-            <h2>Part Errors</h2>
-            <hr>
-            <?php foreach (Yii::$app->session->getFlash('partErrors') as $part_name => $part): ?>
-                <h4>Part Error for Part Name "<?= Html::encode($part_name) ?>":</h4>
-                <ul>
-                    <?php foreach($part as $partField => $fieldErrors): ?>
-                    <strong><?= Html::encode(Inflector::camel2words($partField)) ?></strong>
-                    <ul>
-                        <?php foreach($fieldErrors as $error): ?>
-                            <li><?= Html::encode($error) ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endforeach; ?>
-        </div>
+        <?= $this->render('ticket-field-error', [
+            'errorType' => 'partErrors',
+            'errorTitle' => 'Part',
+        ]); ?>
     <?php endif; ?>
 
     <?= $this->render(
