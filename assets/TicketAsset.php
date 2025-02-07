@@ -12,14 +12,14 @@ use yii\web\AssetBundle;
 /**
  * ticket create asset bundle
  */
-class TicketCreateAsset extends AssetBundle
+class TicketAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
     ];
     public $js = [
-        'js/ticket-create.js',
+        'js/ticket.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

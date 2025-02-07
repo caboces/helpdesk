@@ -9,7 +9,7 @@ use yii\widgets\DetailView;
 $this->title = 'View Asset: ' . $model->new_prop_tag;
 $this->params['breadcrumbs'][] = ['label' => 'Inventories', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+
 ?>
 <div class="inventory-view">
 

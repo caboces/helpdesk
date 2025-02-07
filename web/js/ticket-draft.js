@@ -1,44 +1,143 @@
-jQuery(() => {
-    function reCaptchaOnSubmit(token) {
-        $('#ticket-draft-form').submit()
-    }
-    /**
-     * OnChange: Customer Type Input Radio List
-     * When the user selects a new customerTypeId for the ticket, show/hide/clear the second drop down
-     * list options accordingly
-     * 
-     * efox - 4/11/24 - ctrl+c ctrl+v by tristen 1/24/2025
-     */
-    $('#ticketdraft-customer_type_id').on('change', function() {
-        // find new customer_type_id value
-        var selectedCustomerType = $("input:radio[name='TicketDraft[customer_type_id]']:checked").val();
+/**
+ * 
+ * ticketdraft-draft.js
+ * 
+ * Controls ticket draft functionality
+ * 
+ */
 
-        // CABOCES selected, show divisions > departments + department buildings
-        if (selectedCustomerType == 1) {
-            $('.field-ticketdraft-district_id').hide();
-            $('.field-ticketdraft-district_building_id').hide();
-            $('.field-ticketdraft-department_id').show();
-            $('.field-ticketdraft-department_building_id').show();
-            // clear district + district building val
-            $('#ticketdraft-district_id').val('');
-            $('#ticketdraft-district_building_id').val('');
+
+jQuery(() => {
+
+    /**
+     * onChangeTicketFieldsModule
+     * 
+     * makes changes to certain fields in the form depending on the current selection(s)
+     * 
+     * copied straight from ticket.js
+     * 
+     */
+    const onChangeTicketFieldsModule = {
+        loadEvents: function() {
+            $('#ticketdraft-customer_type_id').on('change', this.ticketCustomerTypeIdOnChange)
+            $('#ticketdraft-department_id').on('change', this.ticketDepartmentIdOnChange)
+            $('#ticketdraft-district_id').on('change', this.ticketDistrictIdOnChange)
+            $('#ticketdraft-job_type_id').on('change', this.ticketJobTypeIdOnChange)
+        },
+        ticketCustomerTypeIdOnChange: function () {
+            // find new customer_type_id value
+            var selectedCustomerType = $("input:radio[name='TicketDraft[customer_type_id]']:checked").val()
+        
+            // CABOCES selected, show divisions > departments + department buildings
+            if (selectedCustomerType == 1) {
+                $('.field-ticketdraft-district_id').hide()
+                $('.field-ticketdraft-district_building_id').hide()
+                $('.field-ticketdraft-department_id').show()
+                $('.field-ticketdraft-department_building_id').show()
+                // clear district + district building val
+                $('#ticketdraft-district_id').val('')
+                $('#ticketdraft-district_building_id').val('')
+            }
+            // DISTRICT or WNYRIC selected, show districts + district buildings
+            else if (selectedCustomerType == 2 || selectedCustomerType == 4) {
+                $('.field-ticketdraft-district_id').show()
+                $('.field-ticketdraft-district_building_id').show()
+                $('.field-ticketdraft-department_id').hide()
+                $('.field-ticketdraft-department_building_id').hide()
+                // clear division > deptartment val
+                $('#ticketdraft-division_id').val('')
+                $('#ticketdraft-department_id').val('')
+                $('#ticketdraft-department_building_id').val('')
+            }
+            // Nothing selected, clear all subsequent vals
+            else {
+                $('#ticketdraft-district_id').val('')
+                $('#ticketdraft-department_id').val('')
+                $('#ticketdraft-division_id').val('')
+            }
+        },
+        ticketDepartmentIdOnChange: async function() {
+            // Populate departments depending on the selected division
+            return await $.ajax({
+                type: 'post',
+                url: '/ticket-draft/department-building-dependent-dropdown-query',
+                data: { department_search_reference: $('#ticketdraft-department_id').val() },
+                dataType: 'json',
+                success: function(response) {
+                    $("#ticketdraft-division_id").val("");
+                    $("#ticketdraft-department_building_id").empty();
+                    var count = response.length;
+                    if (count === 0) {
+                        $("#ticketdraft-department_building_id").empty();
+                        $("#ticketdraft-department_building_id").append(`<option value="">Sorry, no buildings available for this department</option>`);
+                    } else {
+                        $("#ticketdraft-department_building_id").append(`<option value="">Select Department Building</option>`);
+                        for (var i = 0; i < count; i++) {
+                            var id = response[i]['id'];
+                            var name = response[i]['name'];
+                            $("#ticketdraft-department_building_id").append(`<option value="${id}">${name}</option>`);
+        
+                            // this is so redundant...
+                            var division = response[i]['division'];
+                            $("#ticketdraft-division_id").val(division);
+                        }
+                    }
+                }
+            })
+        },
+        ticketDistrictIdOnChange: async function () {
+            // Populate districts based on selection
+            return await $.ajax({
+                type: 'post',
+                url: '/ticket-draft/district-building-dependent-dropdown-query',
+                data: { district_search_reference: $('#ticketdraft-district_id').val() },
+                dataType: "json",
+                success: function(response) {
+                    $("#ticketdraft-district_building_id").empty();
+                    var count = response.length;
+        
+                    if (count === 0) {
+                        $("#ticketdraft-district_building_id").empty();
+                        $("#ticketdraft-district_building_id").append(`<option value="">Sorry, no buildings available for this district</option>`);
+                    } else {
+                        $("#ticketdraft-district_building_id").append(`<option value="">Select District Building</option>`);
+                        for (var i = 0; i < count; i++) {
+                            var id = response[i]['id'];
+                            var name = response[i]['name'];
+                            $("#ticketdraft-district_building_id").append(`<option value="${id}">${name}</option>`);
+                        }
+                    }
+                }
+            })
+        },
+        ticketJobTypeIdOnChange: async function () {
+            // Populate job type id
+            return await $.ajax({
+                type: 'post',
+                url: '/ticket-draft/job-category-dependent-dropdown-query',
+                data: { job_category_search_reference: $('#ticketdraft-job_type_id').val() },
+                dataType: 'json',
+                success: function(response) {
+                    // clear the current job_category selection
+                    $("#ticketdraft-job_category_id").empty();
+                    var count = response.length;
+        
+                    if (count === 0) {
+                        $("#ticketdraft-job_category_id").empty();
+                        $("#ticketdraft-job_category_id").empty().append(`<option value="">Sorry, no categories available for this type</option>`);
+                    } else {
+                        $("#ticketdraft-job_category_id").append(`<option value="">Select Category</option>`);
+                        for (var i = 0; i < count; i++) {
+                            var id = response[i]['id'];
+                            var name = response[i]['name'];
+                            $("#ticketdraft-job_category_id").append(`<option value="${id}">${name}</option>`);
+                        }
+                    }
+                }
+            })
         }
-        // DISTRICT or WNYRIC selected, show districts + district buildings
-        else if (selectedCustomerType == 2 || selectedCustomerType == 4) {
-            $('.field-ticketdraft-district_id').show();
-            $('.field-ticketdraft-district_building_id').show();
-            $('.field-ticketdraft-department_id').hide();
-            $('.field-ticketdraft-department_building_id').hide();
-            // clear division > deptartment val
-            $('#ticketdraft-division_id').val('');
-            $('#ticketdraft-department_id').val('');
-            $('#ticketdraft-department_building_id').val('');
-        }
-        // Nothing selected, clear all subsequent vals
-        else {
-            $('#ticketdraft-district_id').val('');
-            $('#ticketdraft-department_id').val('');
-            $('#ticketdraft-division_id').val('');
-        }
-    });
+    }
+
+    onChangeTicketFieldsModule.loadEvents()
+
 })

@@ -9,6 +9,7 @@ use yii\bootstrap5\ActiveForm;
 
 $this->title = 'Create New User';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="site-signup">
     <div class="title-icon d-flex align-items-center">

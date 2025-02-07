@@ -32,7 +32,7 @@ jQuery(() => {
      * 
      * makes changes to certain fields in the form depending on the current selection(s)
      */
-    onChangeTicketFieldsModule = {
+    const onChangeTicketFieldsModule = {
         loadEvents: function() {
             $('#ticket-customer_type_id').on('change', this.ticketCustomerTypeIdOnChange)
             $('#ticket-department_id').on('change', this.ticketDepartmentIdOnChange)
@@ -158,7 +158,7 @@ jQuery(() => {
      * 
      * handles what happens when different techs are selected and what should be shown in the primary tech select options
      */
-    primaryTechModule = {
+    const primaryTechModule = {
         loadEvents: function() {
             $('#ticket-users').on('select2:unselecting', this.removeTechFromTechField);
         },

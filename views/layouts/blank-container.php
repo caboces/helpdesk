@@ -5,9 +5,12 @@
 
 use yii\helpers\Html;
 use app\assets\AppAsset;
+use app\assets\BreadcrumbAsset;
 use yii\bootstrap5\Breadcrumbs;
 
+\yii\web\YiiAsset::register($this);
 AppAsset::register($this);
+BreadcrumbAsset::register($this);
 $this->beginContent('@app/views/layouts/base.php');
 ?>
 

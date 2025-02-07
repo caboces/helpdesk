@@ -10,16 +10,16 @@ namespace app\assets;
 use yii\web\AssetBundle;
 
 /**
- * ticket create asset bundle
+ * ticket update asset bundle
  */
-class TicketCreateAsset extends AssetBundle
+class TicketDraftCreateAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
     ];
     public $js = [
-        'js/ticket-create.js',
+        'js/ticket-draft.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

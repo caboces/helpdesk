@@ -35,37 +35,6 @@ use yii\bootstrap5\ActiveForm;
                             'style' => ($model->customerType == null || $model->customerType->id == 1) ? 'display: block;' : 'display: none;'
                     ]])->dropDownList($departments, [
                         'prompt' => 'Select Department',
-                        'onchange' => '
-                            $.ajax({
-                                type: "POST",
-                                url: "'.Yii::$app->urlManager->createUrl(["ticket-draft/department-building-dependent-dropdown-query"]) . '",
-                                data: {department_search_reference: $(this).val()},
-                                dataType: "json",
-                                success: function(response) {
-                                    $("#ticketdraft-division_id").val("");
-
-
-                                    $("#ticketdraft-department_building_id").empty();
-                                    var count = response.length;
-
-                                    if (count === 0) {
-                                        $("#tickedraftt-department_building_id").empty();
-                                        $("#ticketdraft-department_building_id").append("<option value=\'" + id + "\'>Sorry, no buildings available for this department</option>");
-                                    } else {
-                                        $("#ticketdraft-department_building_id").append("<option value=\'" + id + "\'>Select Department Building</option>");
-                                        for (var i = 0; i < count; i++) {
-                                            var id = response[i][\'id\'];
-                                            var name = response[i][\'name\'];
-                                            $("#ticketdraft-department_building_id").append("<option value=\'" + id + "\'>" + name + "</option>");
-
-                                            // this is so redundant...
-                                            var division = response[i][\'division\'];
-                                            $("#tickedraft-division_id").val(division);
-                                        }
-                                    }
-                                }
-                            });
-                        '
                     ]); ?>
                     <!-- district selection -->
                     <!-- if customer is district -->
@@ -74,30 +43,6 @@ use yii\bootstrap5\ActiveForm;
                         'style' => ($model->customerType != null && $model->customerType->id != 1) ? 'display: block;' : 'display: none;'
                     ]])->dropDownList($districts, [
                         'prompt' => 'Select District',
-                        'onchange' => '
-                            $.ajax({
-                                type: "POST",
-                                url: "'.Yii::$app->urlManager->createUrl(["ticket-draft/district-building-dependent-dropdown-query"]) . '",
-                                data: {district_search_reference: $(this).val()},
-                                dataType: "json",
-                                success: function(response) {
-                                    $("#ticketdraft-district_building_id").empty();
-                                    var count = response.length;
-
-                                    if (count === 0) {
-                                        $("#ticketdraft-district_building_id").empty();
-                                        $("#ticketdraft-district_building_id").append("<option value=\'" + id + "\'>Sorry, buildings available for this district</option>");
-                                    } else {
-                                        $("#ticketdraft-district_building_id").append("<option value=\'" + id + "\'>Select District Building</option>");
-                                        for (var i = 0; i < count; i++) {
-                                            var id = response[i][\'id\'];
-                                            var name = response[i][\'name\'];
-                                            $("#ticketdraft-district_building_id").append("<option value=\'" + id + "\'>" + name + "</option>");
-                                        }
-                                    }
-                                }
-                            });
-                        '
                     ]); ?>
                     <!-- division textbox -->
                     <!-- this field is going to be entirely hidden and based off of the department selection. it gets values in a stupidly redundent way in the department ajax success function -->
@@ -163,31 +108,6 @@ use yii\bootstrap5\ActiveForm;
                 <div class="col-md-6">
                     <?= $form->field($model, 'job_type_id')->dropDownList($jobTypes, [
                         'prompt' => 'Select Type',
-                        'onchange' => '
-                            $.ajax({
-                                type: "POST",
-                                url: "'.Yii::$app->urlManager->createUrl(["ticket-draft/job-category-dependent-dropdown-query"]) . '",
-                                data: {job_category_search_reference: $(this).val()},
-                                dataType: "json",
-                                success: function(response) {
-                                    // clear the current job_category selection
-                                    $("#ticketdraft-job_category_id").empty();
-                                    var count = response.length;
-
-                                    if (count === 0) {
-                                        $("#ticketdraft-job_category_id").empty();
-                                        $("#ticketdraft-job_category_id").empty().append("<option value=\'" + id + "\'>Sorry, no categories available for this type</option>");
-                                    } else {
-                                        $("#ticketdraft-job_category_id").append("<option value=\'" + id + "\'>Select Category</option>");
-                                        for (var i = 0; i < count; i++) {
-                                            var id = response[i][\'id\'];
-                                            var name = response[i][\'name\'];
-                                            $("#ticketdraft-job_category_id").append("<option value=\'" + id + "\'>" + name + "</option");
-                                        }
-                                    }
-                                }
-                            });
-                        '
                     ]); ?>
                 </div>
                 <div class="col-md-6">

@@ -7,6 +7,7 @@ use yii\helpers\Html;
 use app\assets\AppAsset;
 use yii\widgets\Breadcrumbs;
 
+\yii\web\YiiAsset::register($this);
 AppAsset::register($this);
 $this->beginContent('@app/views/layouts/base.php');
 ?>

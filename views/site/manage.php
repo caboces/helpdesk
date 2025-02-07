@@ -5,6 +5,7 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 
 $this->title = 'General Management Tools';
+
 ?>
 <div class="site-manage">
 

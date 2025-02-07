@@ -7,6 +7,7 @@ use app\assets\AppAsset;
 use yii\bootstrap5\Html;
 use app\widgets\Alert;
 
+\yii\web\YiiAsset::register($this);
 AppAsset::register($this);
 $this->beginContent('@app/views/layouts/base.php');
 ?>

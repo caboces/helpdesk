@@ -7,8 +7,9 @@
  */
 
 {/* 
-    // '...' indicates anything you want
-    // .dynamic form is usually only created once in a <form> tag, but multiple forms can be on a webpage
+// '...' indicates anything you want
+// .dynamic-form is usually only created once in a <form> tag, but multiple forms can be on a page
+
 <div id="..." class="dynamic-form ...">
     <div class="dynamic-form-input-group ...">
         ... // your inputs

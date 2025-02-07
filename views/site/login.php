@@ -4,10 +4,12 @@
 /** @var yii\bootstrap5\ActiveForm $form */
 /** @var \common\models\LoginForm $model */
 
+use app\assets\SiteAsset;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
 $this->title = 'Login';
+
 ?>
 <div class="site-login pt-3 pt-md-5">
     <div class="mt-5 offset-lg-3 col-lg-6 p-5 | text-light bg-transparent-slate">

@@ -1,4 +1,4 @@
-import dynamicFormModule from './dynamic-forms.js'
+import dynamicFormModule from './dynamic-form.js'
 
 /**
  * ticket-update.js
@@ -10,6 +10,7 @@ jQuery(() => {
 
     /** 
      * Module that switches tab panes depending on the url parameter given.
+     * TODO does nothing for now
      */
     const switchTabPaneModule = { 
         init: function() {

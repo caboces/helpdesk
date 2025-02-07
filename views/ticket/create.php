@@ -1,5 +1,6 @@
 <?php
 
+use app\assets\TicketAsset;
 use app\assets\TicketCreateAsset;
 use app\models\Part;
 use yii\helpers\Html;
@@ -10,6 +11,7 @@ use yii\helpers\Inflector;
 
 $this->title = 'Create Ticket';
 
+TicketAsset::register($this);
 TicketCreateAsset::register($this);
 
 ?>

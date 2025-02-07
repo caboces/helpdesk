@@ -1,14 +1,11 @@
 <?php
 
-use app\models\TicketDraft;
-use kartik\grid\ActionColumn;
-use kartik\grid\GridView;
 use yii\bootstrap5\Html;
-use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 
 $this->title = 'Dashboard';
+
 ?>
 <div class="site-index">
     <div class="title-icon d-flex align-items-center">

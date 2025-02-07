@@ -5,6 +5,7 @@ use yii\bootstrap5\Html;
 /** @var yii\web\View $this */
 
 $this->title = 'Frequently Asked Questions';
+
 ?>
 <div class="site-help">
     <div class="title-icon d-flex align-items-center">

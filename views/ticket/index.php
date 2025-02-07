@@ -1,24 +1,23 @@
 <?php
 
-use app\controllers\TicketController;
-use app\models\User;
+use app\assets\GridviewAsset;
+use app\assets\PillsTabAsset;
+use app\assets\TicketAsset;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
-use app\models\Ticket;
 use yii\grid\GridView;
-use app\models\JobType;
 use yii\bootstrap5\Html;
-use app\models\JobStatus;
 use yii\grid\ActionColumn;
-use app\models\JobCategory;
-use app\models\JobPriority;
-use yii\helpers\ArrayHelper;
 use yii\helpers\StringHelper;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Ticket Management';
+
+GridviewAsset::register($this);
+PillsTabAsset::register($this);
+TicketAsset::register($this);
 
 ?>
 

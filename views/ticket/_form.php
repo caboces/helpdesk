@@ -1,16 +1,12 @@
 <?php
 
-use app\assets\TicketUpdateAsset;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
-use app\models\Ticket;
 use yii\grid\GridView;
 use app\models\TimeEntry;
 use yii\bootstrap5\Modal;
 use yii\grid\ActionColumn;
-use app\models\JobCategory;
-use kartik\export\ExportMenu;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap5\ActiveForm;
@@ -20,7 +16,6 @@ use yii\bootstrap5\ButtonDropdown;
 /** @var app\models\Ticket $model */
 /** @var yii\bootstrap5\ActiveForm $form */
 
-TicketUpdateAsset::register($this)
 ?>
 
 <div class="ticket-form">

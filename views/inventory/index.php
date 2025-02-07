@@ -1,5 +1,7 @@
 <?php
 
+use app\assets\GridviewAsset;
+use app\assets\PillsTabAsset;
 use app\models\Inventory;
 use app\models\LoanedInventory;
 use yii\helpers\Html;
@@ -16,6 +18,10 @@ use Symfony\Component\VarDumper\VarDumper;
 /** @var yii\data\ActiveDataProvider $loanedInvDataProvider */
 
 $this->title = 'Inventory';
+
+PillsTabAsset::register($this);
+GridviewAsset::register($this);
+
 ?>
 <div class="inventory-index">
 

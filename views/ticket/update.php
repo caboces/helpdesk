@@ -1,5 +1,6 @@
 <?php
 
+use app\assets\TicketAsset;
 use app\assets\TicketUpdateAsset;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
@@ -8,6 +9,7 @@ use yii\helpers\Inflector;
 /** @var app\models\Ticket $model */
 
 $this->title = 'Update Ticket: ' . $model->id;
+TicketAsset::register($this);
 TicketUpdateAsset::register($this);
 ?>
 <div class="ticket-update">

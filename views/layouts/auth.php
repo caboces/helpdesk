@@ -9,6 +9,7 @@ use app\widgets\Alert;
 
 AppAsset::register($this);
 $this->beginContent('@app/views/layouts/base.php');
+\yii\web\YiiAsset::register($this);
 ?>
 
 <!-- content start -->

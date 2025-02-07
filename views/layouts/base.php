@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+\yii\web\YiiAsset::register($this);
 ?>
 
 
