@@ -1,5 +1,8 @@
 <?php
 
+use app\models\Asset;
+use app\models\Part;
+use app\models\TicketNote;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
@@ -19,55 +22,26 @@ use yii\bootstrap5\ButtonDropdown;
 ?>
 
 <div class="ticket-form">
-	<!-- modal window for time entries -->
-	<?php 
-	Modal::begin([
-		'title' => 'Add Times',
-		'id' => 'time-entry-modal',
-		'size' => 'modal-lg',
-	]);
-
-	echo '<div id="time-entry-modal-content"></div>';
-
-	Modal::end(); 
-	?>
+	<?php $form = ActiveForm::begin(); ?>
 
 	<!-- modal window for asset entries -->
 	<?php 
-	Modal::begin([
-		'title' => 'Add Asset',
-		'id' => 'asset-modal',
-		'size' => 'modal-lg',
-	]);
-
-	echo '<div id="asset-modal-content"></div>';
-
-	Modal::end(); 
-	?>
-
-	<!-- Parts creation modal -->
-	<?php 
 		Modal::begin([
-			'title' => 'Add Parts',
-			'id' => 'part-modal',
+			'title' => 'Add Asset',
+			'id' => 'asset-modal',
 			'size' => 'modal-lg',
-		]);
-		echo '<div id="part-modal-content"></div>';
-		Modal::end(); 
-	?>
+		]); ?>
 
-	<!-- Ticket note creation modal -->
-	<?php 
-		Modal::begin([
-			'title' => 'Add Ticket Journal Entry',
-			'id' => 'ticket-note-modal',
-			'size' => 'modal-lg',
-		]);
-		echo '<div id="ticket-note-modal-content"></div>';
-		Modal::end(); 
-	?>
+		<div id="asset-modal-content">
+			<?= $this->render('@app/views/asset/_form-injectable', [
+				'form' => $form,
+				'ticket_id' => Yii::$app->request->get('id'),
+				'models' => [new Asset()],
+			]) ?>
+			<?= Html::button('Save', ['class' => 'close-asset-modal mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
+		</div>
 
-	<?php $form = ActiveForm::begin(); ?>
+	<?php Modal::end(); ?>
 
 	<!-- Ticket draft object, hidden. Only here if we are creating a new ticket -->
 	<?php if (Yii::$app->controller->action->id == 'create'): ?>
@@ -92,10 +66,9 @@ use yii\bootstrap5\ButtonDropdown;
 		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
 				<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
 			</svg> Add assets', [
-			'value' => Url::to('/asset/create?ticket_id=' . $model->id),
 			'class' => 'asset-modal-button btn btn-primary bg-iris border-iris',
 			// disable if creating a new ticket
-			'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+			// 'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
 		]); ?>
 		<!-- Add part -->
 		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
@@ -226,7 +199,9 @@ use yii\bootstrap5\ButtonDropdown;
 			<div class="subsection-info-block">
 				<h2>General</h2>
 				<p>Details pertaining to the request</p>
-
+				<div id="spinner-general" class="spinner-border" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
 				<!-- /ticket/update specific fields -->
 				<?php if (Yii::$app->controller->action->id == 'update'): ?>
 					<div class="question-box">
@@ -397,6 +372,9 @@ use yii\bootstrap5\ButtonDropdown;
 			<div class="subsection-info-block">
 				<h2>Technicians</h2>
 				<p>Technicians assigned to this ticket</p>
+				<div id="spinner-technicians" class="spinner-border" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
 				<div class="question-box">
 					<!-- all tech assignments -->
 					<?= $form->field($model, 'users')->widget(Select2::class, [
@@ -410,23 +388,6 @@ use yii\bootstrap5\ButtonDropdown;
 					<!-- primary tech assignment -->
 					<?= $form->field($model, 'primary_tech_id')
 						->dropDownList(ArrayHelper::map($assignedTechData, 'user_id', 'username'),
-						// this has to be an inline javascript function for 'onclick' since theres no option like with kartik to add plug jquery events
-						['onclick' => '// populate based on whats selected in the assigned techs box. array
-							var $dropdown = $(this)
-							// clear dropdown of selection
-							const $selected = $dropdown.find(":selected")
-							$dropdown.children().not($selected).remove()
-							var ids = $(`#ticket-users`).val()
-							ids.forEach((elem) => {
-								// dont add the same element twice
-								if (elem == $selected.val()) {
-									return;
-								}
-								$dropdown.append($("<option>", {
-									text: $(`#ticket-users`).find(`option[value="${elem}"]`).text(),
-									value: elem 
-								}))
-							})']
 					);?>
 				</div>
 			</div>
@@ -437,14 +398,17 @@ use yii\bootstrap5\ButtonDropdown;
 					<h2>Assets</h2>
 					<p>Assets associated with this ticket.</p>
 					<p>Assets are inventory items related to the ticket.</p>
+					<div id="spinner-assets" class="spinner-border" role="status">
+						<span class="visually-hidden">Loading...</span>
+					</div>
 					<!-- Add asset -->
 					<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
 							<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
 						</svg> Add assets', [
-						'value' => Url::to('/asset/create?ticket_id=' . $model->id),
+						'value' => (Yii::$app->controller->action->id == 'create') ? Url::to('/asset/create?unknown_ticket_id=true') : Url::to('/asset/create?ticket_id=' . $model->id),
 						'class' => 'asset-modal-button btn btn-primary bg-iris border-iris',
 						// disable if creating a new ticket
-						'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
+						// 'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
 					]); ?>
 					<div id="assets-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
 						<div class="table-container container-fluid overflow-x-scroll">
@@ -467,6 +431,9 @@ use yii\bootstrap5\ButtonDropdown;
 					<h2>Parts</h2>
 					<p>Parts associated with this ticket.</p>
 					<p>Parts are items purchased to help resolve the ticket.</p>
+					<div id="spinner-parts" class="spinner-border" role="status">
+						<span class="visually-hidden">Loading...</span>
+					</div>
 					<!-- Add part -->
 					<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
 							<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
@@ -495,6 +462,9 @@ use yii\bootstrap5\ButtonDropdown;
 			<div class="subsection-info-block">
 				<h2>Time entries</h2>
 				<p>Hours spent on the current ticket</p>
+				<div id="spinner-time-entries" class="spinner-border" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
 				<!-- Add time entry -->
 				<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16" aria-hidden="true">
 						<path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
@@ -623,6 +593,9 @@ use yii\bootstrap5\ButtonDropdown;
 				<div>
 					<h2>Ticket Journal</h2>
 					<p>These are the journal entries left by other techs about the ticket.</p>
+					<div id="spinner-ticket-notes" class="spinner-border" role="status">
+						<span class="visually-hidden">Loading...</span>
+					</div>
 					<!-- Add tech note 
 					 I called it ticket_note internally, but we'll say "tech journal" in the frontend i guess 
 					 -->

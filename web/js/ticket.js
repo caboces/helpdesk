@@ -1,3 +1,5 @@
+import dynamicFormModule from './dynamic-form.js'
+
 /**
  * ticket.js
  * 
@@ -161,6 +163,36 @@ jQuery(() => {
     const primaryTechModule = {
         loadEvents: function() {
             $('#ticket-users').on('select2:unselecting', this.removeTechFromTechField);
+            $('#ticket-primary_tech_id').on('click', () => { this.onPrimaryTechSelect(this) });
+        },
+        spinners: {
+            general: '#spinner-general',
+            technicians: '#spinner-technicians',
+            assets: '#spinner-assets',
+            parts: '#spinner-parts',
+            time_entries: '#spinner-time-entries',
+            ticket_notes: '#spinner-ticket-note',
+        },
+        toggleSpinner: function (theSpinner) {
+            if (this.spinners && this.spinners[theSpinner]) {
+                $(this.spinners[theSpinner]).toggle()
+            }
+        },
+        onPrimaryTechSelect: function(theSelect) {
+            // clear dropdown of selection
+            const selected = $(theSelect).find(":selected")
+            $(theSelect).children().not($(selected)).remove()
+            var ids = $(`#ticket-users`).val()
+            ids.forEach((elem) => {
+                // dont add the same element twice
+                if (elem == $(selected).val()) {
+                    return;
+                }
+                $(theSelect).append($("<option>", {
+                    text: $(`#ticket-users`).find(`option[value="${elem}"]`).text(),
+                    value: elem 
+                }))
+            })
         },
         removeTechFromTechField: async function(e) {
             // disable the unselect element for now as we validate
@@ -168,51 +200,109 @@ jQuery(() => {
             var passed = true
             const tech_id = e.params.args.data.id
             // see if the removed user was the primary tech of the ticket internally, stop if it was
-            await $.ajax({
-                // SEE: TicketController.php/actionGetPrimaryTech
-                url: '/ticket/get-primary-tech',
-                method: 'GET',
-                data: { ticket_id: getUrlParameter('id') },
-                success: function (res) {
-                    // tech_id is a string
-                    if (res.primaryTech && res.primaryTech.id == tech_id) {
-                        // if it is, alert it and block
-                        alert('You cannot delete a tech that is assigned as the current primary tech.')
-                        passed = false
+            const ticket_id = getUrlParameter('id')
+            // only check if ticket id isn't undefined/null
+            if (ticket_id) {
+                this.toggleSpinner(this.spinners.technicians)
+                await $.ajax({
+                    // SEE: TicketController.php/actionGetPrimaryTech
+                    url: '/ticket/get-primary-tech',
+                    method: 'GET',
+                    data: { ticket_id: ticket_id },
+                    success: function (res) {
+                        // tech_id is a string
+                        if (res.primaryTech && res.primaryTech.id == tech_id) {
+                            // if it is, alert it and block
+                            alert('You cannot delete a tech that is assigned as the current primary tech.')
+                            passed = false
+                        }
+                    },
+                    error: () => {
+                        alert('An error occured while trying to fetch the primary tech of this ticket.')
                     }
-                },
-                error: () => {
-                    alert('An error occured while trying to fetch the primary tech of this ticket.')
-                }
-            })
-            // see if the removed user has a current time entry
-            await $.ajax({
-                // TODO: maybe instead of 'alert(...)' we use a modal popup, red text appear/disppear, or something else, since the alerts can be disabled. we can do this later or until important
-                // SEE: TimeEntryController.php/actionCheckEntries
-                url: '/time-entry/check-entries',
-                method: 'GET',
-                data: { tech_id: tech_id, ticket_id: getUrlParameter('id') },
-                success: (res) => {
-                    if (res.exists) {
-                        // if they do, alert it and block
-                        alert('You cannot remove technicians who have had time entries logged for this ticket.')
-                        passed = false
+                })
+                // see if the removed user has a current time entry
+                await $.ajax({
+                    // TODO: maybe instead of 'alert(...)' we use a modal popup, red text appear/disppear, or something else, since the alerts can be disabled. we can do this later or until important
+                    // SEE: TimeEntryController.php/actionCheckEntries
+                    url: '/time-entry/check-entries',
+                    method: 'GET',
+                    data: { tech_id: tech_id, ticket_id: getUrlParameter('id') },
+                    success: (res) => {
+                        if (res.exists) {
+                            // if they do, alert it and block
+                            alert('You cannot remove technicians who have had time entries logged for this ticket.')
+                            passed = false
+                        }
+                    },
+                    error: () => {
+                        alert('An error occured while trying to fetch the time entires for the deleted technician.')
                     }
-                },
-                error: () => {
-                    alert('An error occured while trying to fetch the time entires for the deleted technician.')
-                }
-            })
-            // if it pass, then remove!
+                })
+            }
+            // if it pass, then remove! (will always pass in /ticket/create form)
             if (passed) {
+                this.toggleSpinner(this.spinners.technicians)
                 // filter by removing the one that was meant to be selected
                 $('#ticket-users').val($('#ticket-users').val().filter(function(e){ return e != tech_id}) )
                 $('#ticket-users').trigger('change')
             }
         }
     }
-
+    /**
+     * Handles all modals in the ticket update form
+     */
+    const modalHandlerModule ={
+        modals: {
+            timeEntry: {
+                modal: '#time-entry-modal',
+                content: '#time-entry-modal-content',
+                button: '.time-entry-modal-button',
+                'close-button': '.close-time-entry-modal'
+            },
+            asset: {
+                modal: '#asset-modal',
+                content: '#asset-modal-content',
+                button: '.asset-modal-button',
+                'close-button': '.close-asset-modal'
+            },
+            part: {
+                modal: '#part-modal',
+                content: '#part-modal-content',
+                button: '.part-modal-button',
+                'close-button': '.close-part-modal'
+            },
+            ticketNote: {
+                modal: '#ticket-note-modal',
+                content: '#ticket-note-modal-content',
+                button: '.ticket-note-button',
+                'close-button': '.close-ticket-note-modal'
+            },
+        },
+        loadEvents: function() {
+            if (!this.modals) {
+                return
+            }
+            // initialize each modal
+            for (const modalEntry in this.modals) {
+                const modal = this.modals[modalEntry]['modal']
+                const content = this.modals[modalEntry]['content']
+                const button = this.modals[modalEntry]['button']
+                const closeButton = this.modals[modalEntry]['close-button']
+                $(button).on('click', () => {
+                    $(modal).modal('show')
+                })
+                // register the modal closing
+                $(closeButton).click(function () {
+                    $(modal).modal('hide')
+                })
+            }
+        },
+    }
+    
+    modalHandlerModule.loadEvents()
     onChangeTicketFieldsModule.loadEvents()
     primaryTechModule.loadEvents()
+    
 
 })

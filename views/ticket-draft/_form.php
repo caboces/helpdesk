@@ -103,29 +103,11 @@ use yii\bootstrap5\ActiveForm;
                 <small class="fst-italic">500 character limit</small>
             </div>
         </div>
-        <div class="question-box">
-            <div class="row">
-                <div class="col-md-6">
-                    <?= $form->field($model, 'job_type_id')->dropDownList($jobTypes, [
-                        'prompt' => 'Select Type',
-                    ]); ?>
-                </div>
-                <div class="col-md-6">
-                    <!-- This is the dependent table, based on Type input -->
-                    <?= $form->field($model, 'job_category_id')->dropDownList(ArrayHelper::map($jobTypeCategoryData, 'job_category_id', 'name'),
-                        [
-                            'prompt' => 'Select Category'
-                        ]
-                    ); ?>
-                </div>
-            </div>
-        </div>
 
         <!-- Hidden fields -->
         <?= Html::input('text', 'vc090h3n', null, ['hidden' => true]) ?>
         
         <!-- division textbox -->
-        <!-- this field is going to be entirely hidden and based off of the department selection. it gets values in a stupidly redundent way in the department ajax success function -->
         <?= $form->field($model, 'division_id')->hiddenInput()->label(false); ?>
 
         <div class="form-group">
@@ -134,7 +116,8 @@ use yii\bootstrap5\ActiveForm;
                 'class' => 'btn btn-success g-recaptcha', 
                 'data-sitekey' => '6LcEMsEqAAAAACHqBOkDNZDP7CFW2JjMLvPdN7IQ',
                 'data-callback' => 'reCaptchaOnSubmit',
-                'data-action' => 'submit',]) ?>
+                'data-action' => 'submit',
+                ]) ?>
         </div>
     </div>
 

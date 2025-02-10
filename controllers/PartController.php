@@ -83,7 +83,7 @@ class PartController extends Controller
                     $model->save(false);
                 }
                 // redirect to ticket update since we usually add assets from the update ticket page
-                return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
+                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/ticket-note/view", 'id' => $model->id]);
             } else {
                 // form errors
                 $errors = [];
@@ -93,7 +93,7 @@ class PartController extends Controller
                     }
                 }
                 Yii::$app->session->setFlash('partErrors', $errors);
-                return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
+                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/ticket-note/view", 'id' => $model->id]);
             }
         } else {
             foreach ($models as $model) {

@@ -10,20 +10,16 @@ namespace app\assets;
 use yii\web\AssetBundle;
 
 /**
- * Main application asset bundle.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * ticket create asset bundle
  */
-class FormAsset extends AssetBundle
+class SpinnerAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/form.css',
     ];
     public $js = [
-        'js/dynamic-form.js'
+        ['js/spinner.js', 'type' => 'module'],
     ];
     public $depends = [
         'yii\web\YiiAsset',

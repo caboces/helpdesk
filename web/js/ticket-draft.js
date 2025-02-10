@@ -22,7 +22,6 @@ jQuery(() => {
             $('#ticketdraft-customer_type_id').on('change', this.ticketCustomerTypeIdOnChange)
             $('#ticketdraft-department_id').on('change', this.ticketDepartmentIdOnChange)
             $('#ticketdraft-district_id').on('change', this.ticketDistrictIdOnChange)
-            $('#ticketdraft-job_type_id').on('change', this.ticketJobTypeIdOnChange)
         },
         ticketCustomerTypeIdOnChange: function () {
             // find new customer_type_id value
@@ -110,32 +109,6 @@ jQuery(() => {
                 }
             })
         },
-        ticketJobTypeIdOnChange: async function () {
-            // Populate job type id
-            return await $.ajax({
-                type: 'post',
-                url: '/ticket-draft/job-category-dependent-dropdown-query',
-                data: { job_category_search_reference: $('#ticketdraft-job_type_id').val() },
-                dataType: 'json',
-                success: function(response) {
-                    // clear the current job_category selection
-                    $("#ticketdraft-job_category_id").empty();
-                    var count = response.length;
-        
-                    if (count === 0) {
-                        $("#ticketdraft-job_category_id").empty();
-                        $("#ticketdraft-job_category_id").empty().append(`<option value="">Sorry, no categories available for this type</option>`);
-                    } else {
-                        $("#ticketdraft-job_category_id").append(`<option value="">Select Category</option>`);
-                        for (var i = 0; i < count; i++) {
-                            var id = response[i]['id'];
-                            var name = response[i]['name'];
-                            $("#ticketdraft-job_category_id").append(`<option value="${id}">${name}</option>`);
-                        }
-                    }
-                }
-            })
-        }
     }
 
     onChangeTicketFieldsModule.loadEvents()

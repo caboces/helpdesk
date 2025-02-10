@@ -19,7 +19,7 @@ class TicketDraftCreateAsset extends AssetBundle
     public $css = [
     ];
     public $js = [
-        'js/ticket-draft.js',
+        ['js/ticket-draft.js', 'type' => 'module'],
     ];
     public $depends = [
         'yii\web\YiiAsset',

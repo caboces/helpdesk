@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\TicketNote;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -82,8 +83,8 @@ class TicketNoteController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                // redirect to the ticket update
-                return $this->redirect(['/ticket/update', 'id' => $model->ticket_id]);
+                $id = $model->id;
+                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/ticket-note/view", 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();

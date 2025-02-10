@@ -37,8 +37,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'district_id',
             'district_building_id',
             'location',
-            'job_type_id',
-            'job_category_id',
             'summary',
             'description',
             'email:email',

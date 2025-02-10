@@ -183,8 +183,6 @@ class TicketController extends Controller
                     'district_building_id', 
                     'requestor',
                     'location',
-                    'job_type_id',
-                    'job_category_id',
                     'summary',
                     'description',
                     'email',
@@ -234,12 +232,20 @@ class TicketController extends Controller
 
                 // if this ticket was created with a Ticket Draft, then set that ticket draft's "frozen" value to 1 (true).
                 if ($ticketDraftId) {
-                    TicketDraft::find()->where(['id' => $ticketDraftId])->one()->freeze();
+                    $draft = TicketDraft::find()->where(['id' => $ticketDraftId])->one();
+                    if ($draft) {
+                        $draft->freeze();
+                    }
                 }
 
-                // TODO later. So you can create assets,parts,time entries, and notes in the ticket creation rather than update.
-                // each thing below needs to store a "draft" version of the model, that is, no call to /*/create is made (* being 'asset', 'part', or 'time-entry' or else no ticket_id exists)
-                // create each asset record
+                if (!empty($_POST['Asset'])) {
+                    foreach ($_POST['Asset'] as $index => $asset) {
+                        $asset = new Asset();
+                        $asset->ticket_id = $model->id;
+                        $asset->new_prop_tag = $asset['new_prop_tag'];
+                        $asset->save();
+                    }
+                }
 
                 // create each parts record
 

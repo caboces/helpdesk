@@ -101,8 +101,6 @@ class TicketDraftController extends Controller
         $reCaptchaActionThreshold = 0.5;
         $model = new TicketDraft();
 
-        $jobTypes = ArrayHelper::map(JobType::getTypes(), 'id', 'name');
-        $jobTypeCategoryData = JobTypeCategory::getJobCategoryNamesFromJobTypeId($model);
         // customers
         $customerTypes = ArrayHelper::map(CustomerType::getCustomerTypes(), 'id', 'name');
         $districts = ArrayHelper::map(District::getDistricts(), 'id', 'name');
@@ -147,24 +145,33 @@ class TicketDraftController extends Controller
                 ])
                 ->setFormat(Client::FORMAT_URLENCODED)
                 ->send();
-            // this won't work in dev because there is no internet connection.
             if ($captchaResponse->isOk) {
                 // reCaptcha failed
                 if (!$captchaResponse->data['success']) {
-                    Yii::$app->session->setFlash('captchaError', 'There was an error verifying your reCAPTCHA.');
+                    Yii::$app->session->setFlash('textError', 'There was an error verifying your reCAPTCHA.');
                     return $this->redirect(['/ticket-draft/create', 'model' => $model]);
                 }
                 if ($captchaResponse->data['score'] < $reCaptchaActionThreshold) {
-                    Yii::$app->session->setFlash('captchaError', 'You failed the reCAPTCHA. Try again.');
+                    Yii::$app->session->setFlash('textError', 'You failed the reCAPTCHA. Try again.');
                     return $this->redirect(['/ticket-draft/create', 'model' => $model]);
                 }
             } else {
-                Yii::$app->session->setFlash('captchaError', 'There was an error verifying your reCAPTCHA. Google\'s API may be down or the server lost internet connection.');
+                Yii::$app->session->setFlash('textError', "There was an error verifying your reCAPTCHA. Google's API may be down or the server lost internet connection.");
                 return $this->redirect(['/ticket-draft/create', 'model' => $model]);
             }
+
             // reCAPTCHA passed
 
             if ($model->load($this->request->post()) && $model->validate()) {
+                // see if district/district building or division/department were properly filled out
+                if ($model->customer_type_id == 1 && (!$model->division_id || (!$model->department || !$model->department_id))) {
+                    Yii::$app->session->setFlash('textError', 'You must select both options for Division and Department since you selected a BOCES Customer Type.');
+                    return $this->redirect(['/ticket-draft/create', 'model' => $model]);
+                }
+                if (($model->customer_type_id == 2 || $model->customer_type_id == 4) && (!$model->district_id || !$model->district_building_id)) {
+                    Yii::$app->session->setFlash('textError', 'You must select both options for District and Building since you selected a DISTRICT Customer Type.');
+                    return $this->redirect(['/ticket-draft/create', 'model' => $model]);
+                }
                 // save the model
                 $model->save(false);
 
@@ -189,8 +196,6 @@ class TicketDraftController extends Controller
         $this->layout = 'blank-container';
         return $this->render('create', [
             'model' => $model,
-            'jobTypeCategoryData' => $jobTypeCategoryData,
-            'jobTypes' => $jobTypes,
             // customers
             'customerTypes' => $customerTypes,
             'districts' => $districts,
@@ -236,33 +241,6 @@ class TicketDraftController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * TODO Copied from TicketController.php
-     * Populate the ticket categories DDL based on selected job type id
-     * Can probably remove the job type naming and stuff, think i only need category stuff. not sure what ill do yet
-     */
-    public function actionJobCategoryDependentDropdownQuery() {
-        $search_reference = Yii::$app->request->post('job_category_search_reference');
-        $query = new Query();
-        $query->select(['job_type_category.id', 'job_type_category.job_type_id', 'job_type_category.job_category_id', 'job_category.name'])
-            ->from('job_type_category')
-            ->innerJoin('job_category', 'job_type_category.job_category_id = job_category.id')
-            ->where(['job_type_id' => $search_reference])
-            ->orderBy('name ASC');
-        $rows = $query->all();
-
-        $data = [];
-        if (!empty($rows)) {
-            foreach ($rows as $row) {
-                $data[] = ['id' => $row['job_category_id'], 'name' => $row['name']];
-            }
-        } else {
-            $data = '';
-        }
-
-        return $this->asJson($data);
     }
 
     /**

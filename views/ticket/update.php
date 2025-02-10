@@ -1,5 +1,9 @@
 <?php
 
+use app\assets\FormAsset;
+use app\assets\GridviewAsset;
+use app\assets\PillsTabAsset;
+use app\assets\SpinnerAsset;
 use app\assets\TicketAsset;
 use app\assets\TicketUpdateAsset;
 use yii\helpers\Html;
@@ -9,6 +13,11 @@ use yii\helpers\Inflector;
 /** @var app\models\Ticket $model */
 
 $this->title = 'Update Ticket: ' . $model->id;
+
+PillsTabAsset::register($this);
+FormAsset::register($this);
+GridviewAsset::register($this);
+SpinnerAsset::register($this);
 TicketAsset::register($this);
 TicketUpdateAsset::register($this);
 ?>

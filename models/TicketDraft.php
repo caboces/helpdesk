@@ -16,8 +16,6 @@ use Yii;
  * @property int|null $district_id
  * @property int|null $district_building_id
  * @property string $location
- * @property int $job_type_id
- * @property int $job_category_id
  * @property string $summary
  * @property string $description
  * @property string $email
@@ -51,8 +49,8 @@ class TicketDraft extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['requestor', 'customer_type_id','location', 'job_type_id', 'job_category_id', 'summary', 'description', 'email', 'phone', 'ip_address', 'accept_language', 'user_agent'], 'required'],
-            [['division_id', 'department_id', 'department_building_id', 'district_id', 'district_building_id', 'job_type_id', 'job_category_id', 'frozen'], 'integer'],
+            [['requestor', 'customer_type_id','location', 'summary', 'description', 'email', 'phone', 'ip_address', 'accept_language', 'user_agent'], 'required'],
+            [['division_id', 'department_id', 'department_building_id', 'district_id', 'district_building_id', 'frozen'], 'integer'],
             [['created', 'modified'], 'safe'],
             [['requestor', 'location'], 'string', 'max' => 100],
             [['summary'], 'string', 'max' => 50],
@@ -60,8 +58,6 @@ class TicketDraft extends \yii\db\ActiveRecord
             [['email', 'phone'], 'string', 'max' => 45],
             [['ip_address'], 'string', 'max' => 48],
             [['accept_language', 'user_agent'], 'string', 'max' => 255],
-            [['job_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => JobCategory::class, 'targetAttribute' => ['job_category_id' => 'id']],
-            [['job_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => JobType::class, 'targetAttribute' => ['job_type_id' => 'id']],
             [['customer_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => CustomerType::class, 'targetAttribute' => ['customer_type_id' => 'id']],
             [['department_building_id'], 'exist', 'skipOnError' => true, 'targetClass' => DepartmentBuilding::class, 'targetAttribute' => ['department_building_id' => 'id']],
             [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::class, 'targetAttribute' => ['department_id' => 'id']],
@@ -86,8 +82,6 @@ class TicketDraft extends \yii\db\ActiveRecord
             'district_id' => 'District',
             'district_building_id' => 'District Building',
             'location' => 'Location',
-            'job_type_id' => 'Job Type',
-            'job_category_id' => 'Job Category',
             'summary' => 'Summary',
             'description' => 'Description',
             'email' => 'Email',

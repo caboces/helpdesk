@@ -6,16 +6,9 @@
 
 import spinnerModule from "./spinner.js"
 
-jQuery(() => {
 
-    const autofillSpinnerModule = spinnerModule()
-
-    /**
-     * autofillTicketFormModule
-     * 
-     * autofills the ticket form with fields from the ticket draft
-     */
-    const autofillTicketFormModule = {
+const autofillTicketFormModule = (() => {
+    const module = {
         autofill: function () {
             new Promise((resolve, reject) => {
                 // check if the hidden json field loaded correctly.
@@ -99,6 +92,28 @@ jQuery(() => {
                 console.info('No ticket draft to autofill')
             })
         }
+    }
+
+    jQuery(() => module.loadEvents())
+
+    return module
+
+
+})
+
+export default autofillTicketFormModule
+
+jQuery(() => {
+
+    const autofillSpinnerModule = spinnerModule()
+
+    /**
+     * autofillTicketFormModule
+     * 
+     * autofills the ticket form with fields from the ticket draft
+     */
+    const autofillTicketFormModule = {
+        
     }
 
     autofillSpinnerModule.awaitSpinner('#general-spinner', autofillTicketFormModule.autofill)

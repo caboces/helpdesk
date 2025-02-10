@@ -19,7 +19,9 @@ class TicketCreateAsset extends AssetBundle
     public $css = [
     ];
     public $js = [
-        'js/ticket-create.js',
+        ['js/dynamic-form.js', 'type' => 'module'],
+        ['js/spinner.js', 'type' => 'module'],
+        ['js/ticket-create.js', 'type' => 'module'],
     ];
     public $depends = [
         'yii\web\YiiAsset',

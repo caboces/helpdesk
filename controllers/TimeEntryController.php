@@ -79,7 +79,6 @@ class TimeEntryController extends Controller
     {
         $models = [new TimeEntry()];
         $ticket_id = $this->request->get('ticket_id');
-        $view_or_update_redirect = $this->request->get('redirect')?? "/ticket/view";
 
         if ($this->request->isPost) {
             $count = count($this->request->post('TimeEntry'));
@@ -92,8 +91,7 @@ class TimeEntryController extends Controller
                     // do not run validation since we already did
                     $model->save(false);
                 }
-                // redirect to ticket update OR view. ticket_id should be valid here if it passed model validation
-                return $this->redirect([$view_or_update_redirect, 'id' => $ticket_id]);
+                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/time-entry/view", 'id' => $model->id]);
             } else {
                 // form errors
                 $errors = [];
@@ -102,24 +100,8 @@ class TimeEntryController extends Controller
                         $errors[$model->user->username] = $model->getErrors();
                     }
                 }
-                // timeEntryErrors looks like this:
-                // array:4 [▼
-                //  "mary_poppins" => array:1 [▼
-                //      "entry_date" => array:1 [▼
-                //          0 => "Please select the date of the hours worked."
-                //      ]
-                //   ]
-                // "admin" => array:2 [▼
-                //      "entry_date" => array:1 [▼
-                //          0 => "Please select the date of the hours worked."
-                //      ]
-                // "user_id" => array:1 [▼
-                //     0 => "User ID is required. Please make sure the relevant tech is assigned to the ticket."
-                //      ]
-                //    ]
-                // ]
                 Yii::$app->session->setFlash('timeEntryErrors', $errors);
-                return $this->redirect([$view_or_update_redirect, 'id' => $ticket_id]);
+                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/time-entry/view", 'id' => $model->id]);
             }
         } else {
             foreach ($models as $model) {

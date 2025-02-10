@@ -1,5 +1,7 @@
 <?php
 
+use app\assets\FormAsset;
+use app\assets\TicketAsset;
 use app\assets\TicketDraftCreateAsset;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
@@ -11,6 +13,8 @@ $this->title = 'Create Ticket Request';
 $this->params['breadcrumbs'][] = ['label' => 'Ticket Drafts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
+FormAsset::register($this);
+TicketAsset::register($this);
 TicketDraftCreateAsset::register($this);
 ?>
 <div class="ticket-draft-create">
@@ -21,16 +25,16 @@ TicketDraftCreateAsset::register($this);
     
     <!-- Ticket Draft Errors -->
     <?php if (Yii::$app->session->hasFlash('ticketDraftErrors')): ?>
-        <?= $this->render('ticket-field-error', [
-            'errorType' => 'assetErrors',
-            'errorTitle' => 'Asset',
+        <?= $this->render('ticket-draft-field-error', [
+            'errorType' => 'ticketDraftErrors',
+            'errorTitle' => 'Ticket Draft',
         ]); ?>
     <?php endif; ?>
 
-    <!-- Ticket Draft captcha error -->
-    <?php if (Yii::$app->session->hasFlash('captchaError')): ?>
+    <!-- Ticket Draft text error -->
+    <?php if (Yii::$app->session->hasFlash('textError')): ?>
         <div class="alert alert-danger">
-            <strong><?= Html::encode(Yii::$app->session->getFlash('captchaError')) ?></strong>
+            <strong><?= Html::encode(Yii::$app->session->getFlash('textError')) ?></strong>
         </div>
     <?php endif; ?>
 
@@ -43,8 +47,6 @@ TicketDraftCreateAsset::register($this);
 
     <?= $this->render('_form', [
         'model' => $model,
-        'jobTypeCategoryData' => $jobTypeCategoryData,
-        'jobTypes' => $jobTypes,
         // customers
         'customerTypes' => $customerTypes,
         'districts' => $districts,

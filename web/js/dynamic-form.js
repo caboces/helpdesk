@@ -30,32 +30,31 @@ const dynamicFormModule = (() => {
             $('.dynamic-form-button-remove').off('click')
             // add them back
             $('.dynamic-form-button-add').on('click', function() {
-                dynamicFormModule.onAdd(this)
+                dynamicFormModule.onAdd($(this).closest('.dynamic-form-input-group'))
             })
             $('.dynamic-form-button-remove').on('click', function() {
-                dynamicFormModule.onRemove(this)
+                dynamicFormModule.onRemove($(this).closest('.dynamic-form-input-group'))
+            })
+            $('.dynamic-form').each((index, element) => {
+                this.updateRemoveButtonState(element)
             })
         },
-        updateRemoveButtonState: function(section) {
-            if ($(section).find('.dynamic-form-input-group').length <= 1) {
+        updateRemoveButtonState: function(theForm) {
+            if ($(theForm).find('.dynamic-form-input-group').length <= 1) {
                 // disable remove button if there is only 1 element
-                $(section).find('.dynamic-form-button-remove').prop('disabled', true)
+                $(theForm).find('.dynamic-form-button-remove').prop('disabled', true)
             } else {
                 // otherwise, keep enabled
-                $(section).find('.dynamic-form-button-remove').prop('disabled', false)
+                $(theForm).find('.dynamic-form-button-remove').prop('disabled', false)
             }
         },
-        onAdd: function (theAddButton) {
-            // $(this) will point to whatever event an element delegated this function to
-            // ; in this case, in loadEvents, .dynamic-form-button-add elements.
-            const $parent = $(theAddButton).closest('.dynamic-form-input-group')
-            const $clone = $parent.clone()
+        onAdd: function (theParent) {
+            const clone = $(theParent).clone()
             // append the clone
-            const $section = $parent.closest('.dynamic-form')
-            $section.append($clone)
+            const form = $(theParent).closest('.dynamic-form')
+            $(form).append($(clone))
             // update input numbers.
-            // copying the <select> elements wont select the same <option>s, but this is okay especially for the TimeEntry form.
-            $clone.find('input, select, textarea').each(function() {
+            $(clone).find('input, select, textarea').each(function() {
                 const name = $(this).attr('name')
                 // match a string like "[123]", where 123 is any number
                 const match = name.match(/\[(\d+)\]/)
@@ -66,19 +65,18 @@ const dynamicFormModule = (() => {
             })
             // reload events so we register the new buttons we just added
             this.loadEvents()
-            this.updateRemoveButtonState($section)
+            this.updateRemoveButtonState($(form))
         },
-        onRemove: function (theRemoveButton) {
-            const $parent = $(theRemoveButton).closest('.dynamic-form-input-group')
-            const $section = $parent.closest('.dynamic-form')
-            if ($section.find('.dynamic-form-input-group').length > 1) {
-                $parent.remove()
+        onRemove: function (theParent) {
+            const form = $(theParent).closest('.dynamic-form')
+            if ($(form).find('.dynamic-form-input-group').length > 1) {
+                $(theParent).remove()
             } else {
                 alert('Cannot remove the last entry!')
             }
             // reload events so we register the new buttons we just added
             this.loadEvents()
-            this.updateRemoveButtonState($section)
+            this.updateRemoveButtonState($(form))
         }
 
     }

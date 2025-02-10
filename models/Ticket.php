@@ -274,6 +274,15 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /**
+     * Junction relation to get ticket notes attached to a ticket via part table
+     *
+     * */
+    public function getTicketNotes()
+    {
+        return $this->hasMany(TicketNote::class,['ticket_id'=>'id']); 
+    }
+
+    /**
      * Junction relation to get the user who created the ticket
      *
      * */

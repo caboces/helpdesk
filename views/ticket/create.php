@@ -1,8 +1,13 @@
 <?php
 
+use app\assets\FormAsset as AssetsFormAsset;
+use app\assets\GridviewAsset;
+use app\assets\PillsTabAsset;
+use app\assets\SpinnerAsset;
 use app\assets\TicketAsset;
 use app\assets\TicketCreateAsset;
 use app\models\Part;
+use kartik\builder\FormAsset;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 
@@ -11,6 +16,10 @@ use yii\helpers\Inflector;
 
 $this->title = 'Create Ticket';
 
+PillsTabAsset::register($this);
+AssetsFormAsset::register($this);
+GridviewAsset::register($this);
+SpinnerAsset::register($this);
 TicketAsset::register($this);
 TicketCreateAsset::register($this);
 

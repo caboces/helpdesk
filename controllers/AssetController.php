@@ -72,6 +72,7 @@ class AssetController extends Controller
     {
         $models = [new Asset()];
         $ticket_id = $this->request->get('ticket_id');
+        $unknown_ticket_id = $this->request->get('unknown_ticket_id');
 
         if ($this->request->isPost) {
             $count = count($this->request->post('Asset'));
@@ -85,7 +86,7 @@ class AssetController extends Controller
                     $model->save(false);
                 }
                 // redirect to ticket update since we usually add assets from the update ticket page
-                return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
+                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/asset/view", 'id' => $model->id]);
             } else {
                 // form errors
                 $errors = [];
@@ -95,7 +96,7 @@ class AssetController extends Controller
                     }
                 }
                 Yii::$app->session->setFlash('assetErrors', $errors);
-                return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
+                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/asset/view", 'id' => $model->id]);
             }
         } else {
             foreach ($models as $model) {
@@ -107,6 +108,7 @@ class AssetController extends Controller
         return $this->renderAjax('create', [
             'models' => $models,
             'ticket_id' => $ticket_id,
+            'unknown_ticket_id' => $unknown_ticket_id
         ]);
     }
 
