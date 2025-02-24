@@ -1,26 +1,13 @@
 <?php
 
-use app\assets\FormAsset as AssetsFormAsset;
-use app\assets\GridviewAsset;
-use app\assets\PillsTabAsset;
-use app\assets\SpinnerAsset;
-use app\assets\TicketAsset;
 use app\assets\TicketCreateAsset;
-use app\models\Part;
-use kartik\builder\FormAsset;
 use yii\helpers\Html;
-use yii\helpers\Inflector;
 
 /** @var yii\web\View $this */
 /** @var app\models\Ticket $model */
 
 $this->title = 'Create Ticket';
 
-PillsTabAsset::register($this);
-AssetsFormAsset::register($this);
-GridviewAsset::register($this);
-SpinnerAsset::register($this);
-TicketAsset::register($this);
 TicketCreateAsset::register($this);
 
 ?>
@@ -32,25 +19,6 @@ TicketCreateAsset::register($this);
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
     <p>You are currently creating a new ticket. To save your changes, click the "Save" button.</p>
-    <!-- Time Entry Errors -->
-    <?php if (Yii::$app->session->hasFlash('timeEntryErrors')): ?>
-        <?= $this->render('ticket-field-error', [
-            'errorType' => 'timeEntryErrors',
-            'errorTitle' => 'Time Entry',
-        ]); ?>
-    <?php endif; ?>
-    <?php if (Yii::$app->session->hasFlash('assetErrors')): ?>
-        <?= $this->render('ticket-field-error', [
-            'errorType' => 'assetErrors',
-            'errorTitle' => 'Asset',
-        ]); ?>
-    <?php endif; ?>
-    <?php if (Yii::$app->session->hasFlash('partErrors')): ?>
-        <?= $this->render('ticket-field-error', [
-            'errorType' => 'partErrors',
-            'errorTitle' => 'Part',
-        ]); ?>
-    <?php endif; ?>
     <?= $this->render(
         '_form',
         [

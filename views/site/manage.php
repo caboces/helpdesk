@@ -1,10 +1,12 @@
 <?php
 
+use app\assets\AppAsset;
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 
 $this->title = 'General Management Tools';
+AppAsset::register($this);
 
 ?>
 <div class="site-manage">

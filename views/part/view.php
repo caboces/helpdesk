@@ -1,5 +1,6 @@
 <?php
 
+use app\assets\AppAsset;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -10,6 +11,7 @@ $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Parts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+AppAsset::register($this);
 ?>
 <div class="part-view">
 
@@ -37,7 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'quantity',
             'unit_price',
             'pending_delivery',
-            'note',
             'created',
             'modified',
         ],

@@ -1,22 +1,23 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap5\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Asset $model */
-/** @var yii\widgets\ActiveForm $form */
+/** @var yii\bootstrap5\ActiveForm $form */
+
 ?>
 
 <div class="asset-form">
 
     <?php $form = ActiveForm::begin([
         'id' => 'add-asset-form',
-        'action' => '/asset/create',
         'enableClientValidation' => true,
         'validateOnSubmit' => true,
     ]); ?>
 
+    <!-- Hidden ticket id field if it is filled -->
     <div id="asset-box" class="dynamic-form asset-container">
         <h3>Add Asset</h3>
         
@@ -24,25 +25,27 @@ use yii\widgets\ActiveForm;
 
         <div class="dynamic-form-input-group question-box-no-trim">
             <?= $form->field($model, "[$index]last_modified_by_user_id", [
-                        'template' => '{input}',
-                        'options' => ['tag' => false],
-                        'inputOptions' => ['value' => Yii::$app->user->id]
-                    ])->hiddenInput([
-                        'readonly' => true, 
-                    ])->label(false)
+                'template' => '{input}',
+                'options' => ['tag' => false],
+                'inputOptions' => ['value' => Yii::$app->user->id]
+            ])->hiddenInput([
+                'readonly' => true, 
+                'class' => 'dynamic-form-clone-value',
+            ])->label(false)
             ?>
             <div class="row">
                 <div class="col">
                     <?= $form->field($model, "[$index]new_prop_tag")->textInput() ?>
                 </div>
                 <div class="col">
+                    <?= $form->field($model, "[$index]po_number")->textInput() ?>
+                </div>
+                <div class="col">
                     <?php
                         if ($ticket_id) {
-                            echo $form->field($model, "[$index]ticket_id", ['inputOptions' => ['value' => $ticket_id]])->textInput(['readonly' => true, 'class' => 'read-only form-control']);
-                        } else if ($ticket_id && !$unknown_ticket_id) {
+                            echo $form->field($model, "[$index]ticket_id", ['inputOptions' => ['value' => $ticket_id]])->textInput(['readonly' => true, 'class' => 'read-only form-control dynamic-form-clone-value']);
+                        } else {
                             echo $form->field($model, "[$index]ticket_id")->textInput();
-                        } else if ($unknown_ticket_id) {
-                            echo ''; // do not show the ticket id field if we don't know it
                         }
                     ?>
                 </div>
@@ -58,13 +61,11 @@ use yii\widgets\ActiveForm;
     </div>
     <div class="form-group">
         <!-- Disable submitting the asset if we don't know the ticket id -->
-        <?php if (!$unknown_ticket_id): ?>
         <?= Html::submitButton('Create assets', [
             'id' => 'create-assets',
             'class' => 'mt-4 btn btn-primary bg-pacific-cyan border-pacific-cyan',
             'form' => 'add-asset-form',
         ]); ?>
-        <?php endif; ?>
     </div>
 
     <?php ActiveForm::end(); ?>

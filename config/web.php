@@ -7,6 +7,7 @@ $db2 = require __DIR__ . '/db2.php';
 $config = [
     'id' => 'basic',
     'name' => 'CABOCES Helpdesk 2',
+    'timeZone' => 'America/New_York',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -62,9 +63,6 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-                'time-entry/check-entries' => 'time-entry/check-entries'
-            ],
         ],
         'user' => [
             'identityClass' => 'app\models\User',

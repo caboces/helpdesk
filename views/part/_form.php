@@ -1,11 +1,11 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap5\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Part $model */
-/** @var yii\widgets\ActiveForm $form */
+/** @var yii\bootstrap5\ActiveForm $form */
 ?>
 
 <div class="part-form">
@@ -22,18 +22,19 @@ use yii\widgets\ActiveForm;
 
         <div class="dynamic-form-input-group question-box-no-trim">
             <?= $form->field($model, "[$index]last_modified_by_user_id", [
-                        'template' => '{input}',
-                        'options' => ['tag' => false],
-                        'inputOptions' => ['value' => Yii::$app->user->id]
-                    ])->hiddenInput([
-                        'readonly' => true, 
-                    ])->label(false)
+                'template' => '{input}',
+                'options' => ['tag' => false],
+                'inputOptions' => ['value' => Yii::$app->user->id]
+            ])->hiddenInput([
+                'class' => 'dynamic-form-clone-value',
+                'readonly' => true, 
+            ])->label(false)
             ?>
             <div class="row">
                 <div class="col">
                     <?php
                         if ($ticket_id) {
-                            echo $form->field($model, "[$index]ticket_id", ['inputOptions' => ['value' => $ticket_id]])->textInput(['readonly' => true, 'class' => 'read-only form-control']);
+                            echo $form->field($model, "[$index]ticket_id", ['inputOptions' => ['value' => $ticket_id]])->textInput(['readonly' => true, 'class' => 'read-only form-control dynamic-form-clone-value']);
                         } else {
                             echo $form->field($model, "[$index]ticket_id")->textInput();
                         }
@@ -60,9 +61,6 @@ use yii\widgets\ActiveForm;
                 <div class="col">
                     <?= $form->field($model, "[$index]pending_delivery")->radioList(['0' => 'Yes', '1' => 'No']) ?>
                 </div>
-            </div>
-            <div class="row">
-                <?= $form->field($model, "[$index]note")->textInput(['maxlength' => true]) ?>
             </div>
             <div class="form-group">
                 <?= Html::button('Remove', ['class' => 'dynamic-form-button-remove btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>

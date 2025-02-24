@@ -4,8 +4,10 @@
 /** @var yii\bootstrap5\ActiveForm $form */
 /** @var \frontend\models\SignupForm $model */
 
+use app\assets\AppAsset;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
+AppAsset::register($this);
 
 $this->title = 'Create New User';
 $this->params['breadcrumbs'][] = $this->title;

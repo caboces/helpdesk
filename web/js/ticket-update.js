@@ -1,26 +1,25 @@
-
-
 /**
- * ticket-update.js
+ * ticket-create.js
  * 
- * Loaded in the /update/ticket page.
+ * Executes some stuff on page load
  */
+
+import switchTabPane from "./modules/switchTabPane.js"
+import PrimaryTechHandler from "./modules/ticket/PrimaryTechHandler.js"
+import TicketModalHandler from "./modules/ticket/TicketModalHandler.js"
 
 jQuery(() => {
 
-    /** 
-     * Module that switches tab panes depending on the url parameter given.
-     * TODO does nothing for now
-     */
-    const switchTabPaneModule = { 
-        init: function() {
-            const params = new URLSearchParams(document.location.search)
-            const tabLocation = params.get('tabPane')
-            if (tabLocation && tabLocation.length > 0) {
-                $('#myTabs .nav-link[href="#' + name + '"]').tab('show');
-            }
-        }
-    }
+    // prepare primary tech module
+    const primaryTechHandler = PrimaryTechHandler('update')
 
-    switchTabPaneModule.init()
+    // prepare ticket modals
+    const ticketModalHandler = TicketModalHandler()
+
+    ticketModalHandler.loadEvents()
+    primaryTechHandler.loadEvents()
+
+    // prepare autopane
+    switchTabPane('pills-tab', 'tabPane')
+
 })

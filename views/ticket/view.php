@@ -1,5 +1,6 @@
 <?php
 
+use app\assets\AppAsset;
 use app\assets\TicketAsset;
 use app\models\User;
 use yii\helpers\Url;
@@ -27,8 +28,6 @@ use app\models\TechTicketAssignment;
 $this->title = 'View Ticket: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Tickets', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
-TicketAsset::register($this);
 
 ?>
 <div class="ticket-view">

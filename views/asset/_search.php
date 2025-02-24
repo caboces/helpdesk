@@ -24,6 +24,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'new_prop_tag') ?>
 
+    <?= $form->field($model, 'po_number') ?>
+
     <?= $form->field($model, 'created') ?>
 
     <?= $form->field($model, 'modified') ?>

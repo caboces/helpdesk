@@ -1,6 +1,5 @@
 <?php
 
-use app\assets\DetailviewAsset;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -10,7 +9,7 @@ use yii\widgets\DetailView;
 $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Asset', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-DetailviewAsset::register($this);
+
 ?>
 <div class="asset-view">
 
@@ -33,6 +32,7 @@ DetailviewAsset::register($this);
             'id',
             'ticket_id',
             'new_prop_tag',
+            'po_number',
             'created',
             'modified',
         ],

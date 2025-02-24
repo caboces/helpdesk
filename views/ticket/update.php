@@ -1,24 +1,13 @@
 <?php
 
-use app\assets\FormAsset;
-use app\assets\GridviewAsset;
-use app\assets\PillsTabAsset;
-use app\assets\SpinnerAsset;
-use app\assets\TicketAsset;
 use app\assets\TicketUpdateAsset;
 use yii\helpers\Html;
-use yii\helpers\Inflector;
 
 /** @var yii\web\View $this */
 /** @var app\models\Ticket $model */
 
 $this->title = 'Update Ticket: ' . $model->id;
 
-PillsTabAsset::register($this);
-FormAsset::register($this);
-GridviewAsset::register($this);
-SpinnerAsset::register($this);
-TicketAsset::register($this);
 TicketUpdateAsset::register($this);
 ?>
 <div class="ticket-update">
@@ -31,28 +20,6 @@ TicketUpdateAsset::register($this);
     </div>
 
     <p>You are currently editing the details of this ticket. To save your changes, click the "Save" button. Your changes will be logged in this ticket's activity, along with your tech journal entry (if provided).</p>
-    
-    <!-- time entry errors -->
-    <?php if (Yii::$app->session->hasFlash('timeEntryErrors')): ?>
-        <?= $this->render('ticket-field-error', [
-            'errorType' => 'timeEntryErrors',
-            'errorTitle' => 'Time Entry',
-        ]); ?>
-    <?php endif; ?>
-    <!-- asset errors -->
-    <?php if (Yii::$app->session->hasFlash('assetErrors')): ?>
-        <?= $this->render('ticket-field-error', [
-            'errorType' => 'assetErrors',
-            'errorTitle' => 'Asset',
-        ]); ?>
-    <?php endif; ?>
-    <!-- part errors -->
-    <?php if (Yii::$app->session->hasFlash('partErrors')): ?>
-        <?= $this->render('ticket-field-error', [
-            'errorType' => 'partErrors',
-            'errorTitle' => 'Part',
-        ]); ?>
-    <?php endif; ?>
 
     <?= $this->render(
         '_form',

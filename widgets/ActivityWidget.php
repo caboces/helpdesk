@@ -50,8 +50,8 @@ class ActivityWidget extends Widget
             // $header = 'Ticket ' . $ticket_id . ' (' . $summary . ')';
             $header = $this->createEntryHeader($entry);
             $subheader = 'Action: ' . $type . ' by ' . $username;
-            $body = 'Tech journal entry: ' . $description;
-            $footer = $created;
+            $body = 'Description: ' . $description;
+            $footer = date('F j, Y g:i A', strtotime($created . ' UTC'));
 
             $entry_test = '
             <div class="row mb-3">

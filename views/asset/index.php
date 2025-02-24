@@ -1,6 +1,5 @@
 <?php
 
-use app\assets\GridviewAsset;
 use app\models\Asset;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -13,8 +12,6 @@ use yii\widgets\Pjax;
 
 $this->title = 'Asset';
 $this->params['breadcrumbs'][] = $this->title;
-
-GridviewAsset::register($this);
 
 ?>
 <div class="asset-index">
@@ -37,6 +34,7 @@ GridviewAsset::register($this);
             'id',
             'ticket_id',
             'new_prop_tag',
+            'po_number',
             'created',
             'modified',
             [

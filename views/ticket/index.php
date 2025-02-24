@@ -1,8 +1,5 @@
 <?php
 
-use app\assets\GridviewAsset;
-use app\assets\PillsTabAsset;
-use app\assets\TicketAsset;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\grid\GridView;
@@ -14,10 +11,6 @@ use yii\helpers\StringHelper;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Ticket Management';
-
-GridviewAsset::register($this);
-PillsTabAsset::register($this);
-TicketAsset::register($this);
 
 ?>
 

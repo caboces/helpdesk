@@ -4,11 +4,10 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap5\ActiveForm;
 use app\models\TechTicketAssignment;
-use yii\jui\DatePicker;
 
 /** @var yii\web\View $this */
 /** @var app\models\TimeEntry $model */
-/** @var yii\widgets\ActiveForm $form */
+/** @var yii\bootstrap5\ActiveForm $form */
 ?>
 
 <div class="time-entry-form">
@@ -34,14 +33,14 @@ use yii\jui\DatePicker;
                     'inputOptions' => ['value' => Yii::$app->user->id]
                 ])->hiddenInput([
                     'readonly' => true, 
+                    'class' => 'dynamic-form-clone-value',
                 ])->label(false)
             ?>
             <div class="row">
                 <div class="col">
                     <?= $form->field($model, "[$index]user_id")
                         ->dropDownList(
-                            ArrayHelper::map(TechTicketAssignment::getTechNamesFromTicketId($ticket_id), 'user_id', 'username'),
-                            [
+                            ArrayHelper::map(TechTicketAssignment::getTechNamesFromTicketId($ticket_id), 'user_id', 'username'), [
                                 'prompt' => 'Select tech',
                             ]
                         ); ?>
@@ -54,21 +53,21 @@ use yii\jui\DatePicker;
                 </div>
                 <!-- do not allow the techs to change this value, but still submit the ticket id as if it's new input -->
                 <div class="col">
-                    <?= $form->field($model, "[$index]ticket_id", ['inputOptions' => ['value' => $ticket_id]])->textInput(['readonly' => true, 'class' => 'read-only form-control']) ?>
+                    <?= $form->field($model, "[$index]ticket_id", ['inputOptions' => ['value' => $ticket_id]])->textInput(['readonly' => true, 'class' => 'read-only form-control dynamic-form-clone-value']) ?>
                 </div>
             </div>
             <div class="row">
                 <div class="col-3 col-xs-auto">
-                    <?= $form->field($model, "[$index]tech_time")->textInput() ?>
+                    <?= $form->field($model, "[$index]tech_time")->textInput(['class' => 'form-control dynamic-form-clone-value']) ?>
                 </div>
                 <div class="col-3 col-xs-auto">
-                    <?= $form->field($model, "[$index]overtime")->textInput() ?>
+                    <?= $form->field($model, "[$index]overtime")->textInput(['class' => 'form-control dynamic-form-clone-value']) ?>
                 </div>
                 <div class="col-3 col-xs-auto">
-                    <?= $form->field($model, "[$index]travel_time")->textInput() ?>
+                    <?= $form->field($model, "[$index]travel_time")->textInput(['class' => 'form-control dynamic-form-clone-value']) ?>
                 </div>
                 <div class="col-3 col-xs-auto">
-                    <?= $form->field($model, "[$index]itinerate_time")->textInput() ?>
+                    <?= $form->field($model, "[$index]itinerate_time")->textInput(['class' => 'form-control dynamic-form-clone-value']) ?>
                 </div>
             </div>
             <div class="row">

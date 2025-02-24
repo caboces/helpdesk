@@ -1,8 +1,10 @@
 <?php
 
+use app\assets\AppAsset;
 use yii\bootstrap5\Html;
 
 /** @var yii\web\View $this */
+AppAsset::register($this);
 
 $this->title = 'Frequently Asked Questions';
 

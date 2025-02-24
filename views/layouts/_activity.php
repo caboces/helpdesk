@@ -1,12 +1,10 @@
 <?php
 
-use app\assets\ActivityAsset;
 use yii\bootstrap5\Html;
 use app\widgets\ActivityWidget;
 
 $this->title = 'Activity';
 
-ActivityAsset::register($this);
 ?>
 
 <div class="activity col-12 col-xxl-4 px-2 py-5 px-lg-5 | bg-slate text-white">

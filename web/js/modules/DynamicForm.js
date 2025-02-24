@@ -1,6 +1,6 @@
 /**
  * 
- * dynamic-forms.js
+ * DynamicForm.js
  * 
  * Handles dynamic form generation
  * 
@@ -21,21 +21,23 @@
 </div> 
 */}
 
-const dynamicFormModule = (() => {
+/**
+ * Handler to easily set up dynamic add/remove forms
+ */
+const DynamicForm = (() => {
     const module = {
-
         loadEvents: function() {
             // remove events, subsequent calls will add onAdd/onRemove to be called multiple times on 1 button click
             $('.dynamic-form-button-add').off('click')
             $('.dynamic-form-button-remove').off('click')
             // add them back
             $('.dynamic-form-button-add').on('click', function() {
-                dynamicFormModule.onAdd($(this).closest('.dynamic-form-input-group'))
+                module.onAdd($(this).closest('.dynamic-form-input-group'))
             })
             $('.dynamic-form-button-remove').on('click', function() {
-                dynamicFormModule.onRemove($(this).closest('.dynamic-form-input-group'))
+                module.onRemove($(this).closest('.dynamic-form-input-group'))
             })
-            $('.dynamic-form').each((index, element) => {
+            $('.dynamic-form').each((_, element) => {
                 this.updateRemoveButtonState(element)
             })
         },
@@ -50,19 +52,28 @@ const dynamicFormModule = (() => {
         },
         onAdd: function (theParent) {
             const clone = $(theParent).clone()
+            // for any clone element without the .dynamic-form-clone-value class, drop their value
+            $(clone).find(`input:not([type="radio"]):not(.dynamic-form-clone-value)`).each(function(_, element) {
+                $(element).val('')
+            })
+            $(clone).find(`input[type="radio"]:not(.dynamic-form-clone-value)`).each(function(_, element) {
+                $(element).prop('checked', false)
+            })
             // append the clone
             const form = $(theParent).closest('.dynamic-form')
-            $(form).append($(clone))
             // update input numbers.
             $(clone).find('input, select, textarea').each(function() {
                 const name = $(this).attr('name')
-                // match a string like "[123]", where 123 is any number
-                const match = name.match(/\[(\d+)\]/)
+                // match a string like "[123]", where 123 is any number, and increment it
+                const regex = /\[(\d+)\]/
+                const match = name.match(regex)
                 if (match) {
                     const newIndex = parseInt(match[1], 10) + 1;
-                    $(this).attr('name', name.replace(/\[\d+\]/, `[${newIndex}]`))
+                    $(this).attr('name', name.replace(regex, `[${newIndex}]`))
                 }
             })
+            // append after we update the indexessince it can screw up radio buttons
+            $(form).append($(clone))
             // reload events so we register the new buttons we just added
             this.loadEvents()
             this.updateRemoveButtonState($(form))
@@ -86,6 +97,6 @@ const dynamicFormModule = (() => {
 
     return module
     
-})()
+})
 
-export default dynamicFormModule
+export default DynamicForm

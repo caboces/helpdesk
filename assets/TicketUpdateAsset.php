@@ -20,7 +20,6 @@ class TicketUpdateAsset extends AssetBundle
     ];
     public $js = [
         ['js/ticket-update.js', 'type' => 'module'],
-        ['js/dynamic-form.js', 'type' => 'module'],
     ];
     public $depends = [
         'yii\web\YiiAsset',

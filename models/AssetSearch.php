@@ -19,6 +19,7 @@ class AssetSearch extends Asset
     {
         return [
             [['id', 'ticket_id', 'new_prop_tag'], 'integer'],
+            [['po_number'], 'string'],
             [['created', 'modified'], 'safe'],
         ];
     }
@@ -61,7 +62,8 @@ class AssetSearch extends Asset
         $query->andFilterWhere([
             'id' => $this->id,
             'ticket_id' => $this->ticket_id,
-            'asset_tag' => $this->new_prop_tag,
+            'new_prop_tag' => $this->new_prop_tag,
+            'po_number' => $this->po_number,
             'created' => $this->created,
             'modified' => $this->modified,
         ]);

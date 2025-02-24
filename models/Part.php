@@ -15,7 +15,6 @@ use Yii;
  * @property int $quantity
  * @property float $unit_price
  * @property int $pending_delivery
- * @property string|null $note
  * @property string|null $created
  * @property string|null $modified
  *
@@ -38,12 +37,11 @@ class Part extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ticket_id', 'last_modified_by_user_id', 'part_name', 'quantity', 'unit_price'], 'required'],
+            [['ticket_id', 'last_modified_by_user_id', 'part_name', 'quantity', 'unit_price', 'pending_delivery'], 'required'],
             [['ticket_id', 'last_modified_by_user_id', 'quantity', 'pending_delivery'], 'integer'],
             [['unit_price'], 'number', 'min' => '0.01', 'max' => 99.99],
             [['created', 'modified'], 'safe'],
             [['part_number', 'part_name'], 'string', 'max' => 100],
-            [['note'], 'string', 'max' => 500],
             [['last_modified_by_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['last_modified_by_user_id' => 'id']],
             [['ticket_id'], 'exist', 'skipOnError' => true, 'targetClass' => Ticket::class, 'targetAttribute' => ['ticket_id' => 'id']],
         ];
@@ -63,7 +61,6 @@ class Part extends \yii\db\ActiveRecord
             'quantity' => 'Quantity',
             'unit_price' => 'Unit Price',
             'pending_delivery' => 'Pending Delivery',
-            'note' => 'Note',
             'created' => 'Created',
             'modified' => 'Modified',
         ];

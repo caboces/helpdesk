@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Html;
 
 /**
  * TicketNoteController implements the CRUD actions for TicketNote model.
@@ -82,10 +83,12 @@ class TicketNoteController extends Controller
         $ticket_id = $this->request->get('ticket_id');
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                $id = $model->id;
-                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/ticket-note/view", 'id' => $model->id]);
+            if (!$model->load($this->request->post()) && $model->save()) {
+                // form errors
+                Yii::$app->session->setFlash('error', Html::errorSummary($model));
+                return $this->redirect(Yii::$app->request->referrer);
             }
+            return $this->redirect("/ticket/update?id=$ticket_id&tabPane=pills-ticket-notes-tab");
         } else {
             $model->loadDefaultValues();
         }

@@ -1,9 +1,11 @@
 <?php
 
+use app\assets\AppAsset;
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\Part $model */
+AppAsset::register($this);
 
 $this->title = 'Create Part';
 $this->params['breadcrumbs'][] = ['label' => 'Parts', 'url' => ['index']];

@@ -4,9 +4,11 @@
 /** @var yii\bootstrap5\ActiveForm $form */
 /** @var \common\models\LoginForm $model */
 
+use app\assets\AppAsset;
 use app\assets\SiteAsset;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
+AppAsset::register($this);
 
 $this->title = 'Login';
 

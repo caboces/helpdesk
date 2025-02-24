@@ -8,6 +8,7 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Html;
 
 /**
  * PartController implements the CRUD actions for Part model.
@@ -79,22 +80,14 @@ class PartController extends Controller
             // validate and load
             if (Part::loadMultiple($models, $this->request->post()) && Part::validateMultiple($models)) {
                 foreach ($models as $model) {
-                    // do not run validation since we already did
+                    // do not run validation since we already did, save each one
                     $model->save(false);
                 }
-                // redirect to ticket update since we usually add assets from the update ticket page
-                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/ticket-note/view", 'id' => $model->id]);
             } else {
-                // form errors
-                $errors = [];
-                foreach ($models as $model) {
-                    if ($model->hasErrors()) {
-                        $errors[$model->part_name] = $model->getErrors();
-                    }
-                }
-                Yii::$app->session->setFlash('partErrors', $errors);
-                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/ticket-note/view", 'id' => $model->id]);
+                Yii::$app->session->setFlash('error', Html::errorSummary($models));
+                return $this->redirect(Yii::$app->request->referrer);
             }
+            return $this->redirect("/ticket/update?id=$ticket_id&tabPane=pills-parts-tab");
         } else {
             foreach ($models as $model) {
                 $model->loadDefaultValues();

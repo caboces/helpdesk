@@ -5,10 +5,12 @@
 /** @var string $message */
 /** @var Exception$exception */
 
+use app\assets\AppAsset;
 use app\assets\SiteAsset;
 use yii\helpers\Html;
 
 $this->title = $name;
+AppAsset::register($this);
 \yii\web\YiiAsset::register($this);
 
 ?>

@@ -1,5 +1,6 @@
 <?php
 
+use app\assets\AppAsset;
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
@@ -9,6 +10,7 @@ $this->title = 'Update Part: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Parts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
+AppAsset::register($this);
 ?>
 <div class="part-update">
 

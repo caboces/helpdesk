@@ -1,10 +1,7 @@
 <?php
 
-use app\assets\FormAsset;
-use app\assets\TicketAsset;
 use app\assets\TicketDraftCreateAsset;
 use yii\helpers\Html;
-use yii\helpers\Inflector;
 
 /** @var yii\web\View $this */
 /** @var app\models\TicketDraft $model */
@@ -13,8 +10,6 @@ $this->title = 'Create Ticket Request';
 $this->params['breadcrumbs'][] = ['label' => 'Ticket Drafts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-FormAsset::register($this);
-TicketAsset::register($this);
 TicketDraftCreateAsset::register($this);
 ?>
 <div class="ticket-draft-create">

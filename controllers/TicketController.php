@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Activity;
 use Yii;
 use DateTime;
 use yii\db\Query;
@@ -247,9 +248,14 @@ class TicketController extends Controller
                     }
                 }
 
-                // create each parts record
-
-                // create each time_entry record
+                // create "activity" entry
+                $act = new Activity();
+                $act->user_id = $model->created_by;
+                $act->ticket_id = $model->id;
+                $act->type = 'create';
+                $requester = $model->requester;
+                $act->description = "Ticket created for $requester";
+                $act->save();
 
                 return $this->redirect(['/ticket/update', 'id' => $model->id]);
             } else {
@@ -356,7 +362,14 @@ class TicketController extends Controller
                         }
                     }
 
-                    // TODO: add tech note space
+                    // create activity
+                    $act = new Activity();
+                    $act->user_id = $model->created_by;
+                    $act->ticket_id = $model->id;
+                    $act->type = 'update';
+                    $act->description = 'Ticket updated';
+                    $act->save();
+
                     // $model->link('activities', Yii::$app->user->identity);
 
                     return $this->redirect(['update', 'id' => $model->id]);
@@ -469,7 +482,18 @@ class TicketController extends Controller
     {
         // must have the delete-ticket permission
         if (Yii::$app->user->can('delete-ticket')) {
-            $this->findModel($id)->delete();
+            $model = $this->findModel($id);
+
+            // create activity
+            $act = new Activity();
+            $act->user_id = $model->created_by;
+            $act->ticket_id = $model->id;
+            $act->type = 'delete';
+            $act->description = 'Ticket deleted';
+            $act->save();
+
+            $model->delete();
+
             return $this->redirect(['index']);
         } else {
             // wrong permissions!
@@ -805,6 +829,10 @@ class TicketController extends Controller
                 'attribute' => 'new_prop_tag',
                 'label' => 'Asset Tag',
             ],
+            'po_number' => [
+                'attribute' => 'po_number',
+                'label' => 'PO Number',
+            ],
             [
                 'value' => function(Asset $model) {
                     $item = $model->inventory;
@@ -857,15 +885,15 @@ class TicketController extends Controller
             ],
             'unit_price' => [
                 'attribute' => 'unit_price',
+                'value' => function (Part $model) {
+                    return '$' . $model->unit_price;
+                }
             ],
             'pending_delivery' => [
                 'attribute' => 'pending_delivery',
                 'value' => function(Part $model) {
                     return $model->pending_delivery == 1? 'Yes' : 'No';
                 },
-            ],
-            'note' => [
-                'attribute' => 'note',
             ],
             [
                 'attribute' => 'last_modified_by',

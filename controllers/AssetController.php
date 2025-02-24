@@ -9,6 +9,7 @@ use app\models\AssetSearch;
 use Yii;
 use yii\base\Model;
 use yii\filters\VerbFilter;
+use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -71,10 +72,10 @@ class AssetController extends Controller
     public function actionCreate()
     {
         $models = [new Asset()];
-        $ticket_id = $this->request->get('ticket_id');
-        $unknown_ticket_id = $this->request->get('unknown_ticket_id');
+        $ticket_id = Yii::$app->request->get('ticket_id');
 
         if ($this->request->isPost) {
+            // figure out how many Asset models we need to upload
             $count = count($this->request->post('Asset'));
             for ($i = 0; $i < $count; $i++) {
                 $models[$i] = new Asset();
@@ -82,22 +83,15 @@ class AssetController extends Controller
             // validate and load
             if (Asset::loadMultiple($models, $this->request->post()) && Asset::validateMultiple($models)) {
                 foreach ($models as $model) {
-                    // do not run validation since we already did
+                    // do not run validation since we already did, save each one
                     $model->save(false);
                 }
-                // redirect to ticket update since we usually add assets from the update ticket page
-                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/asset/view", 'id' => $model->id]);
             } else {
                 // form errors
-                $errors = [];
-                foreach ($models as $model) {
-                    if ($model->hasErrors()) {
-                        $errors[$model->new_prop_tag] = $model->getErrors();
-                    }
-                }
-                Yii::$app->session->setFlash('assetErrors', $errors);
-                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/asset/view", 'id' => $model->id]);
+                Yii::$app->session->setFlash('error', Html::errorSummary($models));
+                return $this->redirect(Yii::$app->request->referrer);
             }
+            return $this->redirect("/ticket/update?id=$ticket_id&tabPane=pills-assets-tab");
         } else {
             foreach ($models as $model) {
                 $model->loadDefaultValues();
@@ -108,7 +102,6 @@ class AssetController extends Controller
         return $this->renderAjax('create', [
             'models' => $models,
             'ticket_id' => $ticket_id,
-            'unknown_ticket_id' => $unknown_ticket_id
         ]);
     }
 

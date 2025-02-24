@@ -9,6 +9,7 @@ use app\models\TimeEntry;
 use yii\filters\VerbFilter;
 use app\models\TimeEntrySearch;
 use Yii;
+use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -88,21 +89,14 @@ class TimeEntryController extends Controller
             // validate and load
             if (TimeEntry::loadMultiple($models, $this->request->post()) && TimeEntry::validateMultiple($models)) {
                 foreach ($models as $model) {
-                    // do not run validation since we already did
+                    // do not run validation since we already did, save each one
                     $model->save(false);
                 }
-                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/time-entry/view", 'id' => $model->id]);
             } else {
-                // form errors
-                $errors = [];
-                foreach ($models as $model) {
-                    if ($model->hasErrors()) {
-                        $errors[$model->user->username] = $model->getErrors();
-                    }
-                }
-                Yii::$app->session->setFlash('timeEntryErrors', $errors);
-                return $this->redirect(Yii::$app->request->referrer? [Yii::$app->request->referrer] : ["/time-entry/view", 'id' => $model->id]);
+                Yii::$app->session->setFlash('error', Html::errorSummary($models));
+                return $this->redirect(Yii::$app->request->referrer);
             }
+            return $this->redirect("/ticket/update?id=$ticket_id&tabPane=pills-ticket-notes-tab");
         } else {
             foreach ($models as $model) {
                 $model->loadDefaultValues();

@@ -22,7 +22,6 @@ $this->title = 'Billing Detail Report';
     </div>
     <div>
         <div>
-            <strong>Select a date range</strong>
             <?= $this->render('date-form', ['startDate' => $startDate, 'endDate' => $endDate]) ?>
             <!-- Button trigger modal -->
             <button type="button" class="d-inline-block btn btn-primary" data-bs-toggle="modal" data-bs-target="#labor-rates-modal">
