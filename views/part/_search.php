@@ -28,6 +28,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'part_name') ?>
 
+    <?= $form->field($model, 'po_number') ?>
+
     <?php // echo $form->field($model, 'quantity') ?>
 
     <?php // echo $form->field($model, 'unit_price') ?>

@@ -39,6 +39,7 @@ AppAsset::register($this);
             'quantity',
             'unit_price',
             'pending_delivery',
+            'po_number',
             'created',
             'modified',
         ],

@@ -35,6 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'last_modified_by_user_id',
             'part_number',
             'part_name',
+            'po_number',
             //'quantity',
             //'unit_price',
             //'pending_delivery',

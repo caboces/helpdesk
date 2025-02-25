@@ -61,6 +61,9 @@ use yii\bootstrap5\ActiveForm;
                 <div class="col">
                     <?= $form->field($model, "[$index]pending_delivery")->radioList(['0' => 'Yes', '1' => 'No']) ?>
                 </div>
+                <div class="col">
+                    <?= $form->field($model, "[$index]po_number")->textInput(['maxlength' => true]) ?>
+                </div>
             </div>
             <div class="form-group">
                 <?= Html::button('Remove', ['class' => 'dynamic-form-button-remove btn btn-outline-secondary border-imperial-red imperial-red btn-skinny']); ?>

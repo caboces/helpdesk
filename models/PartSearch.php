@@ -18,7 +18,7 @@ class PartSearch extends Part
     {
         return [
             [['id', 'ticket_id', 'last_modified_by_user_id', 'quantity', 'pending_delivery'], 'integer'],
-            [['part_number', 'part_name', 'note', 'created', 'modified'], 'safe'],
+            [['part_number', 'part_name', 'po_number', 'note', 'created', 'modified'], 'safe'],
             [['unit_price'], 'number'],
         ];
     }
@@ -65,6 +65,7 @@ class PartSearch extends Part
             'quantity' => $this->quantity,
             'unit_price' => $this->unit_price,
             'pending_delivery' => $this->pending_delivery,
+            'po_number' => $this->po_number,
             'created' => $this->created,
             'modified' => $this->modified,
         ]);
