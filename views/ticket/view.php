@@ -1,26 +1,14 @@
 <?php
 
-use app\assets\AppAsset;
-use app\assets\TicketAsset;
 use app\models\User;
 use yii\helpers\Url;
 use yii\helpers\Html;
-use yii\web\YiiAsset;
-use app\models\JobType;
 use app\models\Building;
-use app\models\District;
-use app\models\Division;
-use app\models\JobStatus;
 use app\models\TimeEntry;
 use yii\bootstrap5\Modal;
-use app\models\Department;
-use app\models\JobCategory;
-use app\models\JobPriority;
-use yii\widgets\DetailView;
 use app\models\DistrictBuilding;
 use app\models\DepartmentBuilding;
 use yii\bootstrap5\ButtonDropdown;
-use app\models\TechTicketAssignment;
 
 /** @var yii\web\View $this */
 /** @var app\models\Ticket $model */
@@ -34,9 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <!-- modal window for time entries -->
     <?php 
         Modal::begin([
-                'title' => 'Add Times',
-                'id' => 'time-entry-modal',
-                'size' => 'modal-lg',
+            'title' => 'Add Times',
+            'id' => 'time-entry-modal',
+            'size' => 'modal-lg',
         ]);
 
         echo '<div id="time-entry-modal-content"></div>';

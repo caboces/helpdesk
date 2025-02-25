@@ -65,6 +65,7 @@ class Ticket extends \yii\db\ActiveRecord
             [['requester'], 'string', 'max' => 100],
             [['location'], 'string', 'max' => 100 ],
             [['requester_email'], 'string', 'max' => 100],
+            [['requester_email'], 'email'],
             [['requester_phone'], 'string', 'max' => 100],
             
             [['job_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => JobCategory::class, 'targetAttribute' => ['job_category_id' => 'id']],
@@ -271,15 +272,6 @@ class Ticket extends \yii\db\ActiveRecord
     public function getParts()
     {
         return $this->hasMany(Part::class,['ticket_id'=>'id']); 
-    }
-
-    /**
-     * Junction relation to get ticket notes attached to a ticket via part table
-     *
-     * */
-    public function getTicketNotes()
-    {
-        return $this->hasMany(TicketNote::class,['ticket_id'=>'id']); 
     }
 
     /**

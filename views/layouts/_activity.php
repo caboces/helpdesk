@@ -14,5 +14,5 @@ $this->title = 'Activity';
         </svg>
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
-    <?php echo ActivityWidget::widget([]); ?>
+    <?php echo ActivityWidget::widget(isset($ticketId) ? ['ticketId' => $ticketId] : []); ?>
 </div>

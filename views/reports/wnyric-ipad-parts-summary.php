@@ -48,7 +48,7 @@ $this->title = 'WNYRIC iPad Parts Summary';
                             <td><?= Html::encode($district['name']) ?></td>
                             <td><?= Html::encode($ticket['summary']) ?></td>
                             <td>&nbsp;</td>
-                            <td>$<?= Html::encode(number_format($ticket['totalPartsCost'], 2)) ?></td>
+                            <td><?= Html::encode(Yii::$app->formatter->asCurrency($ticket['totalPartsCost'])) ?></td>
                         </tr>
                         <?php endforeach; ?>
                         <tr>
@@ -56,7 +56,7 @@ $this->title = 'WNYRIC iPad Parts Summary';
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>Total for <?= Html::encode($district['name']) ?></td>
-                            <td>$<?= Html::encode($district['totalPartsCost']) ?></td>
+                            <td><?= Html::encode(Yii::$app->formatter->asCurrency($district['totalPartsCost'])) ?></td>
                         </tr>
                         <?php endforeach; ?>
                         </tbody>
@@ -66,7 +66,7 @@ $this->title = 'WNYRIC iPad Parts Summary';
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>Total for WNYRIC</td>
-                                <td>$<?= Html::encode(number_format($model['totalPartsCost'], 2)) ?></td>
+                                <td><?= Html::encode(Yii::$app->formatter->asCurrency($model['totalPartsCost'])) ?></td>
                             </tr>
                         </tfoot>
                     </table>

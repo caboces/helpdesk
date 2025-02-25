@@ -68,8 +68,8 @@ $this->title = 'WNYRIC iPad Repair Billing Report';
                                 <td><?= Html::encode($ticket['summary']) ?></td>
                                 <td><?= Html::encode($ticket['description']) ?></td>
                                 <td><?= date('F j, Y', strtotime($ticket['modified'])) ?></td>
-                                <td><?= Html::encode(number_format($ticket['totalLaborHours'], 2)) ?></td>
-                                <td>$<?= Html::encode(number_format($ticket['totalLaborCost'], 2)) ?></td>
+                                <td><?= Html::encode($ticket['totalLaborHours']) ?></td>
+                                <td><?= Html::encode(Yii::$app->formatter->asCurrency($ticket['totalLaborCost'])) ?></td>
                             </tr>
                             <?php foreach($ticket['parts'] as $index => $part): ?>
                             <tr class="hover-row">
@@ -78,8 +78,8 @@ $this->title = 'WNYRIC iPad Repair Billing Report';
                                 <td><?= Html::encode($part['part_name']) ?></td>
                                 <td><?= Html::encode($part['note']) ?></td>
                                 <td><?= Html::encode($part['quantity']) ?></td>
-                                <td>$<?= Html::encode(number_format($part['unit_price'], 2)) ?></td>
-                                <td>$<?= Html::encode(number_format($part['quantity'] * $part['unit_price'], 2)) ?></td>
+                                <td><?= Html::encode(Yii::$app->formatter->asCurrency($part['unit_price'])) ?></td>
+                                <td><?= Html::encode(Yii::$app->formatter->asCurrency($part['quantity'] * $part['unit_price'])) ?></td>
                             </tr>
                             <?php endforeach ?>
                             <?php foreach($ticket['assets'] as $index => $asset): ?>
@@ -98,10 +98,10 @@ $this->title = 'WNYRIC iPad Repair Billing Report';
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td class="fst-italic">Totals for Ticket ID #<?= Html::encode($ticket['id']) ?></td> 
-                                <td>Labor Cost: $<?= Html::encode(number_format($ticket['totalLaborCost'], 2)) ?></td>
-                                <td>Parts: $<?= Html::encode(number_format($ticket['totalPartsCost'], 2)) ?></td>
-                                <td>Labor Hours: <?= Html::encode(number_format($ticket['totalLaborHours'], 2)) ?></td>
-                                <td>Total: $<?= Html::encode(number_format($ticket['totalCost'], 2)) ?></td>
+                                <td>Labor Cost: $<?= Html::encode(Yii::$app->formatter->asCurrency($ticket['totalLaborCost'])) ?></td>
+                                <td>Parts: $<?= Html::encode(Yii::$app->formatter->asCurrency($ticket['totalPartsCost'])) ?></td>
+                                <td>Labor Hours: <?= Html::encode(Yii::$app->formatter->asCurrency($ticket['totalLaborHours'])) ?></td>
+                                <td>Total: $<?= Html::encode(Yii::$app->formatter->asCurrency($ticket['totalCost'])) ?></td>
                             </tr>
                             <?php endforeach ?>
                             <!-- Totals row for each district -->
@@ -109,10 +109,10 @@ $this->title = 'WNYRIC iPad Repair Billing Report';
                                 <td class="fst-italic" style="text-align:right;">Totals for <?= Html::encode($district['name']) ?></td> 
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td>Labor Cost: $<?= Html::encode(number_format($district['totalLaborCost'], 2)) ?></td>
-                                <td>Parts: $<?= Html::encode(number_format($district['totalPartsCost'], 2)) ?></td>
-                                <td>Labor Hours: <?= Html::encode(number_format($district['totalLaborHours'], 2)) ?></td>
-                                <td>Total: $<?= Html::encode(number_format($district['totalCost'], 2)) ?></td>
+                                <td>Labor Cost: $<?= Html::encode(Yii::$app->formatter->asCurrency($district['totalLaborCost'])) ?></td>
+                                <td>Parts: $<?= Html::encode(Yii::$app->formatter->asCurrency($district['totalPartsCost'])) ?></td>
+                                <td>Labor Hours: <?= Html::encode(Yii::$app->formatter->asCurrency($district['totalLaborHours'], 2)) ?></td>
+                                <td>Total: $<?= Html::encode(Yii::$app->formatter->asCurrency($district['totalCost'])) ?></td>
                             </tr>
                             <?php endforeach ?>
                         </tbody>
@@ -132,9 +132,9 @@ $this->title = 'WNYRIC iPad Repair Billing Report';
                                         $totalCost += array_sum(array_column($district['tickets'], 'totalCost'));
                                     } 
                                 ?>
-                                <td>$<?= Html::encode(number_format($totalPartsCost, 2)) ?><!-- Part * quantity = parts total. --></td>
-                                <td><?= Html::encode(number_format($totalTechTime, 2)) ?><!-- tech time total. --></td>
-                                <td class="fw-bold">$<?= Html::encode(number_format($totalCost, 2)) ?><!-- cost total. --></td>
+                                <td><?= Html::encode(Yii::$app->formatter->asCurrency($totalPartsCost)) ?><!-- Part * quantity = parts total. --></td>
+                                <td><?= Html::encode(Yii::$app->formatter->asCurrency($totalTechTime)) ?><!-- tech time total. --></td>
+                                <td class="fw-bold">$<?= Html::encode(Yii::$app->formatter->asCurrency($totalCost)) ?><!-- cost total. --></td>
                             </tr>
                         </tfoot>
                     </table>

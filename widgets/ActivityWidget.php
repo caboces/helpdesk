@@ -19,11 +19,18 @@ use yii\bootstrap5\Html;
 
 class ActivityWidget extends Widget
 {
+
+    public $ticketId = null;
+
     // Note to self: handling the data/input should go here rather than in run
     public function init()
     {
         parent::init();
         ob_start();
+    }
+
+    public function __construct($config = []) {
+        parent::__construct($config);
     }
 
     public function run()
@@ -32,7 +39,13 @@ class ActivityWidget extends Widget
         $output = ob_get_clean();
 
         $db = \Yii::$app->db;
-        $entries = $db->createCommand('SELECT * FROM activity ORDER BY created DESC LIMIT 10')->queryAll();
+        $entries = [];
+        // if ticket id is specified, get activities with this ticket id.
+        if ($this->ticketId) {
+            $entries = $db->createCommand('SELECT * FROM activity WHERE activity.ticket_id = :ticketId ORDER BY created DESC LIMIT 10', ['ticketId' => $this->ticketId])->queryAll();
+        } else {
+            $entries = $db->createCommand('SELECT * FROM activity ORDER BY created DESC LIMIT 10')->queryAll();
+        }
 
         foreach ($entries as $entry) {
             // this is the user object
@@ -44,7 +57,6 @@ class ActivityWidget extends Widget
             $icon = $this->typeIcon($type);
             $description = $entry['description'];
             $created = $entry['created'];
-
 
             // trying to reduce ugliness by chunking up the data
             // $header = 'Ticket ' . $ticket_id . ' (' . $summary . ')';
@@ -70,6 +82,14 @@ class ActivityWidget extends Widget
             ';
 
             echo $entry_test;
+        }
+
+        if (count($entries) <= 0) {
+            echo "
+            <div>
+                No activity for this ticket.
+            </div>
+            ";
         }
     }
 

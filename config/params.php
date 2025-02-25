@@ -21,5 +21,8 @@ return [
         // other params settings below
         // 'bsVersion' => '5.x',
         // 'adminEmail' => 'admin@example.com'
-    ]
+    ],
+    'recaptcha' => [
+        'apikey' => '6LcEMsEqAAAAAHb_vxGCjgC8iY5Xm2IbUAGDvEpE',
+    ],
 ];

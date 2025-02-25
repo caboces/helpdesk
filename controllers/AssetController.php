@@ -59,6 +59,7 @@ class AssetController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'main';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -120,6 +121,7 @@ class AssetController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $this->layout = 'blank';
         return $this->render('update', [
             'model' => $model,
         ]);

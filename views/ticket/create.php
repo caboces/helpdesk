@@ -49,8 +49,6 @@ TicketCreateAsset::register($this);
             'assetColumns' => $assetColumns,
             'partsProvider' => $partsProvider,
             'partsColumns' => $partsColumns,
-            'ticketNotesProvider' => $ticketNotesProvider,
-            'ticketNotesColumns' => $ticketNotesColumns,
             'ticketDraft' => $ticketDraft,
         ]
     ) ?>

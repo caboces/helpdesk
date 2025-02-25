@@ -1,14 +1,10 @@
 <?php
 
-use app\models\Asset;
-use app\models\Part;
-use app\models\TicketNote;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use yii\grid\GridView;
 use app\models\TimeEntry;
-use app\widgets\Alert;
 use yii\bootstrap5\Modal;
 use yii\grid\ActionColumn;
 use kartik\select2\Select2;
@@ -51,15 +47,6 @@ use yii\bootstrap5\ButtonDropdown;
 		<div id="part-modal-content"></div>
 	<?php Modal::end(); ?>
 
-	<!-- Ticket note creation modal -->
-	<?php Modal::begin([
-		'title' => 'Add Ticket Journal Entry',
-		'id' => 'ticket-note-modal',
-		'size' => 'modal-lg',
-	]); ?>
-		<div id="ticket-note-modal-content"></div>
-	<?php Modal::end(); ?>
-
 	<?php $form = ActiveForm::begin(); ?>
 
 	<!-- Ticket draft object, hidden. Only here if we are creating a new ticket -->
@@ -70,18 +57,10 @@ use yii\bootstrap5\ButtonDropdown;
 	<!-- action buttons -->
 	<div class='container-fluid p-2 | bg-dark shadow-sm'>
 		<?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
-		<!-- Add tech note -->
-		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16" aria-hidden="true">
-				<path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
-				<path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
-				<path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
-			</svg> New tech journal entry', [
-				'value' => Url::to("/ticket-note/create?ticket_id=$model->id"),
-				'class' => 'ticket-note-button btn btn-primary bg-iris border-iris',
-				// disable if creating a new ticket
-				'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
-		]); ?>
+
+
 		<!-- Add asset -->
+		<?php if (Yii::$app->controller->action->id == 'update'): ?>
 		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
 				<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
 			</svg> Add assets', [
@@ -90,7 +69,11 @@ use yii\bootstrap5\ButtonDropdown;
 			// disable if creating a new ticket
 			'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
 		]); ?>
+		<?php endif; ?>
+
+
 		<!-- Add part -->
+		<?php if (Yii::$app->controller->action->id == 'update'): ?>
 		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
 				<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
 			</svg> Add parts', [
@@ -99,7 +82,11 @@ use yii\bootstrap5\ButtonDropdown;
 			// disable if creating a new ticket
 			'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
 		]); ?>
+		<?php endif; ?>
+
+
 		<!-- Add time entry -->
+		<?php if (Yii::$app->controller->action->id == 'update'): ?>
 		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16" aria-hidden="true">
 				<path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
 				<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
@@ -109,6 +96,9 @@ use yii\bootstrap5\ButtonDropdown;
 			// disable if creating a new ticket
 			'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
 		]); ?>
+		<?php endif; ?>
+
+
 		<!-- Depending on the current status level, show the reopen button -->
 		<?php
 		// reopen the ticket. do not show this option on ticket creation screen.
@@ -173,6 +163,7 @@ use yii\bootstrap5\ButtonDropdown;
 		) ?>
 
 		<!-- More options -->
+		<?php if (Yii::$app->controller->action->id == 'update'): ?>
 		<?= ButtonDropdown::widget([
 			'label' => 'More',
 			'dropdown' => [
@@ -189,9 +180,10 @@ use yii\bootstrap5\ButtonDropdown;
 				],
 			],
 		]) ?>
+		<?php endif; ?>
 	</div>
 
-	<!-- pill nav -->
+	<!-- pill nav. Only show certain options in the create/update pages -->
 	<ul class="nav nav-pills" id="pills-tab" role="tablist">
 		<li class="nav-item" role="presentation">
 			<button class="nav-link active" id="pills-general-tab" data-bs-toggle="pill" data-bs-target="#pills-general" type="button" role="tab" aria-controls="pills-general" aria-selected="true">General</button>
@@ -199,18 +191,21 @@ use yii\bootstrap5\ButtonDropdown;
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="pills-technicians-tab" data-bs-toggle="pill" data-bs-target="#pills-technicians" type="button" role="tab" aria-controls="pills-technicians" aria-selected="false">Technicians</button>
 		</li>
+		<?php if (Yii::$app->controller->action->id == 'update'): ?>
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="pills-assets-tab" data-bs-toggle="pill" data-bs-target="#pills-assets" type="button" role="tab" aria-controls="pills-assets" aria-selected="false">Assets</button>
 		</li>
+		<?php endif; ?>
+		<?php if (Yii::$app->controller->action->id == 'update'): ?>
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="pills-parts-tab" data-bs-toggle="pill" data-bs-target="#pills-parts" type="button" role="tab" aria-controls="pills-parts" aria-selected="false">Parts</button>
 		</li>
+		<?php endif; ?>
+		<?php if (Yii::$app->controller->action->id == 'update'): ?>
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="pills-time-entries-tab" data-bs-toggle="pill" data-bs-target="#pills-time-entries" type="button" role="tab" aria-controls="pills-time-entries" aria-selected="false">Time Entries</button>
 		</li>
-		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-ticket-notes-tab" data-bs-toggle="pill" data-bs-target="#pills-ticket-notes" type="button" role="tab" aria-controls="pills-ticket-notes" aria-selected="false">Ticket Journal</button>
-		</li>
+		<?php endif; ?>
 	</ul>
 
 	<!-- pill content -->
@@ -608,42 +603,6 @@ use yii\bootstrap5\ButtonDropdown;
 						],
 					]); ?>
 				<?php Pjax::end(); ?>
-				</div>
-			</div>
-		</div>
-		<div class="tab-pane fade" id="pills-ticket-notes" role="tabpanel" aria-labelledby="pills-ticket-notes">
-			<div class="subsection-info-block">
-				<div>
-					<h2>Ticket Journal</h2>
-					<p>These are the journal entries left by other techs about the ticket.</p>
-					<div id="spinner-ticket-notes" class="spinner-border" role="status">
-						<span class="visually-hidden">Loading...</span>
-					</div>
-					<!-- Add tech note 
-					 I called it ticket_note internally, but we'll say "tech journal" in the frontend i guess 
-					 -->
-					<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16" aria-hidden="true">
-							<path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
-							<path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
-							<path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
-						</svg> New tech journal entry', [
-							'value' => Url::to("/ticket-note/create?ticket_id={$model->id}&redirect=/ticket/".Yii::$app->controller->action->id),
-							'class' => 'ticket-note-button btn btn-primary bg-iris border-iris',
-							// disable if creating a new ticket
-							'disabled' => (Yii::$app->controller->action->id == 'create') ? true : false,
-					]); ?>
-					<div id="ticket-notes-stats" class="d-flex flex-wrap justify-content-evenly | mb-2">
-						<div class="table-container container-fluid overflow-x-scroll">
-							<?php
-								Pjax::begin(['id' => 'ticket-note-entries']);
-								echo GridView::widget([
-									'dataProvider' => $ticketNotesProvider,
-									'columns' => $ticketNotesColumns,
-								]); 
-								Pjax::end();
-							?>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>

@@ -30,16 +30,6 @@ $this->title = 'Frequently Asked Questions';
                 </div>
             </div>
             <div class="accordion-item">
-                <h3 class="accordion-header" id="flush-headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                        How do I add a tech journal entry to a ticket?
-                    </button>
-                </h3>
-                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample1">
-                    <div class="accordion-body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum natus officiis cupiditate libero quod ut laborum pariatur fugit voluptatibus rerum!</div>
-                </div>
-            </div>
-            <div class="accordion-item">
                 <h3 class="accordion-header" id="flush-headingThree">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
                         How do I assign multiple technicians to a ticket?

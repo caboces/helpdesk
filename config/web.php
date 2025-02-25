@@ -71,6 +71,7 @@ $config = [
         'formatter' => [
             'class' => 'yii\i18n\Formatter',
             'nullDisplay' => '', // Set nullDisplay to an empty string
+            'currencyCode' => '$',
         ],
     ],
     'modules' => [

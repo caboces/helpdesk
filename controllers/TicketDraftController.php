@@ -96,7 +96,7 @@ class TicketDraftController extends Controller
         // TODO not great that this is in the source code, but yii2 has 0 support for env files without installing another package.
         // problem is, this VM has some funky crap with the internet connection, so its hard to install new dependencies. 
         // Fix it later
-        $reCaptchaPrivateApiKey = '6LcEMsEqAAAAAHb_vxGCjgC8iY5Xm2IbUAGDvEpE';
+        $reCaptchaPrivateApiKey = Yii::$app->params['recaptcha']['apikey'];
         // 0 is very likely a bot, 1.0 is clean. So, treat 0.5 as the threshold to determine if they are a bot or not.
         $reCaptchaActionThreshold = 0.5;
         $model = new TicketDraft();
@@ -164,12 +164,12 @@ class TicketDraftController extends Controller
 
             if ($model->load($this->request->post()) && $model->validate()) {
                 // see if district/district building or division/department were properly filled out
-                if ($model->customer_type_id == 1 && (!$model->division_id || (!$model->department || !$model->department_id))) {
-                    Yii::$app->session->setFlash('textError', 'You must select both options for Division and Department since you selected a BOCES Customer Type.');
+                if ($model->customer_type_id == 1 && (!$model->department_id || !$model->department_building_id)) {
+                    Yii::$app->session->setFlash('textError', "You must select both options for Department and Department Building since you selected a 'BOCES' Customer Type.");
                     return $this->redirect(['/ticket-draft/create', 'model' => $model]);
                 }
                 if (($model->customer_type_id == 2 || $model->customer_type_id == 4) && (!$model->district_id || !$model->district_building_id)) {
-                    Yii::$app->session->setFlash('textError', 'You must select both options for District and Building since you selected a DISTRICT Customer Type.');
+                    Yii::$app->session->setFlash('textError', "You must select both options for District and Building since you selected a 'DISTRICT' Customer Type.");
                     return $this->redirect(['/ticket-draft/create', 'model' => $model]);
                 }
                 // save the model

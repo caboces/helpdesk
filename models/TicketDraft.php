@@ -56,6 +56,7 @@ class TicketDraft extends \yii\db\ActiveRecord
             [['summary'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 500],
             [['email', 'phone'], 'string', 'max' => 45],
+            [['email'], 'email', 'message' => 'Email must be a valid email address.'],
             [['ip_address'], 'string', 'max' => 48],
             [['accept_language', 'user_agent'], 'string', 'max' => 255],
             [['customer_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => CustomerType::class, 'targetAttribute' => ['customer_type_id' => 'id']],

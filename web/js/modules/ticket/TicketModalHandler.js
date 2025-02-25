@@ -38,12 +38,6 @@ const TicketModalHandler = (() => {
                 content: '#part-modal-content',
                 'submit-button': '.submit-part-modal'
             },
-            ticketNote: {
-                modal: '#ticket-note-modal',
-                button: '.ticket-note-button',
-                content: '#ticket-note-modal-content',
-                'submit-button': '.submit-ticket-note-modal'
-            },
             // add more if required
         },
         loadEvents: function() {

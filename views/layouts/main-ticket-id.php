@@ -1,0 +1,27 @@
+<?php
+
+/** @var \yii\web\View $this */
+/** @var string $content */
+
+use app\assets\AppAsset;
+use yii\bootstrap5\Html;
+use app\widgets\Alert;
+
+\yii\web\YiiAsset::register($this);
+AppAsset::register($this);
+$this->beginContent('@app/views/layouts/base.php');
+?>
+
+<!-- content start -->
+<main role="main" class="row">
+    <div class="col-12 col-xxl-8 flex-1 | px-2 py-5 px-lg-5">
+        <div class="container-fluid">
+            <?= Alert::widget() ?>
+            <?= $content ?>
+        </div>
+    </div>
+
+    <?php echo $this->render('_activity', ['ticketId' => $this->params['ticketId']]); ?>
+</main>
+
+<?php $this->endContent() ?>

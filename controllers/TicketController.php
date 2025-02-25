@@ -35,7 +35,6 @@ use app\models\TicketAssignmentSearch;
 use app\models\TicketClosedResolvedSearch;
 use app\models\Asset;
 use app\models\TicketDraft;
-use app\models\TicketNote;
 use app\models\TicketRecentlyDeletedSearch;
 use yii\data\ActiveDataProvider;
 use yii\grid\ActionColumn;
@@ -116,7 +115,7 @@ class TicketController extends Controller
             ]
         ]);
 
-        $this->layout = 'blank';
+        $this->layout = 'main';
         return $this->render('index', [
             // search assigned tickets
             'ticketAssignmentSearchModel' => $ticketAssignmentSearchModel,
@@ -154,6 +153,8 @@ class TicketController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'main-ticket-id';
+        Yii::$app->view->params['ticketId'] = $id;
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -268,7 +269,6 @@ class TicketController extends Controller
 
         $assetGridProps = $this->getTicketAssetGridProperties($model);
         $partsGridProps = $this->getTicketPartsGridProperties($model);
-        $ticketNoteGridProps = $this->getTicketNotesGridProperties($model);
 
         $this->layout = 'blank-container';
         return $this->render('create', [
@@ -299,8 +299,6 @@ class TicketController extends Controller
             'assetColumns' => $assetGridProps['columns'],
             'partsProvider' => $partsGridProps['provider'],
             'partsColumns' => $partsGridProps['columns'],
-            'ticketNotesProvider' => $ticketNoteGridProps['provider'],
-            'ticketNotesColumns' => $ticketNoteGridProps['columns'],
             'ticketDraft' => json_encode($ticketDraft),
         ]);
     }
@@ -377,8 +375,9 @@ class TicketController extends Controller
 
                 $assetGridProps = $this->getTicketAssetGridProperties($model);
                 $partsGridProps = $this->getTicketPartsGridProperties($model);
-                $ticketNoteGridProps = $this->getTicketNotesGridProperties($model);
 
+                $this->layout = 'main-ticket-id';
+                Yii::$app->view->params['ticketId'] = $model->id;
                 return $this->render('update', [
                     'model' => $model,
                     'partModel' => new Part(),
@@ -408,8 +407,6 @@ class TicketController extends Controller
                     'assetColumns' => $assetGridProps['columns'],
                     'partsProvider' => $partsGridProps['provider'],
                     'partsColumns' => $partsGridProps['columns'],
-                    'ticketNotesProvider' => $ticketNoteGridProps['provider'],
-                    'ticketNotesColumns' => $ticketNoteGridProps['columns'],
                 ]);
             } else {
                 // ticket isn't active!
@@ -904,47 +901,5 @@ class TicketController extends Controller
             ],
         ];
         return ['provider' => $partsProvider, 'columns' => $partsColumns];
-    }
-
-    /**
-     * Get the ticket note columns and data provider for the /create and /update ticket pages
-     */
-    private function getTicketNotesGridProperties($model) {
-        // get ticket note provider and columns
-        $ticketNotesProvider = new ActiveDataProvider([
-            'query' => TicketNote::find()->where(['ticket_id' => $model->id]),
-            'sort' => [
-                'defaultOrder' => [
-                    'created' => SORT_ASC
-                ]
-            ]
-        ]);
-        // ticket note columns
-        $ticketNotesColumns = [
-            [
-                'class' => ActionColumn::class,
-                'template' => '{delete}',
-                'urlCreator' => function ($action, TicketNote $model, $key, $index) {
-                    return Url::to(['ticket-note/' . $action, 'id' => $model->id]);
-                }
-            ],
-            'note' => [
-                'attribute' => 'note',
-            ],
-            [
-                'attribute' => 'last_modified_by',
-                'value' => function(TicketNote $model) {
-                    return '<a href="/user/view?id=' . ($model->last_modified_by_user_id != null ? $model->last_modified_by_user_id : '') . '">' . ($model->last_modified_by_user_id != null ? $model->lastModifiedByUser->username : '') . '</a>';
-                },
-                'format' => 'raw',
-            ],
-            'created' => [
-                'attribute' => 'created',
-                'value' => function (TicketNote $model) {
-                    return Yii::$app->formatter->asDate($model->created, 'php:F jS, Y');
-                }
-            ]
-        ];
-        return ['provider' => $ticketNotesProvider, 'columns' => $ticketNotesColumns];
     }
 }

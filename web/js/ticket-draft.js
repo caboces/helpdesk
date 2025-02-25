@@ -4,7 +4,7 @@
  * Prepares onchange stuff for the ticket draft form
  */
 
-import ChangeTicketDraftFieldsHandler from "./modules/ticket-draft/ChangeTicketDraftFieldsHandler"
+import ChangeTicketDraftFieldsHandler from "./modules/ticket-draft/ChangeTicketDraftFieldsHandler.js"
 
 jQuery(() => {
     const onChangeModule = ChangeTicketDraftFieldsHandler()

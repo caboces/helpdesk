@@ -51,7 +51,7 @@ $this->title = 'NON-WNYRIC iPad Repair Labor Report';
                             <td><?= Html::encode($ticket['summary']) ?></td>
                             <td>&nbsp;</td>
                             <td><?= Html::encode(number_format($ticket['totalTechTime'], 2)) ?></td>
-                            <td>$<?= Html::encode(number_format($ticket['totalLaborCost'], 2)) ?></td>
+                            <td>$<?= Html::encode(Yii::$app->formatter->asCurrency($ticket['totalLaborCost'])) ?></td>
                             <td><?= Html::encode($ticket['requester']) ?></td>
                         </tr>
                         <?php endforeach; ?>
@@ -61,7 +61,7 @@ $this->title = 'NON-WNYRIC iPad Repair Labor Report';
                             <td>&nbsp;</td>
                             <td class="fst-italic">Total for <?= Html::encode($district['name']) ?></td>
                             <td><?= Html::encode(number_format($district['totalTechTime'], 2)) ?></td>
-                            <td>$<?= Html::encode(number_format($district['totalLaborCost'], 2)) ?></td>
+                            <td>$<?= Html::encode(Yii::$app->formatter->asCurrency($district['totalLaborCost'])) ?></td>
                             <td>&nbsp;</td>
                         </tr>
                         <?php endforeach; ?>
@@ -73,7 +73,7 @@ $this->title = 'NON-WNYRIC iPad Repair Labor Report';
                                 <td>&nbsp;</td>
                                 <td>Total for WNYRIC</td>
                                 <td><?= Html::encode(number_format($model['totalTechTime'], 2)) ?></td>
-                                <td>$<?= Html::encode(number_format($model['totalLaborCost'], 2)) ?></td>
+                                <td><?= Html::encode(Yii::$app->formatter->asCurrency($model['totalLaborCost'])) ?></td>
                                 <td>&nbsp;</td>
                             </tr>
                         </tfoot>

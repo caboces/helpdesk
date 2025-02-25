@@ -220,7 +220,7 @@ class ReportsController extends Controller
             ]
         ];
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('billing-detail-report', [
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -275,7 +275,7 @@ class ReportsController extends Controller
             'itinerate_time'
         ];
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('master-ticket-summary', [
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -413,7 +413,7 @@ class ReportsController extends Controller
             ]
         ];
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('support-and-repair-labor-billing', [
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -555,7 +555,7 @@ class ReportsController extends Controller
             ]
         ];
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('support-and-repair-telecom-billing', [
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -608,7 +608,7 @@ class ReportsController extends Controller
             ]
         ];
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('technician-monthly-report',[
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -680,7 +680,7 @@ class ReportsController extends Controller
             }
         }
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('technician-detailed-monthly-report',[
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -718,12 +718,12 @@ class ReportsController extends Controller
                 'attribute' => 'parts_totals',
                 'label' => 'Parts Totals',
                 'value' => function($model) {
-                    return $model['parts_totals']? '$' . $model['parts_totals'] : '';
+                    return Yii::$app->formatter->asCurrency($model['parts_totals']?? 0, '$');
                 }
             ],
         ];
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('part-billing-summary',[
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -795,7 +795,7 @@ class ReportsController extends Controller
             $model['totalLaborCost'] += $district['totalLaborCost'];
         }
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('wnyric-ipad-repair-labor-report',[
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -849,7 +849,7 @@ class ReportsController extends Controller
             $model['totalPartsCost'] += $district['totalPartsCost'];
         }
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('wnyric-ipad-parts-summary',[
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -942,7 +942,7 @@ class ReportsController extends Controller
             }
         }
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('wnyric-ipad-repair-billing-report',[
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -1013,7 +1013,7 @@ class ReportsController extends Controller
             $model['totalLaborCost'] += $district['totalLaborCost'];
         }
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('non-wnyric-ipad-repair-labor-report',[
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -1056,7 +1056,7 @@ class ReportsController extends Controller
             ],
         ];
 
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('telecom-parts-report',[
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -1098,7 +1098,7 @@ class ReportsController extends Controller
             ->asArray()
             ->all();
 
-        $this->layout = 'blank';
+            $this->layout = 'blank-container';
         return $this->render('technicians-by-call-type-report',[
             'startDate' => $startDate,
             'endDate' => $endDate,

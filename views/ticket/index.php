@@ -714,5 +714,4 @@ $this->title = 'Ticket Management';
             </div>
         </div>
     </div>
-
 </div>

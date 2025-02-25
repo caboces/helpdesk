@@ -1,15 +1,11 @@
 <?php
 
-use app\assets\GridviewAsset;
-use app\assets\PillsTabAsset;
 use app\models\Inventory;
 use app\models\LoanedInventory;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
-use yii\widgets\Pjax;
-use Symfony\Component\VarDumper\VarDumper;
 
 /** @var yii\web\View $this */
 /** @var app\models\InventorySearch $searchModel */
@@ -18,9 +14,6 @@ use Symfony\Component\VarDumper\VarDumper;
 /** @var yii\data\ActiveDataProvider $loanedInvDataProvider */
 
 $this->title = 'Inventory';
-
-PillsTabAsset::register($this);
-GridviewAsset::register($this);
 
 ?>
 <div class="inventory-index">
