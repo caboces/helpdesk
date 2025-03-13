@@ -155,6 +155,16 @@ class Inventory extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Class]].
+     *
+     * @return \yii\db\ActiveQuery|VendorQuery
+     */
+    public function getClass()
+    {
+        return $this->hasOne(InventoryClass::class, ['class_id' => 'class_id']);
+    }
+
+    /**
      * {@inheritdoc}
      * @return InventoryQuery the active query used by this AR class.
      */
@@ -169,6 +179,6 @@ class Inventory extends \yii\db\ActiveRecord
      * @return \yii\db\ActiveQuery
      */
     public function getLoanedInventory() {
-        return $this->hasMany(LoanedInventory::class, ['new_prop_tag' => 'new_propg_tag'])->viaTable('{{%loaned_inventory}}', ['new_prop_tag' => 'new_prop_tag']);
+        return $this->hasMany(LoanedInventory::class, ['new_prop_tag' => 'new_prop_tag'])->viaTable('{{%loaned_inventory}}', ['new_prop_tag' => 'new_prop_tag']);
     }
 }

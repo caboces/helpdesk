@@ -13,6 +13,7 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@utils' => '@app/utils',
     ],
     'components' => [
         'authManager' => [
@@ -73,6 +74,12 @@ $config = [
             'nullDisplay' => '', // Set nullDisplay to an empty string
             'currencyCode' => '$',
         ],
+        'stringUtils' => [
+            'class' => 'app\utils\StringUtils',
+        ],
+        'dateUtils' => [
+            'class' => 'app\utils\DateUtils',
+        ]
     ],
     'modules' => [
         'gridview' =>  [

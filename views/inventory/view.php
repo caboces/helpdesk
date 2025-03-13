@@ -1,12 +1,13 @@
 <?php
 
+use app\models\Inventory;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
 /** @var app\models\Inventory $model */
 
-$this->title = 'View Asset: ' . $model->new_prop_tag;
+$this->title = 'View Inventory: ' . $model->new_prop_tag;
 $this->params['breadcrumbs'][] = ['label' => 'Inventories', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -29,20 +30,69 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'new_prop_tag',
                 'label' => 'Asset Tag',
             ],
-            'fund_id',
-            'bl_code',
-            'vendor_id',
-            'tagged',
+            'fund_id' => [
+                'label' => 'Funds',
+                'value' => function (Inventory $model) {
+                    return Html::tag('span', Html::tag('b', "$model->fund_id:&nbsp;") . $model->fund->fund_description);
+                },
+                'format' => 'raw'
+            ],
+            'bl_code' => [
+                'label' => 'Location',
+                'value' => function (Inventory $model) {
+                    return $model->blCode->bl_name;
+                }
+            ],
+            'vendor_id' => [
+                'label' => 'Vendor',
+                'value' => function (Inventory $model) {
+                    return $model->vendor->vendor_name;
+                }
+            ],
+            'tagged' => [
+                'label' => 'Tagged',
+                'value' => function (Inventory $model) {
+                    return $model->tagged === -1 ? 'No' : 'Yes';
+                }
+            ],
             'qty',
-            'purchased_date',
+            'purchased_date' => [
+                'label' => 'Purchased Date',
+                'value' => function (Inventory $model) {
+                    return Yii::$app->dateUtils->asDate($model->purchased_date);
+                }
+            ],
             'date_purchased_num',
-            'po',
-            'unit_price',
-            'total_price',
+            'po' => [
+                'label' => 'PO Number',
+                'attribute' => 'po',
+            ],
+            'unit_price' => [
+                'label' => 'Unit Price',
+                'value' => function (Inventory $model) {
+                    return Yii::$app->formatter->asCurrency($model->unit_price);
+                }
+            ],
+            'total_price' => [
+                'label' => 'Total Price',
+                'value' => function (Inventory $model) {
+                    return Yii::$app->formatter->asCurrency($model->total_price);
+                }
+            ],
             'useful_life',
             'old_prop_tag',
-            'entry_date',
-            'last_modified_date',
+            'entry_date' => [
+                'label' => 'Entry Date',
+                'value' => function (Inventory $model) {
+                    return Yii::$app->dateUtils->asDate($model->entry_date);
+                }
+            ],
+            'last_modified_date' => [
+                'label' => 'Last Modified Date',
+                'value' => function (Inventory $model) {
+                    return Yii::$app->dateUtils->asDate($model->last_modified_date);
+                }
+            ],
         ],
     ]) ?>
 

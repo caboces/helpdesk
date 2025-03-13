@@ -57,36 +57,52 @@ class InventorySearch extends Inventory
             return $dataProvider;
         }
 
-        // grid filtering conditions
+        // text input, exact conditions
         $query->andFilterWhere([
             'new_prop_tag' => $this->new_prop_tag,
-            'delete_code' => $this->delete_code,
+            'serial_number' => $this->serial_number,
+            'po_number' => $this->po,
             'tagged' => $this->tagged,
-            'qty' => $this->qty,
-            'purchased_date' => $this->purchased_date,
-            'date_purchased_num' => $this->date_purchased_num,
-            'unit_price' => $this->unit_price,
-            'total_price' => $this->total_price,
-            'useful_life' => $this->useful_life,
-            'deleted_date' => $this->deleted_date,
             'old_prop_tag' => $this->old_prop_tag,
             'donated_to_boces' => $this->donated_to_boces,
-            'donated_date' => $this->donated_date,
-            'has_inv' => $this->has_inv,
-            'entry_date' => $this->entry_date,
-            'last_modified_date' => $this->last_modified_date,
         ]);
 
-        $query->andFilterWhere(['like', 'fund_id', $this->fund_id])
-            ->andFilterWhere(['like', 'bl_code', $this->bl_code])
-            ->andFilterWhere(['like', 'class_id', $this->class_id])
-            ->andFilterWhere(['like', 'vendor_id', $this->vendor_id])
-            ->andFilterWhere(['like', 'item_description', $this->item_description])
-            ->andFilterWhere(['like', 'serial_number', $this->serial_number])
-            ->andFilterWhere(['like', 'po', $this->po])
-            ->andFilterWhere(['like', 'delete_status', $this->delete_status])
-            ->andFilterWhere(['like', 'date_deleted', $this->date_deleted])
-            ->andFilterWhere(['like', 'date_donated', $this->date_donated]);
+        // multiple selections/select2/IN clause
+        $query->andFilterWhere(['in', 'fund_id', $this->fund_id]);
+        $query->andFilterWhere(['in', 'bl_code', $this->bl_code]);
+        $query->andFilterWhere(['in', 'delete_code', $this->delete_code]);
+        $query->andFilterWhere(['in', 'class_id', $this->class_id]);
+        $query->andFilterWhere(['in', 'vendor_id', $this->vendor_id]);
+        $query->andFilterWhere(['in', 'useful_life', $this->useful_life]);
+        $query->andFilterWhere(['in', 'delete_status', $this->delete_status]);
+
+        // like/contains
+        $query->andFilterWhere([$params['item_description_order'], 'item_description', $this->item_description]);
+
+        // comparisons
+        $query->andFilterCompare('purchased_date', $this->purchased_date, $params['purchased_date_order']);
+        $query->andFilterCompare('unit_price', $this->unit_price, $params['unit_price_order']);
+        $query->andFilterCompare('total_price', $this->total_price, $params['total_price_order']);
+        $query->andFilterCompare('date_deleted', $this->date_deleted, $params['date_deleted_order']);
+        $query->andFilterCompare('donated_date', $this->donated_date, $params['donated_date_order']);
+        $query->andFilterCompare('entry_date', $this->entry_date, $params['entry_date_order']);
+        $query->andFilterCompare('last_modified_date', $this->last_modified_date, $params['last_modified_date_order']);
+
+        // operator stuff
+        // $query->andFilterCompare('qty', $this->qty, $params['qty_order']); NOTE: 'qty' is only ever 1 in the database, so its irrelevant
+
+        
+
+        // $query->andFilterWhere(['like', 'fund_id', $this->fund_id])
+        //     ->andFilterWhere(['like', 'bl_code', $this->bl_code])
+        //     ->andFilterWhere(['like', 'class_id', $this->class_id])
+        //     ->andFilterWhere(['like', 'vendor_id', $this->vendor_id])
+        //     ->andFilterWhere(['like', 'item_description', $this->item_description])
+        //     ->andFilterWhere(['like', 'serial_number', $this->serial_number])
+        //     ->andFilterWhere(['like', 'po', $this->po])
+        //     ->andFilterWhere(['like', 'delete_status', $this->delete_status])
+        //     ->andFilterWhere(['like', 'date_deleted', $this->date_deleted])
+        //     ->andFilterWhere(['like', 'date_donated', $this->date_donated]);
 
         return $dataProvider;
     }

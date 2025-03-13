@@ -1,5 +1,6 @@
 <?php
 
+use app\models\TicketDraft;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 use yii\grid\GridView;
@@ -236,6 +237,16 @@ $this->title = 'Ticket Management';
                             [
                                 'attribute' => 'description',
                                 'label' => 'Description',
+                                'value' => function (TicketDraft $model) {
+                                    return Yii::$app->stringUtils->truncateString($model->description);
+                                }
+                            ],
+                            [
+                                'attribute' => 'created',
+                                'label' => 'Date Submitted',
+                                'value' => function (TicketDraft $model) {
+                                    return Yii::$app->dateUtils->asDate($model->created);
+                                }
                             ]
                         ],
                     ]); ?>

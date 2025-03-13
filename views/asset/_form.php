@@ -41,13 +41,11 @@ use yii\bootstrap5\ActiveForm;
                     <?= $form->field($model, "[$index]po_number")->textInput() ?>
                 </div>
                 <div class="col">
-                    <?php
-                        if ($ticket_id) {
-                            echo $form->field($model, "[$index]ticket_id", ['inputOptions' => ['value' => $ticket_id]])->textInput(['readonly' => true, 'class' => 'read-only form-control dynamic-form-clone-value']);
-                        } else {
-                            echo $form->field($model, "[$index]ticket_id")->textInput();
-                        }
-                    ?>
+                    <?php if ($ticket_id): ?>
+                        <?= $form->field($model, "[$index]ticket_id", ['inputOptions' => ['value' => $ticket_id]])->textInput(['readonly' => true, 'class' => 'read-only form-control dynamic-form-clone-value']); ?>
+                    <?php else: ?>
+                        <?= $form->field($model, "[$index]ticket_id")->textInput(); ?>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="form-group">

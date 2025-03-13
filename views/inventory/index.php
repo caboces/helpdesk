@@ -30,30 +30,26 @@ $this->title = 'Inventory';
         <?= Html::a('Reset filters', ['index'], ['class' => 'btn btn-secondary']); ?>
         <?= Html::a('New loaned inventory', ['/inventory/create-loaned-inventory'], ['class' => 'btn btn-primary bg-purple border-purple text-white']) ?>
         <?= Html::a('Return loaned inventory', ['/inventory/return-loaned-inventory'], ['class' => 'btn btn-primary bg-purple border-purple text-white']) ?>
+        <?= Html::a('Detailed Search', ['/inventory/search'], ['class' => 'btn btn-primary bg-iris border-iris']) ?>
     </div>
 
     <!-- pill nav -->
     <ul class="nav nav-pills" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="pills-worked-tab" data-bs-toggle="pill" data-bs-target="#pills-worked" type="button" role="tab" aria-controls="pills-worked" aria-selected="true">Worked equipment</button>
+            <button class="nav-link active" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all" aria-selected="false" aria-selected="true">All equipment</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="pills-loaned-tab" data-bs-toggle="pill" data-bs-target="#pills-loaned" type="button" role="tab" aria-controls="pills-loaned" aria-selected="false">Loaned equipment</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all" aria-selected="false">All equipment</button>
         </li>
     </ul>
 
     <!-- pill content -->
     <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-worked" role="tabpanel" aria-labelledby="pills-worked-tab">
+        <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
             <div class="subsection-info-block">
-                <h2>Worked equipment</h2>
-                <p>Every piece of equipment with at least one associated ticket</p>
-                <div class="alert alert-warning" role="alert">
-                    Filters haven't been made yet! Currently showing all equipment.
-                </div>
+                <h2>All equipment</h2>
+                <p>Every piece of equipment</p>
+                <p>Use the search input fields to search for specific asset tags, PO numbers, etc.</p>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
@@ -69,6 +65,10 @@ $this->title = 'Inventory';
                         'new_prop_tag' => [
                             'attribute' => 'new_prop_tag',
                             'label' => 'Asset Tag',
+                        ],
+                        'po' => [
+                            'label' => 'PO Number',
+                            'attribute' => 'po',
                         ],
                         'item_description',
                         'serial_number',
@@ -97,40 +97,20 @@ $this->title = 'Inventory';
                             'label' => 'Asset Tag',
                         ],
                         'inventory.item_description',
-                        'inventory.serial_number',
                         'borrower_name',
-                        'borrower_email',
-                        'borrower_phone',
-                        'borrower_loc',
                         'borrower_reason',
-                        'date_borrowed',
-                        'date_returned'
-                    ],
-                ]); ?>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
-            <div class="subsection-info-block">
-                <h2>All equipment</h2>
-                <p>Every piece of equipment</p>
-                <?= GridView::widget([
-                    'dataProvider' => $dataProvider,
-                    'filterModel' => $searchModel,
-                    'tableOptions' => ['class' => 'table table-bordered'],
-                    'columns' => [
-                        [
-                            'class' => ActionColumn::className(),
-                            'template' => '{view}',
-                            'urlCreator' => function ($action, Inventory $model, $key, $index, $column) {
-                                return Url::toRoute([$action, 'new_prop_tag' => $model->new_prop_tag]);
+                        'date_borrowed' => [
+                            'label' => 'Date Loaned',
+                            'value' => function (LoanedInventory $model) {
+                                return Yii::$app->dateUtils->asDate($model->date_borrowed);
                             }
                         ],
-                        'new_prop_tag' => [
-                            'attribute' => 'new_prop_tag',
-                            'label' => 'Asset Tag',
+                        'date_returned' => [
+                            'label' => 'Date Returned',
+                            'value' => function (LoanedInventory $model) {
+                                return Yii::$app->dateUtils->asDate($model->date_returned);
+                            }
                         ],
-                        'item_description',
-                        'serial_number',
                     ],
                 ]); ?>
             </div>

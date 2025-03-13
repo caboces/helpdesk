@@ -239,7 +239,7 @@ use yii\bootstrap5\ButtonDropdown;
 									'readonly' => true, 
 									'disabled' => true,
 									'class' => 'read-only form-control',
-									'value' => Yii::$app->formatter->asDate($model->created, 'php:F j, Y g:i A')
+									'value' => Yii::$app->dateUtils->asDate($model->created),
 								]) ?>
 							</div>
 							<div class="col-md-4">
@@ -247,7 +247,7 @@ use yii\bootstrap5\ButtonDropdown;
 									'readonly' => true, 
 									'disabled' => true,
 									'class' => 'read-only form-control',
-									'value' => Yii::$app->formatter->asDate($model->modified, 'php:F j, Y g:i A')
+									'value' => Yii::$app->dateUtils->asDate($model->modified),
 								]) ?>
 							</div>
 						</div>

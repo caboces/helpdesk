@@ -59,6 +59,7 @@ class Part extends \yii\db\ActiveRecord
             'ticket_id' => 'Ticket ID',
             'last_modified_by_user_id' => 'Last Modified By User ID',
             'part_number' => 'Part Number',
+            'po_number' => 'PO Number',
             'part_name' => 'Part Name',
             'quantity' => 'Quantity',
             'unit_price' => 'Unit Price',
@@ -86,6 +87,18 @@ class Part extends \yii\db\ActiveRecord
     public function getTicket()
     {
         return $this->hasOne(Ticket::class, ['id' => 'ticket_id']);
+    }
+
+    /**
+     * Gets the parts associated with the specified PO number
+     */
+    public static function get($po)
+    {
+        return Part::find()
+            ->where([
+                'po_number' => $po
+            ])->asArray()
+            ->all();
     }
 
     /**

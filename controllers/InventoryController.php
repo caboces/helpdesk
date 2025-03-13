@@ -2,12 +2,17 @@
 
 namespace app\controllers;
 
+use app\models\DeleteReason;
+use app\models\Fund;
 use Yii;
 
 use app\models\Inventory;
+use app\models\InventoryClass;
 use app\models\InventorySearch;
 use app\models\LoanedInventory;
 use app\models\LoanedInventorySearch;
+use app\models\Location;
+use app\models\Vendor;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -47,7 +52,7 @@ class InventoryController extends Controller
         $loanedInvSearchModel = new LoanedInventorySearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
         $loanedInvDataProvider = $loanedInvSearchModel->search($this->request->queryParams);
-
+        
         $this->layout = 'blank-container';
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -131,6 +136,41 @@ class InventoryController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($new_prop_tag),
+        ]);
+    }
+
+    /**
+     * More refined search details for inventory
+     */
+    public function actionSearch() {
+        $fundsOptions = ArrayHelper::map(Fund::find()->select(['fund_id', 'fund_description'])->orderBy('fund_description ASC')->all(), 'fund_id', 'fund_description');
+        $locationsOptions = ArrayHelper::map(Location::find()->select(['bl_code', 'bl_name'])->orderBy('bl_name ASC')->all(), 'bl_code', 'bl_name');
+        $deleteOptions = ArrayHelper::map(DeleteReason::find()->select(['delete_code', 'reason_deleted'])->orderBy('reason_deleted ASC')->all(), 'delete_code', 'reason_deleted');
+        $classOptions = ArrayHelper::map(InventoryClass::find()->select(['class_id', 'class_description'])->orderBy('class_description ASC')->all(), 'class_id', 'class_description');
+        $vendorsOptions = ArrayHelper::map(Vendor::find()->select(['vendor_id', 'vendor_name'])->orderBy('vendor_name ASC')->all(), 'vendor_id', 'vendor_name');
+
+        $this->layout = 'blank-container';
+        return $this->render('search', [
+            'model' => new InventorySearch(),
+            'fundsOptions' => $fundsOptions,
+            'locationsOptions' => $locationsOptions,
+            'deleteOptions' => $deleteOptions,
+            'classOptions' => $classOptions,
+            'vendorsOptions' => $vendorsOptions,
+        ]);
+    }
+
+    /**
+     * Perform the search request
+     */
+    public function actionSearchResults() {
+        $searchModel = new InventorySearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+        $count = $dataProvider->totalCount;
+
+        return $this->render('search-results', [
+            'dataProvider' => $dataProvider,
+            'count' => $count,
         ]);
     }
 

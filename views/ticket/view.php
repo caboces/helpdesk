@@ -251,6 +251,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="quick-glance-info-line timestamp">
                 <p>Ticket created:
                     <?php
+                        
                         echo date('m/d/Y, h:iA', strtotime($model->created));
                     ?>
                 </p>
