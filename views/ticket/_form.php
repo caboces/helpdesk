@@ -58,12 +58,10 @@ use yii\bootstrap5\ButtonDropdown;
 	<div class='container-fluid p-2 | bg-dark shadow-sm'>
 		<?= Html::a('Back', Yii::$app->request->referrer, ['class' => 'btn btn-secondary']); ?>
 
-
 		<!-- Add asset -->
 		<?php if (Yii::$app->controller->action->id == 'update'): ?>
-		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
-				<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
-			</svg> Add assets', [
+		<?= Html::button('<i class="fa-solid fa-barcode"></i>
+				Add assets', [
 			'value' => Url::to("/asset/create?ticket_id=$model->id"),
 			'class' => 'asset-modal-button btn btn-primary bg-iris border-iris',
 			// disable if creating a new ticket
@@ -74,9 +72,7 @@ use yii\bootstrap5\ButtonDropdown;
 
 		<!-- Add part -->
 		<?php if (Yii::$app->controller->action->id == 'update'): ?>
-		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
-				<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
-			</svg> Add parts', [
+		<?= Html::button('<i class="fa-solid fa-gear"></i> Add parts', [
 			'value' => Url::to("/part/create?ticket_id=$model->id"),
 			'class' => 'part-modal-button btn btn-primary bg-iris border-iris',
 			// disable if creating a new ticket
@@ -87,10 +83,7 @@ use yii\bootstrap5\ButtonDropdown;
 
 		<!-- Add time entry -->
 		<?php if (Yii::$app->controller->action->id == 'update'): ?>
-		<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16" aria-hidden="true">
-				<path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-				<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
-			</svg> New time entry', [
+		<?= Html::button('<i class="fa-solid fa-clock"></i> New time entry', [
 			'value' => Url::to("/time-entry/create?ticket_id=$model->id"),
 			'class' => 'time-entry-modal-button btn btn-primary bg-iris border-iris',
 			// disable if creating a new ticket
@@ -420,9 +413,8 @@ use yii\bootstrap5\ButtonDropdown;
 						<span class="visually-hidden">Loading...</span>
 					</div>
 					<!-- Add asset -->
-					<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
-							<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
-						</svg> Add assets', [
+					<?= Html::button('<i class="fa-solid fa-barcode"></i>
+							Add assets', [
 						'value' => (Yii::$app->controller->action->id == 'create') ? Url::to('/asset/create?unknown_ticket_id=true') : Url::to('/asset/create?ticket_id=' . $model->id),
 						'class' => 'asset-modal-button btn btn-primary bg-iris border-iris',
 						// disable if creating a new ticket
@@ -453,9 +445,7 @@ use yii\bootstrap5\ButtonDropdown;
 						<span class="visually-hidden">Loading...</span>
 					</div>
 					<!-- Add part -->
-					<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16" aria-hidden="true">
-							<path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"/>
-						</svg> Add parts', [
+					<?= Html::button('<i class="fa-solid fa-gear"></i> Add parts', [
 						'value' => Url::to('/part/create?ticket_id=' . $model->id),
 						'class' => 'part-modal-button btn btn-primary bg-iris border-iris',
 						// disable if creating a new ticket
@@ -484,10 +474,7 @@ use yii\bootstrap5\ButtonDropdown;
 					<span class="visually-hidden">Loading...</span>
 				</div>
 				<!-- Add time entry -->
-				<?= Html::button('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16" aria-hidden="true">
-						<path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-						<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
-					</svg> New time entry', [
+				<?= Html::button('<i class="fa-solid fa-clock"></i> New time entry', [
 					'value' => Url::to("/time-entry/create?ticket_id={$model->id}&redirect=/ticket/".Yii::$app->controller->action->id),
 					'class' => 'time-entry-modal-button btn btn-primary bg-iris border-iris',
 					// disable if creating a new ticket
@@ -551,6 +538,7 @@ use yii\bootstrap5\ButtonDropdown;
 						'summary' => '',
 						'columns' => [
 							[
+								'header' => 'Actions',
 								'class' => ActionColumn::class,
 								'template' => '{delete}',
 								'urlCreator' => function ($action, TimeEntry $model, $key, $index) {

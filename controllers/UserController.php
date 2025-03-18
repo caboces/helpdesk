@@ -38,7 +38,7 @@ class UserController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],
@@ -94,12 +94,12 @@ class UserController extends Controller
         ]);
         $ticketColumns = [
             [
+                'header' => 'Actions',
                 'class' => ActionColumn::class,
                 'template' => '{view}',
                 'urlCreator' => function ($action, $model, $key, $index, $column) {
                     return Url::toRoute(['/ticket/view', 'id' => $model['ticket_id']]);
                 },
-                'header' => 'View'
             ],
             [
                 'attribute' => 'ticket_id',

@@ -29,20 +29,31 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'ticket_id',
-            'new_prop_tag',
-            'po_number',
-            'created',
-            'modified',
             [
-                'class' => ActionColumn::className(),
+                'header' => 'Actions',
+                'class' => ActionColumn::class,
                 'urlCreator' => function ($action, Asset $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }
             ],
+            'id',
+            'ticket_id',
+            'new_prop_tag' => [
+                'attribute' => 'new_prop_tag',
+                'value' => function (Asset $model) {
+                    return Html::a($model->new_prop_tag, Url::to("/inventory/view?new_prop_tag=$model->new_prop_tag", ['target' => '_blank']));
+                },
+                'format' => 'raw',
+            ],
+            'po_number' => [
+                'attribute' => 'po_number',
+                'value' => function (Asset $model) {
+                    return Html::a($model->po_number, Url::to("/inventory/index?InventorySearch[po]=$model->po_number", ['target' => '_blank']));
+                },
+                'format' => 'raw',
+            ],
+            'created',
+            'modified',
         ],
     ]); ?>
 

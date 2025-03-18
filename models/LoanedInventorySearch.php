@@ -16,7 +16,7 @@ class LoanedInventorySearch extends LoanedInventory {
             [['id', 'new_prop_tag'], 'integer'],
             [['borrower_name', 'borrower_email', 'borrower_phone', 'borrower_loc', 'borrower_reason'], 'string', 'max' => 45],
             [['borrower_email'], 'email'],
-            [['new_prop_tag', 'date_borrowed', 'borrower_name', 'borrower_phone', 'borrower_loc', 'borrower_reason'], 'required'],
+            [['new_prop_tag', 'date_borrowed', 'borrower_name', 'borrower_email', 'borrower_phone', 'borrower_loc', 'borrower_reason', 'date_returned'], 'safe'],
             [['date_borrowed', 'date_returned'], 'date']
         ];
     }

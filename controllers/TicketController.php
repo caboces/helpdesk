@@ -36,6 +36,7 @@ use app\models\TicketClosedResolvedSearch;
 use app\models\Asset;
 use app\models\TicketDraft;
 use app\models\TicketRecentlyDeletedSearch;
+use yii\bootstrap5\Html;
 use yii\data\ActiveDataProvider;
 use yii\grid\ActionColumn;
 use yii\helpers\Url;
@@ -816,6 +817,7 @@ class TicketController extends Controller
         // asset columns
         $assetColumns = [
             [
+                'header' => 'Actions',
                 'class' => ActionColumn::class,
                 'template' => '{delete}',
                 'urlCreator' => function ($action, Asset $model, $key, $index) {
@@ -865,6 +867,7 @@ class TicketController extends Controller
         // parts columns
         $partsColumns = [
             [
+                'header' => 'Actions',
                 'class' => ActionColumn::class,
                 'template' => '{delete}',
                 'urlCreator' => function ($action, Part $model, $key, $index) {
@@ -889,8 +892,11 @@ class TicketController extends Controller
             'pending_delivery' => [
                 'attribute' => 'pending_delivery',
                 'value' => function(Part $model) {
-                    return $model->pending_delivery == 1? 'Yes' : 'No';
+                    return $model->pending_delivery == 1 ? 
+                    Html::tag('span', 'Yes', ['class' => 'text-success'])
+                    : Html::tag('span', 'No', ['class' => 'text-danger']);
                 },
+                'format' => 'raw',
             ],
             [
                 'attribute' => 'last_modified_by',

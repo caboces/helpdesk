@@ -19,7 +19,6 @@ use yii\bootstrap5\ActiveForm;
 
     <!-- Hidden ticket id field if it is filled -->
     <div id="asset-box" class="dynamic-form asset-container">
-        <h3>Add Asset</h3>
         
         <?php foreach ($models as $index => $model): ?>
 

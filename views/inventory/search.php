@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </svg>
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
-    <p>Search for specific inventory assets below.</p>
+    <p>Search for CABOCES inventory assets below.</p>
     <?= $this->render('_search', [
         'model' => $model,
         'fundsOptions' => $fundsOptions,

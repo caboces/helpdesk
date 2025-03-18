@@ -51,6 +51,7 @@ AppAsset::register($this);
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item p-2"><?= Html::a('Manage departments', ['department/index']) ?></li>
                     <li class="list-group-item p-2"><?= Html::a('Manage districts', ['district/index']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('Manage buildings', ['building/index']) ?></li>
                 </ul>
             </div>
         </div>
@@ -58,14 +59,13 @@ AppAsset::register($this);
             <div class="card h-100 bg-slate text-light">
                 <div class="card-body d-flex align-items-center mx-auto">
                     <div class="text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" class="bi bi-tv-fill" viewBox="0 0 16 16" aria-hidden="true">
-                            <path d="M2.5 13.5A.5.5 0 0 1 3 13h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5M2 2h12s2 0 2 2v6s0 2-2 2H2s-2 0-2-2V4s0-2 2-2" />
-                        </svg>
-                        <h5 class="card-title | m-2">Equipment</h5>
+                        <i class="fa-solid fa-gear fa-2xl" width="2rem" height="2rem"></i>
+                        <h5 class="card-title | m-2">Parts</h5>
                     </div>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item p-2">Manage equipment types</li>
+                    <li class="list-group-item p-2"><?= Html::a('Manage parts', ['part/index']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('Manage part types', ['part-type/index']) ?></li>
                 </ul>
             </div>
         </div>
@@ -81,6 +81,46 @@ AppAsset::register($this);
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item p-2"><?= Html::a('Manage ticket categories', ['job-category/index']) ?></li>
+                    <li class="list-group-item p-2"><?= Html::a('Manage ticket job types', ['job-type/index']) ?></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 bg-slate text-light">
+                <div class="card-body d-flex align-items-center mx-auto">
+                    <div class="text-center">
+                        <i class="fa-solid fa-wifi fa-2xl"></i>
+                        <h5 class="card-title | m-2">Blocked IP Addresses</h5>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item p-2"><?= Html::a('Manage blocked IP addresses', ['blocked-ip-address/index']) ?></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 bg-slate text-light">
+                <div class="card-body d-flex align-items-center mx-auto">
+                    <div class="text-center">
+                        <i class="fa-solid fa-dollar-sign fa-2xl"></i>
+                        <h5 class="card-title | m-2">Rates</h5>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item p-2"><?= Html::a('Manage rates', ['hourly-rate/index']) ?></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 bg-slate text-light">
+                <div class="card-body d-flex align-items-center mx-auto">
+                    <div class="text-center">
+                        <i class="fa-solid fa-barcode fa-2xl"></i>
+                        <h5 class="card-title | m-2">Assets</h5>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item p-2"><?= Html::a('Manage assets', ['asset/index']) ?></li>
                 </ul>
             </div>
         </div>

@@ -50,7 +50,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'dataProvider' => $dataProvider,
                         'columns' => [
                             [
-                                'class' => ActionColumn::className(),
+                                'header' => 'Actions',
+                                'class' => ActionColumn::class,
                                 'urlCreator' => function ($action, JobType $model, $key, $index, $column) {
                                     return Url::toRoute([$action, 'id' => $model->id]);
                                 }

@@ -36,12 +36,13 @@ $this->title = 'Inventory Search Results';
     <div>
         <?php if ($count > 0): ?>
 
-        <div class="mt-3 alert alert-success">Found <?= htmlspecialchars($count) ?> related inventory entries.</div>
+        <div class="mt-2 alert alert-success">Found <?= htmlspecialchars($count) ?> related inventory entries.</div>
         <?= Html::a('Back to Search', ['search'], ['class' => 'btn btn-primary']); ?>
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'columns' => [
                 [
+                    'header' => 'Actions',
                     'class' => ActionColumn::class,
                     'template' => '{view}',
                     'urlCreator' => function ($action, Inventory $model, $key, $index, $column) {
@@ -63,7 +64,7 @@ $this->title = 'Inventory Search Results';
         
         <?php else: ?>
 
-        <div class="mt-3 alert alert-danger">Did not find any related inventory entries.</div>
+        <div class="mt-2 alert alert-danger">Did not find any related inventory entries.</div>
         <?= Html::a('Back to Search', ['search'], ['class' => 'btn btn-primary']); ?>
 
         <?php endif; ?>

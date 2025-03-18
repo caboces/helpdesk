@@ -50,7 +50,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'dataProvider' => $dataProvider,
                         'columns' => [
                             [
-                                'class' => ActionColumn::className(),
+                                'header' => 'Actions',
+                                'class' => ActionColumn::class,
                                 'urlCreator' => function ($action, JobCategory $model, $key, $index, $column) {
                                     return Url::toRoute([$action, 'id' => $model->id]);
                                 }
@@ -58,8 +59,20 @@ $this->params['breadcrumbs'][] = $this->title;
                             'id',
                             'name',
                             'description',
-                            'created',
-                            'updated',
+                            'created' => [
+                                'attribute' => 'created',
+                                'label' => 'Created',
+                                'value' => function (JobCategory $model) {
+                                    return Yii::$app->dateUtils->asDate($model->created);
+                                }
+                            ],
+                            'updated' => [
+                                'attribute' => 'updated',
+                                'label' => 'Updated',
+                                'value' => function (JobCategory $model) {
+                                    return Yii::$app->dateUtils->asDate($model->updated);
+                                }
+                            ],
                         ],
                         'tableOptions' => ['class' => 'table table-bordered'],
                     ]); ?>
@@ -72,8 +85,37 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h2>Inactive categories</h2>
                 <p>These categories have been disabled. You may still see them on older tickets, but they cannot be applied to new ones</p>
                 <?php Pjax::begin(['id' => 'grid-inactive']); ?>
-                <!-- WIP -->
-                <?php Pjax::end(); ?>
+                    <?= GridView::widget([
+                        'dataProvider' => $dataProviderInactive,
+                        'columns' => [
+                            [
+                                'header' => 'Actions',
+                                'class' => ActionColumn::class,
+                                'urlCreator' => function ($action, JobCategory $model, $key, $index, $column) {
+                                    return Url::toRoute([$action, 'id' => $model->id]);
+                                }
+                            ],
+                            'id',
+                            'name',
+                            'description',
+                            'created' => [
+                                'attribute' => 'created',
+                                'label' => 'Created',
+                                'value' => function (JobCategory $model) {
+                                    return Yii::$app->dateUtils->asDate($model->created);
+                                }
+                            ],
+                            'updated' => [
+                                'attribute' => 'updated',
+                                'label' => 'Updated',
+                                'value' => function (JobCategory $model) {
+                                    return Yii::$app->dateUtils->asDate($model->updated);
+                                }
+                            ],
+                        ],
+                        'tableOptions' => ['class' => 'table table-bordered'],
+                    ]); ?>
+                    <?php Pjax::end(); ?>
             </div>
         </div>
     </div>

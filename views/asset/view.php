@@ -40,12 +40,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'new_prop_tag',
             'po_number',
             'created' => [
+                'attribute' => 'created',
                 'label' => 'Date Created',
                 'value' => function (Asset $model) {
                     return Yii::$app->dateUtils->asDate($model->created);
                 }
             ],
             'modified' => [
+                'attribute' => 'modified',
                 'label' => 'Date Modified',
                 'value' => function (Asset $model) {
                     return Yii::$app->dateUtils->asDate($model->modified);

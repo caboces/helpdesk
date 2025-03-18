@@ -92,8 +92,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="detail-view-container">
         <h3>Current Assignments</h3>
         <div class="table-container">
-            <?php
-            GridView::widget([
+            <?= GridView::widget([
                 'dataProvider' => $currentUserAssignmentsProvider,
                 'columns' => $ticketColumns,
             ]); ?>
@@ -103,8 +102,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="detail-view-container">
         <h3>Past Assignments</h3>
         <div class="table-container">
-            <?php
-            GridView::widget([
+            <?= GridView::widget([
                 'dataProvider' => $pastUserAssignmentsProvider,
                 'columns' => $ticketColumns,
             ]); ?>

@@ -4,11 +4,17 @@ namespace app\controllers;
 
 use app\models\Part;
 use app\models\PartSearch;
+use app\models\PartType;
+use app\models\Ticket;
+use app\models\User;
 use Yii;
+use yii\db\ForeignKeyConstraint;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\web\ForbiddenHttpException;
 
 /**
  * PartController implements the CRUD actions for Part model.
@@ -24,7 +30,7 @@ class PartController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],
@@ -42,10 +48,16 @@ class PartController extends Controller
     {
         $searchModel = new PartSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-
+        $inactivePartsSearchModel = new PartSearch();
+        $inactivePartsSearchModel->pending_delivery = false;
+        $inactivePartsSearchModel->search_inactive_tickets = true;
+        $inactivePartsDataProvider = $inactivePartsSearchModel->search(array_merge($this->request->queryParams, ['search_inactive_tickets' => true]));
+        
+        $this->layout = 'blank-container';
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'inactivePartsDataProvider' => $inactivePartsDataProvider,
         ]);
     }
 
@@ -57,6 +69,7 @@ class PartController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'blank-container';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -64,6 +77,7 @@ class PartController extends Controller
 
     /**
      * Creates a new Part model.
+     * NOTE: Should not be able to make a part without a ticket.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
@@ -71,6 +85,7 @@ class PartController extends Controller
     {
         $models = [new Part()];
         $ticket_id = $this->request->get('ticket_id');
+        $partTypes = PartType::find()->select(['id', 'name', 'description'])->orderBy('name ASC')->all();
 
         if ($this->request->isPost) {
             $count = count($this->request->post('Part'));
@@ -93,11 +108,12 @@ class PartController extends Controller
                 $model->loadDefaultValues();
             }
         }
-
+        
         $this->layout = 'blank';
         return $this->renderAjax('create', [
             'models' => $models,
             'ticket_id' => $ticket_id,
+            'partTypes' => $partTypes,
         ]);
     }
 
@@ -116,24 +132,61 @@ class PartController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
+        $this->layout = 'blank';
+        return $this->renderAjax('update', [
             'model' => $model,
+            'ticket_id' => $model->ticket_id,
         ]);
     }
 
     /**
      * Deletes an existing Part model.
-     * If deletion is successful, the browser will be redirected to the 'ticket/update' page.
+     * If deletion is successful, the browser will be redirected to the 'part/update' page.
      * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
-        $ticket_id = $this->findModel($id)->ticket_id;
-        $this->findModel($id)->delete();
+        $part = $this->findModel($id);
+        if ($part->pending_delivery) {
+            throw new ForbiddenHttpException('You cannot delete parts that are pending delivery. Please mark it as arrived and then delete it if required.');
+        }
+        $part->delete();
+        $ticketId = $part->ticket_id;
 
-        return $this->redirect(['/ticket/update', 'id' => $ticket_id]);
+        $this->layout = 'blank-container';
+        return $this->redirect(["/ticket/update?id=$ticketId&tabPane=pills-parts-tab"]);
+    }
+
+    public function actionSearch() {
+        $partTypesOptions = ArrayHelper::map(
+            PartType::find()
+                ->select(['id', 'name'])
+                ->orderBy('name ASC')
+                ->all(), 'id', 'name'
+        );
+        $usersOptions = ArrayHelper::map(
+            User::find()
+                ->select(['id', 'username'])
+                ->orderBy('username ASC')
+                ->all(), 'id', 'username'
+        );
+        $ticketsOptions = ArrayHelper::map(
+            Ticket::find()
+                ->select(['ticket.id', 'ticket.summary'])
+                ->orderBy('ticket.summary ASC')
+                ->innerJoin('part', 'part.ticket_id = ticket.id')
+                ->all(), 'id', 'summary'
+        );
+
+        $this->layout = 'blank-container';
+        return $this->render('search', [
+            'model' => new PartSearch(),
+            'partTypesOptions' => $partTypesOptions,
+            'usersOptions' => $usersOptions,
+            'ticketsOptions' => $ticketsOptions,
+        ]);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
+use yii\helpers\ArrayHelper;
 
 /** @var yii\web\View $this */
 /** @var app\models\Part $model */
@@ -16,10 +17,8 @@ use yii\bootstrap5\ActiveForm;
         'validateOnSubmit' => true,
     ]); ?>
     <div id="parts-box" class="dynamic-form asset-container">
-        <h3>Add Parts</h3>
-
         <?php foreach ($models as $index => $model): ?>
-
+            
         <div class="dynamic-form-input-group question-box-no-trim">
             <?= $form->field($model, "[$index]last_modified_by_user_id", [
                 'template' => '{input}',
@@ -46,6 +45,9 @@ use yii\bootstrap5\ActiveForm;
             </div>
             <div class="row">
                 <div class="col">
+                    <?= $form->field($model, "[$index]part_type_id")->dropDownList(ArrayHelper::map($partTypes, 'id', 'name'), ['height' => '120px;']) ?>
+                </div>
+                <div class="col">
                     <?= $form->field($model, "[$index]part_name")->textInput(['maxlength' => true]) ?>
                 </div>
             </div>
@@ -63,6 +65,11 @@ use yii\bootstrap5\ActiveForm;
                 </div>
                 <div class="col">
                     <?= $form->field($model, "[$index]po_number")->textInput(['maxlength' => true]) ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <?= $form->field($model, "[$index]note")->textarea(['maxlength' => true]) ?>
                 </div>
             </div>
             <div class="form-group">

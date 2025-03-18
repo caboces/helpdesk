@@ -28,18 +28,18 @@ $this->title = 'Inventory';
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Reset filters', ['index'], ['class' => 'btn btn-secondary']); ?>
+        <?= Html::a('Detailed Search', ['/inventory/search'], ['class' => 'btn btn-primary bg-iris border-iris']) ?>
         <?= Html::a('New loaned inventory', ['/inventory/create-loaned-inventory'], ['class' => 'btn btn-primary bg-purple border-purple text-white']) ?>
         <?= Html::a('Return loaned inventory', ['/inventory/return-loaned-inventory'], ['class' => 'btn btn-primary bg-purple border-purple text-white']) ?>
-        <?= Html::a('Detailed Search', ['/inventory/search'], ['class' => 'btn btn-primary bg-iris border-iris']) ?>
     </div>
 
     <!-- pill nav -->
     <ul class="nav nav-pills" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all" aria-selected="false" aria-selected="true">All equipment</button>
+            <button class="nav-link active" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all" aria-selected="false" aria-selected="true">All inventory</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-loaned-tab" data-bs-toggle="pill" data-bs-target="#pills-loaned" type="button" role="tab" aria-controls="pills-loaned" aria-selected="false">Loaned equipment</button>
+            <button class="nav-link" id="pills-loaned-tab" data-bs-toggle="pill" data-bs-target="#pills-loaned" type="button" role="tab" aria-controls="pills-loaned" aria-selected="false">Loaned inventory</button>
         </li>
     </ul>
 
@@ -47,16 +47,17 @@ $this->title = 'Inventory';
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
             <div class="subsection-info-block">
-                <h2>All equipment</h2>
-                <p>Every piece of equipment</p>
-                <p>Use the search input fields to search for specific asset tags, PO numbers, etc.</p>
+                <h2>All CABOCES Inventory</h2>
+                <p>Every piece of CABOCES inventory that has been logged by our inventory department.</p>
+                <p>Use the search input fields to search for specific asset tags, PO numbers, etc. Or use the 'Detailed Search' above to search with additional parameters.</p>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     'tableOptions' => ['class' => 'table table-bordered'],
                     'columns' => [
                         [
-                            'class' => ActionColumn::className(),
+                            'header' => 'Actions',
+                            'class' => ActionColumn::class,
                             'template' => '{view}',
                             'urlCreator' => function ($action, Inventory $model, $key, $index, $column) {
                                 return Url::toRoute([$action, 'new_prop_tag' => $model->new_prop_tag]);
@@ -86,7 +87,8 @@ $this->title = 'Inventory';
                     'tableOptions' => ['class' => 'table table-bordered'],
                     'columns' => [
                         [
-                            'class' => ActionColumn::className(),
+                            'header' => 'Actions',
+                            'class' => ActionColumn::class,
                             'template' => '{view}',
                             'urlCreator' => function ($action, LoanedInventory $model, $key, $index, $column) {
                                 return Url::toRoute([$action, 'new_prop_tag' => $model->new_prop_tag]);

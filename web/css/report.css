@@ -7,22 +7,22 @@
 **/
 
 .wip-link {
-    color: #7c2700;;
+  color: #7c2700;;
 }
   
-.hover-row:hover {
-    background:color#ccc;
+table tr:hover td {
+  background:color#ccc;
 }
 
 /* media query: when printing forms, display only the report and adjust font size to 10 to fit elements */
 @media print {
-    .date-form {
-      display:none;
-    }
-    .print-button {
-      display:none;
-    }
-    .report > * {
-      font-size: 10pt;
-    }
+  .date-form {
+    display:none;
+  }
+  .print-button {
+    display:none;
+  }
+  .report > * {
+    font-size: 10pt;
+  }
 }

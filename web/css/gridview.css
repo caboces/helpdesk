@@ -24,8 +24,8 @@ tr:nth-child(odd) td {
     box-shadow: inset 200px 200px #ff585841 !important;
 }
 
-.filters td {
-    background-color: #070e33dc;
+.help-block {
+    color:red;
 }
 
 th a {

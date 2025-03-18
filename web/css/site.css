@@ -40,6 +40,20 @@ h2:not(.activity h2) {
     color: #0bb2db;
 }
 
+.title-icon i {
+    margin: 0 10px 2rem 0;
+}
+
+.title-icon i::before {
+    box-shadow: -1px 1px 3px #070e3338;
+    border-radius: 20%;
+    padding: 4px;
+
+    background: #fff;
+
+    color: #0bb2db;
+}
+
 /* ===========================================================================================
 || TYPOGRAPHY
 =========================================================================================== */

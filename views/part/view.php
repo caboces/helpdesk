@@ -32,6 +32,7 @@ AppAsset::register($this);
             'id',
             'ticket_id',
             'last_modified_by_user_id',
+            'part_type_id',
             'part_number',
             'part_name',
             'quantity',

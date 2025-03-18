@@ -251,6 +251,7 @@ class ReportsController extends Controller
 
         $gridColumns = [
             [
+                'header' => 'Actions',
                 'class' => ActionColumn::class,
                 'template' => '{view}',
                 'urlCreator' => function ($action, $model, $key, $index, $column) {

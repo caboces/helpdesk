@@ -47,7 +47,9 @@ $this->params['breadcrumbs'][] = $this->title;
             //'created',
             //'modified',
             [
-                'class' => ActionColumn::className(),
+                'header' => 'Actions',
+                'header' => 'Actions',
+                'class' => ActionColumn::class,
                 'urlCreator' => function ($action, TicketDraft $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }

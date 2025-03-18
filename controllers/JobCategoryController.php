@@ -59,9 +59,23 @@ class JobCategoryController extends Controller
             ],
         ]);
 
+        $dataProviderInactive = new ActiveDataProvider([
+            // TODO: Assuming anything other than '10' is inactive
+            'query' => JobCategory::find()->where("status <> 10"),
+            'pagination' => [
+                'pageSize' => 10
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'name' => SORT_ASC,
+                ]
+            ],
+        ]);
+
         $this->layout = 'blank-container';
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'dataProviderInactive' => $dataProviderInactive,
         ]);
     }
 

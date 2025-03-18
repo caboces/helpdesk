@@ -55,7 +55,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'filterModel' => $searchModel,
                         'columns' => [
                             [
-                                'class' => ActionColumn::className(),
+                                'header' => 'Actions',
+                                'class' => ActionColumn::class,
                                 'template' => '{view} {update} {toggle-status}',
                                 'buttons' => [
                                     'toggle-status' => function ($url, $model) {
@@ -120,7 +121,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'tableOptions' => ['class' => 'table table-bordered'],
                     'columns' => [
                         [
-                            'class' => ActionColumn::className(),
+                            'header' => 'Actions',
+                            'class' => ActionColumn::class,
                             'template' => '{view} {update} {toggle-status} {delete}',
                             'buttons' => [
                                 'toggle-status' => function ($url, $model) {
@@ -182,7 +184,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filterModel' => $userInactiveSearchModel,
                     'columns' => [
                         [
-                            'class' => ActionColumn::className(),
+                            'header' => 'Actions',
+                            'class' => ActionColumn::class,
                             'template' => '{view} {update} {toggle-status} {delete}',
                             'buttons' => [
                                 'toggle-status' => function ($url, $model) {

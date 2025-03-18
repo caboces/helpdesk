@@ -18,9 +18,7 @@ $this->title = 'Ticket Management';
 <div class="ticket-index">
 
     <div class="title-icon d-flex align-items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" class="bi bi-ticket-detailed-fill" viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5V6a.5.5 0 0 1-.5.5 1.5 1.5 0 0 0 0 3 .5.5 0 0 1 .5.5v1.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5V10a.5.5 0 0 1 .5-.5 1.5 1.5 0 1 0 0-3A.5.5 0 0 1 0 6zm4 1a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5m0 5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5M4 8a1 1 0 0 0 1 1h6a1 1 0 1 0 0-2H5a1 1 0 0 0-1 1" />
-        </svg>
+        <i class="fa-solid fa-ticket fa-2xl"></i>
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
 
@@ -38,7 +36,7 @@ $this->title = 'Ticket Management';
             <button class="nav-link active" id="pills-assignments-tab" data-bs-toggle="pill" data-bs-target="#pills-assignments" type="button" role="tab" aria-controls="pills-assignments" aria-selected="true">Assignments</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-ticket-queue-tab" data-bs-toggle="pill" data-bs-target="#pills-ticket-queue" type="button" role="tab" aria-controls="pills-ticket-queue" aria-selected="true">Ticket Queue</button>
+            <button class="nav-link" id="pills-ticket-queue-tab" data-bs-toggle="pill" data-bs-target="#pills-ticket-queue" type="button" role="tab" aria-controls="pills-ticket-queue" aria-selected="false">Ticket Queue</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all" aria-selected="false">Open</button>
@@ -71,8 +69,7 @@ $this->title = 'Ticket Management';
                              */
                             
                             // Make entire grid rows clickable, route to that ticket's view page
-                            $url = StringHelper::basename(get_class($model));
-                            $url = Url::toRoute(['/' . strtolower($url) . '/view']);
+                            $url = Url::toRoute(['/ticket/update', 'id' => $model->id]);
 
                             // Add critical/high class to rows with those priorities
                             if ($model->jobPriority->name == 'Critical') {
@@ -81,17 +78,10 @@ $this->title = 'Ticket Management';
                                 return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);', 'class' => 'high'];
                             }
                             return ['id' => $model['id'], 'onclick' => 'location.href="' . $url .'?id="+(this.id);',];
-                            
-
-                            // (CURRENTLY REPLACING ABOVE CODE)Add critical/high class to rows with those priorities
-                            // if ($model->jobPriority->name == 'Critical') {
-                            //     return ['id' => $model['id'], 'class' => 'critical'];
-                            // } else if ($model->jobPriority->name == 'High') {
-                            //     return ['id' => $model['id'], 'class' => 'high'];
-                            // }
                         },
                         'columns' => [
                             [
+                                'header' => 'Actions',
                                 'class' => ActionColumn::class,
                                 'template' => '{view} {update} {soft-delete}',
                                 'buttons' => [
@@ -218,6 +208,7 @@ $this->title = 'Ticket Management';
                         'tableOptions' => ['class' => 'table table-bordered'],
                         'columns' => [
                             [
+                                'header' => 'Actions',
                                 'class' => ActionColumn::class,
                                 'template' => '{create}',
                                 'buttons' => [
@@ -292,6 +283,7 @@ $this->title = 'Ticket Management';
                         },
                         'columns' => [
                             [
+                                'header' => 'Actions',
                                 'class' => ActionColumn::class,
                                 'template' => '{view} {update} {soft-delete}',
                                 'buttons' => [
@@ -455,6 +447,7 @@ $this->title = 'Ticket Management';
                         },
                         'columns' => [
                             [
+                                'header' => 'Actions',
                                 'class' => ActionColumn::class,
                                 'template' => '{view} {update} {soft-delete}',
                                 'buttons' => [
@@ -616,6 +609,7 @@ $this->title = 'Ticket Management';
                         },
                         'columns' => [
                             [
+                                'header' => 'Actions',
                                 'class' => ActionColumn::class,
                                 'template' => '{view} {undo-soft-delete} {delete}',
                                 'buttons' => [

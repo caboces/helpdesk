@@ -2,6 +2,7 @@
 
 use app\assets\AppAsset;
 use yii\bootstrap5\Html;
+use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 AppAsset::register($this);
@@ -22,21 +23,40 @@ $this->title = 'Frequently Asked Questions';
             <div class="accordion-item">
                 <h3 class="accordion-header" id="flush-headingOne">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                        How do I edit an existing ticket?
+                        How do I edit an existing Ticket?
                     </button>
                 </h3>
                 <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample1">
-                    <div class="accordion-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt cum tempore quaerat natus placeat quis dolore odio recusandae incidunt repellat?</div>
+                    <div class="accordion-body">
+                        <p>To update an existing <i class="fa-solid fa-ticket"></i> Ticket, go to the "<?= Html::a('Tickets', Url::toroute('/ticket/index'), ['target' => '_blank']) ?>" tab to view the "Ticket Management" page. <i class="fa-solid fa-ticket"></i> Tickets are ordered in tables and grids and organized by "Assignments", "Open", "Resolved / Closed", or "Marked for Deletion" tab panes. In each table, select the pencil icon on the left under the "Actions" column to update the ticket.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h3 class="accordion-header" id="flush-headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                        How do I create a Ticket?
+                    </button>
+                </h3>
+                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample1">
+                    <div class="accordion-body">
+                        <p>To create a <i class="fa-solid fa-ticket"></i> Ticket, go to the <?= Html::a('Create Ticket', Url::toRoute(['/ticket/create']), ['target' => '_blank']) ?> page.</p>
+                        <p>When creating a Ticket, you cannot add <i class="fa fa-gear"></i> Parts, <i class="fa fa-barcode"></i> Assets, or <i class="fa-solid fa-clock"></i> Time Entries.</p>
+                        <p>Please be sure the information you enter is as accurate as possible as the billing system is tightly integrated with your inputted information.</p>
+                    </div>
                 </div>
             </div>
             <div class="accordion-item">
                 <h3 class="accordion-header" id="flush-headingThree">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                        How do I assign multiple technicians to a ticket?
+                        How do I assign multiple Technicians to a Ticket?
                     </button>
                 </h3>
                 <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample1">
-                    <div class="accordion-body">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolor atque tenetur ducimus ullam, laboriosam amet iure, tempora quam doloremque, magni laudantium sit! Quasi corporis in voluptatibus unde molestias ratione possimus animi iure ut voluptates consequatur ex eius dicta eligendi esse, minus repellat inventore hic natus voluptatem! Optio deleniti eligendi quos!</div>
+                    <div class="accordion-body">
+                        <p>To assign multiple <i class="fa-solid fa-users"></i> Technicians to a <i class="fa-solid fa-ticket"></i> Ticket, you must go to the "Update Ticket" page for the specific ticket and click on the "Technicians" tab. Under the "Assigned Technicians" input in the form, add or remove specific Technicians referenced by their username.</p>
+                        <p>You can also assign the Primary Technician on this page, but a certain Technician cannot be removed or added to the Primary Technician position if they are not assigned to the ticket. The Primary Technician field automatically populates depending on what is selected in the "Assigned Technicians" field.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -55,11 +75,15 @@ $this->title = 'Frequently Asked Questions';
             <div class="accordion-item">
                 <h3 class="accordion-header" id="flush-headingFive">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
-                        How do I delete an old tech account?
+                        How do I delete an old Technician account?
                     </button>
                 </h3>
                 <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample2">
-                    <div class="accordion-body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum fuga sapiente quis aspernatur explicabo eveniet obcaecati error doloribus. Sit, excepturi?</div>
+                    <div class="accordion-body">
+                        <p>You must have elevated permissions to delete Technicians.</p>
+                        <p>A Technician may have many <i class="fa-solid fa-clock"></i> Time Entries, <i class="fa-solid fa-ticket"></i> Ticket assignments, or other Helpdesk related entities. For this reason, Technicians are rarely deleted from the system as it would harm the integrity and consistency of old data, such as billing and reporting.</p>
+                        <p>However, you can disable certain Technician accounts using the "Toggle Status" switch on a specific account on the <?= Html::a('User Management', Url::toRoute(['/user/index']), ['target' => '_blank']) ?> page.</p>
+                    </div>
                 </div>
             </div>
             <div class="accordion-item">

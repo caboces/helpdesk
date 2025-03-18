@@ -4,6 +4,7 @@
 /** @var string $content */
 
 use app\assets\AppAsset;
+use yii\bootstrap5\Alert;
 use yii\bootstrap5\Breadcrumbs;
 
 \yii\web\YiiAsset::register($this);
@@ -22,7 +23,6 @@ $this->beginContent('@app/views/layouts/base.php');
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ])
         ?>
-
         <?= $content ?>
     </div>
 </main>

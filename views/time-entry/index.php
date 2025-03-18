@@ -27,7 +27,7 @@ $this->title = 'Time Entries';
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Reset filters', ['index'], ['class' => 'btn btn-secondary']); ?>
-        <?= Html::a('New time entry', ['create'], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
+        <?= Html::a(Html::encode('<i class="fa-solid fa-clock"></i>') . ' New time entry', ['create'], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan']) ?>
     </div>
 
     <?php Pjax::begin(); ?>
@@ -44,6 +44,7 @@ $this->title = 'Time Entries';
             'tableOptions' => ['class' => 'table table-bordered'],
             'columns' => [
                 [
+                    'header' => 'Actions',
                     'class' => ActionColumn::class,
                     'buttons' => [
                         'images' => function ($url, $model, $key) { // <--- here you can override or create template for a button of a given name

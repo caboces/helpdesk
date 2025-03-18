@@ -13,6 +13,7 @@ use app\models\LoanedInventory;
 use app\models\LoanedInventorySearch;
 use app\models\Location;
 use app\models\Vendor;
+use yii\bootstrap5\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -32,7 +33,7 @@ class InventoryController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],
@@ -157,20 +158,6 @@ class InventoryController extends Controller
             'deleteOptions' => $deleteOptions,
             'classOptions' => $classOptions,
             'vendorsOptions' => $vendorsOptions,
-        ]);
-    }
-
-    /**
-     * Perform the search request
-     */
-    public function actionSearchResults() {
-        $searchModel = new InventorySearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-        $count = $dataProvider->totalCount;
-
-        return $this->render('search-results', [
-            'dataProvider' => $dataProvider,
-            'count' => $count,
         ]);
     }
 
