@@ -8,9 +8,14 @@ use app\models\Department;
 
 /**
  * DepartmentSearch represents the model behind the search form of `app\models\Department`.
+ * 
+ * @property bool|null $search_inactive_departments
  */
 class DepartmentSearch extends Department
 {
+
+    public bool $search_inactive_departments = false;
+
     /**
      * {@inheritdoc}
      */
@@ -67,6 +72,10 @@ class DepartmentSearch extends Department
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'description', $this->description]);
+            
+        if ($this->search_inactive_departments) {
+            $query->andFilterWhere(['<>', 'status', 10]);
+        }
 
         return $dataProvider;
     }

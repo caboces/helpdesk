@@ -4,9 +4,12 @@ namespace app\controllers;
 
 use app\models\Department;
 use app\models\DepartmentSearch;
+use app\models\Division;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * DepartmentController implements the CRUD actions for Department model.
@@ -40,11 +43,17 @@ class DepartmentController extends Controller
     {
         $searchModel = new DepartmentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        
+        $inactiveDepartmentsSearchModel = new DepartmentSearch();
+        $inactiveDepartmentsSearchModel->search_inactive_departments = true;
+        $inactiveDepartmentsDataProvider = $inactiveDepartmentsSearchModel->search($this->request->queryParams);
 
         $this->layout = 'blank-container';
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'inactiveDepartmentsSearchModel' => $inactiveDepartmentsSearchModel,
+            'inactiveDepartmentsDataProvider' => $inactiveDepartmentsDataProvider,
         ]);
     }
 
@@ -70,6 +79,7 @@ class DepartmentController extends Controller
     public function actionCreate()
     {
         $model = new Department();
+        $divisionsOptions = ArrayHelper::map(Division::find()->select(['id', 'name'])->orderBy('name ASC')->all(), 'id', 'name');
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -84,6 +94,7 @@ class DepartmentController extends Controller
         $this->layout = 'blank-container';
         return $this->render('create', [
             'model' => $model,
+            'divisionsOptions' => $divisionsOptions,
         ]);
     }
 
@@ -97,6 +108,7 @@ class DepartmentController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $divisionsOptions = ArrayHelper::map(Division::find()->select(['id', 'name'])->orderBy('name ASC')->all(), 'id', 'name');
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -104,6 +116,7 @@ class DepartmentController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'divisionsOptions' => $divisionsOptions,
         ]);
     }
 

@@ -12,20 +12,23 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <div class="row">
+        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    </div>
 
-    <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
+    <div class="row">
+        <?= $form->field($model, 'description')->textarea(['maxlength' => true]) ?>
+    </div>
 
-    <?= $form->field($model, 'component_district')->textInput() ?>
-
-    <?= $form->field($model, 'status')->textInput() ?>
-
-    <?= $form->field($model, 'created')->textInput() ?>
-
-    <?= $form->field($model, 'modified')->textInput() ?>
+    <div class="row">
+        <?= $form->field($model, 'component_district')->dropDownList([
+            '1' => 'Yes',
+            '0' => 'No',
+        ])->label('Is Component District?') ?>
+    </div>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Submit District', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

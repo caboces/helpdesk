@@ -81,6 +81,7 @@ class TicketDraftController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'no-header';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -193,7 +194,7 @@ class TicketDraftController extends Controller
             $model->loadDefaultValues();
         }
 
-        $this->layout = 'blank-container';
+        $this->layout = 'no-header';
         return $this->render('create', [
             'model' => $model,
             // customers
@@ -223,7 +224,7 @@ class TicketDraftController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $this->layout = 'blank-container';
+        $this->layout = 'no-header';
         return $this->render('update', [
             'model' => $model,
         ]);

@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <p>This is the Part Types Management page.</p>
     <p>Part Types reference the generic type of a part for categorical and reference purposes.</p>
+    <p>Part types can not be deleted, only deactivated.</p>
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Reset filters', ['index'], ['class' => 'btn btn-secondary']); ?>
@@ -47,6 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     [
                         'header' => 'Actions',
+                        'template' => '{view} {update}',
                         'class' => ActionColumn::class,
                         'urlCreator' => function ($action, PartType $model, $key, $index, $column) {
                             return Url::toRoute([$action, 'id' => $model->id]);

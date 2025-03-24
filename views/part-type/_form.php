@@ -25,7 +25,7 @@ use yii\bootstrap5\ActiveForm;
     <?= $form->field($model, 'description')->textarea(['maxlength' => true])->label('Part Type Description') ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Create Part Type', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Submit', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

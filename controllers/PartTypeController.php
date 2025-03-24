@@ -46,7 +46,7 @@ class PartTypeController extends Controller
 
         $inactivePartTypesSearchModel = new PartTypeSearch();
         $inactivePartTypesSearchModel->search_inactive_part_types = true;
-        $inactivePartTypesDataProvider = $searchModel->search($this->request->queryParams);
+        $inactivePartTypesDataProvider = $inactivePartTypesSearchModel->search($this->request->queryParams);
 
         $this->layout = 'blank-container';
         return $this->render('index', [

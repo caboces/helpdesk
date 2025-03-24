@@ -835,7 +835,7 @@ class TicketController extends Controller
             [
                 'value' => function(Asset $model) {
                     $item = $model->inventory;
-                    return '<a href="/inventory/view?new_prop_tag=' . ($model->new_prop_tag != null ? $model->new_prop_tag : '') . '">' . ($item->item_description != null ? $item->item_description : '') . '</a>';
+                    return Html::a($model->inventory->item_description . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/inventory/view', 'new_prop_tag' => $model->new_prop_tag]), ['target' => '_blank', 'data-pjax' => 0]);
                 },
                 'label' => 'Asset Description',
                 'format' => 'raw',
@@ -843,7 +843,7 @@ class TicketController extends Controller
             [
                 'attribute' => 'last_modified_by',
                 'value' => function(Asset $model) {
-                    return '<a href="/user/view?id=' . ($model->last_modified_by_user_id != null ? $model->last_modified_by_user_id : '') . '">' . ($model->last_modified_by_user_id != null ? $model->lastModifiedByUser->username : '') . '</a>';
+                    return Html::a($model->lastModifiedByUser->username . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/user/view', 'id' => $model->last_modified_by_user_id]), ['target' => '_blank', 'data-pjax' => 0]);
                 },
                 'format' => 'raw',
             ]
@@ -874,11 +874,19 @@ class TicketController extends Controller
                     return Url::to(['part/' . $action, 'id' => $model->id]);
                 }
             ],
-            'part_number' => [
-                'attribute' => 'part_number',
-            ],
             'part_name' => [
                 'attribute' => 'part_name'
+            ],
+            'part_type_id' => [
+                'attribute' => 'part_type_id',
+                'label' => 'Part Type',
+                'value' => function (Part $model) {
+                    return Html::a($model->partType->name . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/part-type/view', 'id' => $model->part_type_id]), ['target' => '_blank', 'data-pjax' => 0]);
+                },
+                'format' => 'raw',
+            ],
+            'part_number' => [
+                'attribute' => 'part_number',
             ],
             'quantity' => [
                 'attribute' => 'quantity'
@@ -886,22 +894,29 @@ class TicketController extends Controller
             'unit_price' => [
                 'attribute' => 'unit_price',
                 'value' => function (Part $model) {
-                    return '$' . $model->unit_price;
+                    return Yii::$app->formatter->asCurrency($model->unit_price);
+                }
+            ],
+            [
+                'label' => 'Total',
+                'value' => function (Part $model) {
+                    return Yii::$app->formatter->asCurrency($model->quantity * $model->unit_price);
                 }
             ],
             'pending_delivery' => [
                 'attribute' => 'pending_delivery',
                 'value' => function(Part $model) {
                     return $model->pending_delivery == 1 ? 
-                    Html::tag('span', 'Yes', ['class' => 'text-success'])
-                    : Html::tag('span', 'No', ['class' => 'text-danger']);
+                        Html::tag('span', 'Yes ' . Html::decode('<i class="fa-solid fa-truck"></i>'), ['class' => 'text-warning'])
+                        : Html::tag('span', 'No ' . Html::decode('<i class="fa-solid fa-check"></i>'), ['class' => 'text-success']);
                 },
                 'format' => 'raw',
             ],
             [
-                'attribute' => 'last_modified_by',
+                'label' => 'Created By',
+                'attribute' => 'last_modified_by_user_id',
                 'value' => function(Part $model) {
-                    return '<a href="/user/view?id=' . ($model->last_modified_by_user_id != null ? $model->last_modified_by_user_id : '') . '">' . ($model->last_modified_by_user_id != null ? $model->lastModifiedByUser->username : '') . '</a>';
+                    return Html::a($model->lastModifiedByUser->username . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/user/view', 'id' => $model->last_modified_by_user_id]), ['target' => '_blank', 'data-pjax' => 0]);
                 },
                 'format' => 'raw',
             ],

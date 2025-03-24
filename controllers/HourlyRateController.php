@@ -3,10 +3,12 @@
 namespace app\controllers;
 
 use app\models\HourlyRate;
+use app\models\JobType;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * HourlyRateController implements the CRUD actions for HourlyRate model.
@@ -39,7 +41,7 @@ class HourlyRateController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => HourlyRate::find(),
+            'query' => HourlyRate::find()->where('CURRENT_TIMESTAMP BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective'),
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -51,9 +53,14 @@ class HourlyRateController extends Controller
             ],
             */
         ]);
+        $inactiveHourlyRatesDataProvider = new ActiveDataProvider([
+            'query' => HourlyRate::find()->where('CURRENT_TIMESTAMP NOT BETWEEN hourly_rate.first_day_effective AND hourly_rate.last_day_effective')
+        ]);
 
+        $this->layout = 'blank-container';
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'inactiveHourlyRatesDataProvider' => $inactiveHourlyRatesDataProvider,
         ]);
     }
 
@@ -65,6 +72,7 @@ class HourlyRateController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = 'blank-container';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -78,6 +86,7 @@ class HourlyRateController extends Controller
     public function actionCreate()
     {
         $model = new HourlyRate();
+        $jobTypesOptions = ArrayHelper::map(JobType::find()->select(['id', 'name'])->where(['status' => 10])->orderBy('name ASC')->all(), 'id', 'name');
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -87,8 +96,10 @@ class HourlyRateController extends Controller
             $model->loadDefaultValues();
         }
 
+        $this->layout = 'blank-container';
         return $this->render('create', [
             'model' => $model,
+            'jobTypesOptions' => $jobTypesOptions,
         ]);
     }
 
@@ -106,7 +117,8 @@ class HourlyRateController extends Controller
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
+        
+        $this->layout = 'blank-container';
         return $this->render('update', [
             'model' => $model,
         ]);

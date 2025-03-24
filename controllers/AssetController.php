@@ -45,6 +45,7 @@ class AssetController extends Controller
         $searchModel = new AssetSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $this->layout = 'blank-container';
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -59,7 +60,7 @@ class AssetController extends Controller
      */
     public function actionView($id)
     {
-        $this->layout = 'blank';
+        $this->layout = 'blank-container';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);

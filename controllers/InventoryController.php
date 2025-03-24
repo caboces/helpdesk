@@ -87,6 +87,8 @@ class InventoryController extends Controller
                 'model' => $this->findModel($model->new_prop_tag)
             ]);
         }
+        
+        $this->layout = 'blank-container';
         return $this->render('createLoanedInventory', [
             'model' => $model,
             // map to an array of just ids
@@ -116,10 +118,11 @@ class InventoryController extends Controller
                 ]);
             }
             $model->delete();
-            return $this->render('view', [
-                'model' => $this->findModel($model->new_prop_tag)
-            ]);
+
+            return $this->redirect('view', ['id' => $model->new_prop_tag]);
         }
+
+        $this->layout = 'blank-container';
         return $this->render('returnLoanedInventory', [
             'model' => $model,
             // map to an array of just ids that were loaned
@@ -135,6 +138,7 @@ class InventoryController extends Controller
      */
     public function actionView($new_prop_tag)
     {
+        $this->layout = 'blank-container';
         return $this->render('view', [
             'model' => $this->findModel($new_prop_tag),
         ]);

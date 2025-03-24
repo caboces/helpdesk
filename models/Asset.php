@@ -16,6 +16,8 @@ use Yii;
  * @property string|null $modified
  *
  * @property Ticket $ticket
+ * @property Inventory $inventory
+ * @property User lastModifiedByUser
  */
 class Asset extends \yii\db\ActiveRecord
 {

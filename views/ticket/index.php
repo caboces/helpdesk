@@ -205,7 +205,7 @@ $this->title = 'Ticket Management';
                 <div class="table-container container-fluid overflow-x-scroll">
                     <?= GridView::widget([
                         'dataProvider' => $ticketDraftsDataProvider,
-                        'tableOptions' => ['class' => 'table table-bordered'],
+                        'tableOptions' => ['class' => 'table table-striped table-bordered'],
                         'columns' => [
                             [
                                 'header' => 'Actions',
@@ -213,7 +213,7 @@ $this->title = 'Ticket Management';
                                 'template' => '{create}',
                                 'buttons' => [
                                     'create' => function ($url, $model, $key) {
-                                        return Html::a('Create Ticket', Url::toRoute('/ticket/create?ticketDraftId='.$model->id));
+                                        return Html::a(Html::decode('<i class="fa-solid fa-plus"></i>'), Url::toRoute(['/ticket/create', 'ticketDraftId' => $model->id]), ['class' => 'btn btn-success', 'title' => 'Create a ticket from this ticket draft.']);
                                     }
                                 ]
                             ],

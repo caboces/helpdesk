@@ -8,9 +8,14 @@ use app\models\District;
 
 /**
  * DistrictSearch represents the model behind the search form of `app\models\District`.
+ * 
+ * @property bool|null search_inactive_districts
  */
 class DistrictSearch extends District
 {
+
+    public bool $search_inactive_districts = false;
+
     /**
      * {@inheritdoc}
      */
@@ -18,7 +23,7 @@ class DistrictSearch extends District
     {
         return [
             [['id', 'component_district', 'status'], 'integer'],
-            [['name', 'description', 'created', 'modified'], 'safe'],
+            [['name', 'description', 'search_inactive_districts', 'created', 'modified'], 'safe'],
         ];
     }
 
@@ -67,6 +72,10 @@ class DistrictSearch extends District
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'description', $this->description]);
+
+        if ($this->search_inactive_districts) {
+            $query->andFilterWhere(['<>', 'status', 10]);
+        }
 
         return $dataProvider;
     }

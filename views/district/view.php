@@ -1,5 +1,6 @@
 <?php
 
+use app\models\District;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -17,13 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
     </p>
 
     <?= DetailView::widget([
@@ -32,10 +26,31 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'description',
-            'component_district',
             'status',
-            'created',
-            'modified',
+            'component_district' => [
+                'attribute' => 'component_district',
+                'label' => 'Component District?',
+                'value' => function (District $model) {
+                    return $model->component_district === 1 ? 
+                        Html::tag('span', 'Yes ' . Html::decode('<i class="fa-solid fa-check"></i>'), ['class' => 'text-success'])
+                        : Html::tag('span', 'No ' . Html::decode('<i class="fa-solid fa-xmark"></i>'), ['class' => 'text-danger']);
+                },
+                'format' => 'raw',
+            ],
+            'created' => [
+                'attribute' => 'created',
+                'label' => 'Date Created',
+                'value' => function (District $model) {
+                    return Yii::$app->dateUtils->asDate($model->created);
+                },
+            ],
+            'modified' => [
+                'attribute' => 'modified',
+                'label' => 'Date Modified',
+                'value' => function (District $model) {
+                    return Yii::$app->dateUtils->asDate($model->modified);
+                },
+            ]
         ],
     ]) ?>
 

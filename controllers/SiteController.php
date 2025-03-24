@@ -45,6 +45,9 @@ class SiteController extends Controller
                         'roles' => ['@'],
                     ],
                 ],
+                'denyCallback' => function ($rule, $action) {
+                    throw new ForbiddenHttpException('You are not allowed access to the requested resource.');
+                }
             ],
             'verbs' => [
                 'class' => VerbFilter::class,

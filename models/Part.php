@@ -23,6 +23,7 @@ use Yii;
  *
  * @property User $lastModifiedByUser
  * @property Ticket $ticket
+ * @property PartType $partType
  */
 class Part extends \yii\db\ActiveRecord
 {

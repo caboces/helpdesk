@@ -41,10 +41,16 @@ class DistrictController extends Controller
         $searchModel = new DistrictSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $inactiveDistrictsSearchModel = new DistrictSearch();
+        $inactiveDistrictsSearchModel->search_inactive_districts = true;
+        $inactiveDistrictsDataProvider = $inactiveDistrictsSearchModel->search($this->request->queryParams);
+
         $this->layout = 'blank-container';
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'inactiveDistrictsSearchModel' => $inactiveDistrictsSearchModel,
+            'inactiveDistrictsDataProvider' => $inactiveDistrictsDataProvider,
         ]);
     }
 

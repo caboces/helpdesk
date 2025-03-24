@@ -21,8 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <p>This is the Parts Management page.</p>
     <p>You cannot create parts outside tickets, but you can update or delete existing parts.</p>
-        <!-- action buttons -->
-        <div class='container-fluid p-2 | bg-dark shadow-sm'>
+    <!-- action buttons -->
+    <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Reset filters', ['index'], ['class' => 'btn btn-secondary']); ?>
         <?= Html::a('Detailed Search', ['/part/search'], ['class' => 'btn btn-primary bg-iris border-iris']) ?>
     </div>
@@ -77,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'attribute' => 'last_modified_by_user_id',
                                 'label' => 'Last Modified By User',
                                 'value' => function (Part $model) {
-                                    return Html::a($model->lastModifiedByUser->username . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/user/view', 'id' => $model->last_modified_by_user_id]));
+                                    return Html::a($model->lastModifiedByUser->username . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/user/view', 'id' => $model->last_modified_by_user_id]), ['target' => '_blank', 'data-pjax' => 0]);
                                 },
                                 'format' => 'raw',
                                 'enableSorting' => false,
@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'attribute' => 'ticket_id',
                                 'label' => 'Ticket',
                                 'value' => function (Part $model) {
-                                    return Html::a($model->ticket->summary . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/ticket/view', 'id' => $model->ticket_id]));
+                                    return Html::a($model->ticket->summary . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/ticket/view', 'id' => $model->ticket_id]), ['target' => '_blank', 'data-pjax' => 0]);
                                 },
                                 'format' => 'raw',
                                 'enableSorting' => false,
@@ -136,7 +136,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'attribute' => 'last_modified_by_user_id',
                                 'label' => 'Last Modified By User',
                                 'value' => function (Part $model) {
-                                    return Html::a($model->lastModifiedByUser->username . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/user/view', 'id' => $model->last_modified_by_user_id]));
+                                    return Html::a($model->lastModifiedByUser->username . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/user/view', 'id' => $model->last_modified_by_user_id]), ['target' => '_blank', 'data-pjax' => 0]);
                                 },
                                 'format' => 'raw',
                                 'enableSorting' => false,
@@ -146,7 +146,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'attribute' => 'ticket_id',
                                 'label' => 'Ticket',
                                 'value' => function (Part $model) {
-                                    return Html::a($model->ticket->summary . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/ticket/view', 'id' => $model->ticket_id]));
+                                    return Html::a($model->ticket->summary . Html::decode(' <i class="fa-solid fa-arrow-up-right-from-square"></i>'), Url::toRoute(['/ticket/view', 'id' => $model->ticket_id]), ['target' => '_blank', 'data-pjax' => 0]);
                                 },
                                 'format' => 'raw',
                                 'enableSorting' => false,
