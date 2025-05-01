@@ -79,6 +79,15 @@ $config = [
         ],
         'dateUtils' => [
             'class' => 'app\utils\DateUtils',
+        ],
+        'CAPTCHA' => [
+            'class' => 'app\utils\CAPTCHA',
+        ],
+        'Honeypot' => [
+            'class' => 'app\utils\Honeypot',
+        ],
+        'requestUtils' => [
+            'class' => 'app\utils\RequestUtils',
         ]
     ],
     'modules' => [

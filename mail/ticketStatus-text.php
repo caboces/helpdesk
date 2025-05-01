@@ -5,7 +5,7 @@ use app\models\JobStatus;
 
 ?>
 
-Hello <?= Html::encode($username) ?>, from Help Desk 2.0,
+Hello <?= Html::encode($username) ?>,
 
 A ticket's status has changed to: <?= Html::encode(strtolower(JobStatus::findOne(['id' => $ticket->job_status_id])->name)) ?>.
 

@@ -1,6 +1,7 @@
 <?php
 
 use app\assets\AppAsset;
+use app\widgets\Alert;
 use yii\helpers\Html;
 \yii\web\YiiAsset::register($this);
 AppAsset::register($this);
@@ -31,6 +32,7 @@ AppAsset::register($this);
     <?php $this->beginBody() ?>
 
     <div class="container d-flex flex-column | h-100 mt-5">
+        <?= Alert::widget() ?>
         <?php echo $content ?>
     </div>
     

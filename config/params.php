@@ -2,10 +2,10 @@
 
 return [
     // mail
-    'adminEmail' => 'admin@example.com',
-    'supportEmail' => 'support@example.com',
-    'senderEmail' => 'noreply@example.com',
-    'senderName' => 'Example.com mailer',
+    'adminEmail' => 'webmaster@caboces.org',
+    'supportEmail' => 'helpdesk@caboces.org',
+    'senderEmail' => 'noreply@caboces.org',
+    'senderName' => 'CABOCES Help Desk',
 
     // password
     'user.passwordResetTokenExpire' => 3600,
@@ -24,5 +24,7 @@ return [
     ],
     'recaptcha' => [
         'apikey' => '6LcEMsEqAAAAAHb_vxGCjgC8iY5Xm2IbUAGDvEpE',
+        // 0 is very likely a bot, 1.0 is totally clean.
+        'actionThreshold' => 0.5,
     ],
 ];

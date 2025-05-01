@@ -307,7 +307,8 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function getAllEmails() {
         return User::find()->select([
-            'user.email'
+            'user.username',
+            'user.fname',
         ])->asArray()->all();
     }
 }

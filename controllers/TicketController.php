@@ -757,7 +757,7 @@ class TicketController extends Controller
                         'jobLabels' => $jobLabels,
                         'primary_tech' => $primaryTechName]
                     )
-                    ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+                    ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name])
                     ->setTo($email)
                     ->setSubject('Ticket #' . $ticketModel->id . ' ' . strtolower(JobStatus::findOne($ticketModel->job_status_id)->name) . '. ' . Yii::$app->name);
             }
@@ -773,7 +773,7 @@ class TicketController extends Controller
                     'jobLabels' => $jobLabels,
                     'primary_tech' => $primaryTechName]
                 )
-                ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+                ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name])
                 ->setTo($ticketModel->requester_email)
                 ->setSubject('CABOCES Ticket #' . $ticketModel->id . ' ' . strtolower(JobStatus::findOne($ticketModel->job_status_id)->name) . '. ' . Yii::$app->name)
         );
@@ -788,7 +788,7 @@ class TicketController extends Controller
                     'jobLabels' => $jobLabels,
                     'primary_tech' => $primaryTechName]
                 )
-                ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+                ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name])
                 ->setTo($ticketModel->requester_email)
                 ->setSubject('Ticket #' . $ticketModel->id . ' ' . strtolower(JobStatus::findOne($ticketModel->job_status_id)->name) . '. ' . Yii::$app->name)
         );

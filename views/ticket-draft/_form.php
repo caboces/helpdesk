@@ -104,11 +104,8 @@ use yii\bootstrap5\ActiveForm;
             </div>
         </div>
 
-        <!-- Hidden fields -->
+        <!-- Honeypot fields -->
         <?= Html::input('text', 'vc090h3n', null, ['hidden' => true]) ?>
-        
-        <!-- division textbox -->
-        <?= $form->field($model, 'division_id')->hiddenInput()->label(false); ?>
 
         <div class="form-group">
             <p>Please note that we will not be accepting file uploads in this form due to security limitations.</p>
@@ -117,7 +114,7 @@ use yii\bootstrap5\ActiveForm;
                 'data-sitekey' => '6LcEMsEqAAAAACHqBOkDNZDP7CFW2JjMLvPdN7IQ',
                 'data-callback' => 'reCaptchaOnSubmit',
                 'data-action' => 'submit',
-                ]) ?>
+            ]) ?>
         </div>
     </div>
 

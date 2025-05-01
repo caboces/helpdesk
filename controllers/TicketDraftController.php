@@ -299,7 +299,6 @@ class TicketDraftController extends Controller
         return $this->asJson($data);
     }
 
-    
     /**
      * Sends an email to the requestor and techs that a new draft was created.
      * 
@@ -333,14 +332,12 @@ class TicketDraftController extends Controller
                     ['ticketDraft' => $model]
                 )->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ': Automated Email'])
                 ->setTo($email)
-                // attach files
                 ->setSubject('CABOCES Help Desk: New Ticket Request');
         }
-        
 
         if (!empty($emails)) {
             // send multiple to save bandwidth
-            return Yii::$app->mailer->sendMultiple($emails);
+            return Yii::$app->mailer->sendMultiple($emails) > 0;
         } else {
             // no emails to deliver
             return false;

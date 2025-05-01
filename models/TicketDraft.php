@@ -55,7 +55,7 @@ class TicketDraft extends \yii\db\ActiveRecord
             [['requestor', 'location'], 'string', 'max' => 100],
             [['summary'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 500],
-            [['email', 'phone'], 'string', 'max' => 45],
+            [['email', 'phone'], 'string', 'max' => 100],
             [['email'], 'email', 'message' => 'Email must be a valid email address.'],
             [['ip_address'], 'string', 'max' => 48],
             [['accept_language', 'user_agent'], 'string', 'max' => 255],

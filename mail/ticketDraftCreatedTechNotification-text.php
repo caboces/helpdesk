@@ -11,9 +11,9 @@ Hello,
 
 A new Ticket Request was submitted to the queue.
 
-<?= Html::encode($ticketDraft->requestor) ?>
-<?= Html::encode($ticketDraft->summary) ?>
-<?= Html::encode($ticketDraft->description) ?>
+Requester: <?= Html::encode($ticketDraft->requestor) ?>
+Summary: <?= Html::encode($ticketDraft->summary) ?>
+Description: <?= Html::encode($ticketDraft->description) ?>
 
 Click the link below to create a ticket from it.
 To avoid confusion, make sure only one person makes a ticket.

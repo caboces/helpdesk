@@ -13,8 +13,10 @@ $this->params['breadcrumbs'][] = $this->title;
 TicketDraftCreateAsset::register($this);
 ?>
 <div class="ticket-draft-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="title-icon d-flex align-items-center">
+        <i class="fa-solid fa-question fa-2xl"></i>
+        <h1><?= Html::encode($this->title) ?></h1>
+    </div>
     <p>Please fill out the information below to request a new ticket.</p>
     <small>Please be sure to enter in the correct contact information as it will be used to contact you.</small>
     

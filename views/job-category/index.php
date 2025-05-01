@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <!-- action buttons -->
     <div class='container-fluid p-2 | bg-dark shadow-sm'>
         <?= Html::a('Back', ['site/manage'], ['class' => 'btn btn-secondary']); ?>
-        <?= Html::a('Create', ['create'], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark']) ?>
+        <?= Html::a(Html::decode('<i class="fa-solid fa-plus"></i>') . ' Create', ['create'], ['class' => 'btn btn-primary bg-pacific-cyan border-pacific-cyan text-dark']) ?>
     </div>
 
     <!-- pill nav -->

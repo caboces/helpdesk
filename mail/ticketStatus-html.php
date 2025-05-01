@@ -2,10 +2,12 @@
 
 use yii\helpers\Html;
 use app\models\JobStatus;
+use yii\helpers\Url;
+use yii\web\UrlRule;
 
 ?>
 <div>
-    <p>Hello <?= Html::encode($username) ?>, from Help Desk 2.0,</p>
+    <p>Hello <?= Html::encode($username) ?>,</p>
     <p>A ticket's status has changed to: <?= Html::encode(strtolower(JobStatus::findOne(['id' => $ticket->job_status_id])->name)) ?>.</p>
     <table>
         <tr>
@@ -49,4 +51,8 @@ use app\models\JobStatus;
             <td><?= Html::encode($ticket->created) ?></td>
         </tr>
     </table>
+    <!-- Check if the ticket is resolved and send the link for feedback -->
+    <?php if ($ticket->job_status_id === 14): ?>
+        <p>You can give us feedback on how well we resolved your ticket by visiting the following link: <?= Html::a(Url::toRoute(['/feedback/create']), Url::toRoute(['/feedback/create'])) ?></p>
+    <?php endif; ?>
 </div>
