@@ -34,7 +34,8 @@ jQuery(() => {
     const ticketDraft = JSON.parse($('#hidden-ticket-draft-data').val())
     if (ticketDraft && Object.keys(ticketDraft).length != 0) {
         // load spinner and wait for autofill to complete
-        spinner.awaitSpinner(autofillSpinner, autofillModule.autofill, ticketDraft)
+        const promise = autofillModule.autofill(ticketDraft)
+        spinner.awaitSpinner(autofillSpinner, promise)
     } else {
         console.info('No ticket draft detected - will not autofill fields')
     }

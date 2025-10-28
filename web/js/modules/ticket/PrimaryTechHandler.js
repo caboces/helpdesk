@@ -86,7 +86,7 @@ const PrimaryTechHandler = ((ticketMethod) => {
                         error: () => {
                             alert('An error occured while trying to fetch the primary tech of this ticket.')
                         }
-                    })
+                    }())
                     // see if the removed user has a current time entry
                     await $.ajax({
                         // TODO: maybe instead of 'alert(...)' we use a modal popup, red text appear/disppear, or something else, since the alerts can be disabled. we can do this later or until important
@@ -103,7 +103,7 @@ const PrimaryTechHandler = ((ticketMethod) => {
                         error: () => {
                             alert('An error occured while trying to fetch the time entires for the deleted technician.')
                         }
-                    })
+                    }())
                 })
             }
             // if it pass, then remove! (will always pass in /ticket/create form)

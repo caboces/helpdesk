@@ -19,11 +19,11 @@ const Spinner = (() => {
          * Call an async function and show a spinner while waiting for its result
          * @param {*} spinner DOM ID to spinner element
          * @param {*} promisedFunction The async function to execute
-         * @param  {...any} params The parameters to the async function, can be undefined
+         * @param {...any} params The parameters to the async function, can be undefined
          */
-        awaitSpinner: async function (spinner, promisedFunction, ...params) {
+        awaitSpinner: async function (spinner, promise) {
             $(spinner).show()
-            await promisedFunction(...params)
+            await promise
             $(spinner).hide()
         }
     }
