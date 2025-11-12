@@ -21,7 +21,7 @@
         "kartik-v/yii2-widget-select2": "dev-master",
         "kartik-v/yii2-grid": "@dev",
         "yiisoft/yii2-jui": "~2.0.0",
-        "bower-asset/jquery-ui": "1.11.*@stable"
+	"bower-asset/jquery-ui": "~1.12.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -38,7 +38,7 @@
         "kartik-v/yii2-widget-select2": "dev-master",
         "kartik-v/yii2-grid": "@dev",
         "yiisoft/yii2-jui": "~2.0.0",
-        "bower-asset/jquery-ui": "1.13.*@stable"
+	"bower-asset/jquery-ui": "~1.12.1"
     },
     "config": {
         "allow-plugins": {

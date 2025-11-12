@@ -3,9 +3,9 @@
 return [
 
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=168.169.55.5;dbname=inv',
+    'dsn' => 'mysql:host=localhost;dbname=inv',
     'username' => 'root',
-    'password' => '!my5qlr000t',
+    'password' => 'lakeeffect22',
     'charset' => 'latin1',
 
 ];

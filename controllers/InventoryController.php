@@ -119,7 +119,7 @@ class InventoryController extends Controller
             }
             $model->delete();
 
-            return $this->redirect('view', ['id' => $model->new_prop_tag]);
+            return $this->redirect('/inventory/view', ['id' => $model->new_prop_tag]);
         }
 
         $this->layout = 'blank-container';
